@@ -54,6 +54,7 @@ const HomeSection = () => {
           className="absolute bottom-0"
         />
       </div>
+      <div className="w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };

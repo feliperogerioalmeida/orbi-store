@@ -119,7 +119,7 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center min-h-screen h-full w-full bg-[url('/aboutBg.png')] bg-cover bg-center bg-no-repeat gap-4 ">
+    <div className="flex flex-col items-center min-h-screen h-full w-full bg-[url('/starsBg.png')] bg-cover bg-center bg-no-repeat gap-4 ">
       <div className=" pt-28 flex flex-col w-[90%] gap-2">
         <h2 className=" text-white text-5xl text-center">FAQ</h2>
         <p className="text-xs text-white text-center">

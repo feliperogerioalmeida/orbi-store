@@ -35,7 +35,7 @@ const ProductsSection = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/productBg.png')] bg-cover bg-center bg-no-repeat ">
+    <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/starsBg.png')] bg-cover bg-center bg-no-repeat">
       <div className="flex pt-36 ">
         <h2 className=" text-white text-5xl text-center">
           Conheça nossos produtos
@@ -47,6 +47,9 @@ const ProductsSection = () => {
           <ProductSectionCard key={product.title} {...product} />
         ))}
       </div>
+
+      {/* Linha divisória no final */}
+      <div className="w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };
