@@ -9,6 +9,13 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "products-cards-bg":
+          "linear-gradient(45deg, rgba(108,108,108,0.7) 0%, rgba(88,88,88,0.2) 100%);",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

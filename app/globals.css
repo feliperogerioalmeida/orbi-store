@@ -64,10 +64,10 @@ body {
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border m-0 p-0 box-border;
   }
   body {
-    @apply bg-background text-foreground h-full;
+    @apply bg-background m-0 p-0 box-border text-foreground h-full;
   }
   html {
     @apply h-full;
