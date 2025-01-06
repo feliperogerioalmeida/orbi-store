@@ -18,7 +18,11 @@ const LandingPageNav = () => {
       <div className="absolute top-4 left-4">
         <Sheet>
           <SheetTrigger asChild>
-            <Button size="icon" variant="outline">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="hover:bg-transparent hover:border-black hover:border-[1px]"
+            >
               <MenuIcon />
             </Button>
           </SheetTrigger>
