@@ -7,19 +7,19 @@ const AboutSection = () => {
     {
       title: "Inovação e Qualidade",
       description:
-        "Nosso compromisso é oferecer o melhor em tecnologia Apple, com uma seleção premium de produtos que definem o mercado.",
+        "Somos apaixonados por tecnologia e comprometidos em entregar o que há de melhor no universo Apple. Cada produto é selecionado com rigor para garantir a sua satisfação.",
       image: "/inovacaoEQualidade.png",
     },
     {
       title: "Design e Funcionalidade",
       description:
-        "Acessórios elegantes e práticos que complementam perfeitamente sua escolha de tecnologia, assegurando funcionalidade e estilo.",
+        "Acessórios que unem praticidade e elegância, projetados para elevar sua experiência com tecnologia sem abrir mão do estilo.",
       image: "/designEFuncionalidade.png",
     },
     {
       title: "Suporte e Assistência",
       description:
-        "Com uma equipe especializada, garantimos assistência técnica e suporte para manter seus dispositivos em perfeito estado.",
+        "Conte com uma equipe altamente capacitada para suporte técnico e manutenção, assegurando o desempenho ideal dos seus dispositivos.",
       image: "/suporteEAssistencia.png",
     },
   ];
@@ -27,23 +27,22 @@ const AboutSection = () => {
     {
       title: "Pagamento",
       description:
-        "Aceitamos Dinheiro, PIX, cartão de débito e cartão de crédito em até 18 parcelas",
+        "Facilitamos sua compra com opções como PIX, cartão de débito ou crédito em até 18 parcelas. Flexibilidade para você adquirir o melhor em tecnologia.",
       image: "/creditCard.png",
     },
     {
       title: "Entregas",
       description:
-        "Realizamos entregas nos Shoppings da Bahia, Salvador, Paralela ou Barra, ou em alguma cafeteria com Wi-Fi que seja melhor para o nosso cliente.",
+        "Entregamos em locais convenientes como os shoppings da Bahia, Salvador, Paralela e Barra, ou em uma cafeteria com Wi-Fi, proporcionando conforto e praticidade.",
       image: "/parcel.png",
     },
     {
       title: "Contato",
       description:
-        "Nosso atendimento é realizado exclusivamente via WhatsApp (+55 71 99973-2369) ou pelo Instagram (@store.orbi), garantindo um contato direto e eficiente",
+        "Atendimento direto e personalizado pelo WhatsApp (+55 71 99973-2369) ou Instagram (@store.orbi). Estamos aqui para você, de forma rápida e eficiente.",
       image: "/whatsapp.png",
     },
   ];
-
   return (
     <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/aboutBg.png')] bg-cover bg-center bg-no-repeat pt-28 gap-4 pb-4">
       <div className="flex">
