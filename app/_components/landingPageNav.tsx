@@ -19,11 +19,11 @@ const LandingPageNav = () => {
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              size="icon"
+              size={"icon"}
               variant="ghost"
               className="hover:bg-transparent hover:border-black hover:border-[1px]"
             >
-              <MenuIcon />
+              <MenuIcon color="white" />
             </Button>
           </SheetTrigger>
           <SheetContent side={"left"} className="w-[20rem]">
