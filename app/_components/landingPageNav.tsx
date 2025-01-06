@@ -14,14 +14,14 @@ import Image from "next/image";
 
 const LandingPageNav = () => {
   return (
-    <div className="flex flex-row w-[100vw] items-center justify-center">
+    <div className="flex flex-row w-[100vw] items-center justify-center backdrop-brightness-150 pt-2">
       <div className="absolute top-4 left-4">
         <Sheet>
           <SheetTrigger asChild>
             <Button
               size={"icon"}
               variant="ghost"
-              className="hover:bg-transparent hover:border-black hover:border-[1px]"
+              className="hover:bg-transparent hover:border-black hover:border-[1px] border-white border-[1px]"
             >
               <MenuIcon color="white" />
             </Button>
