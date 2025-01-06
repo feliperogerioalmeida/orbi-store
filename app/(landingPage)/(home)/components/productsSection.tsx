@@ -33,14 +33,14 @@ const ProductsSection = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/productBg.png')] bg-cover bg-center bg-no-repeat pt-24 gap-4 pb-4">
+    <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/productBg.png')] bg-cover bg-center bg-no-repeat pt-28 gap-4 pb-4">
       <div className="flex">
         <h2 className=" text-white text-5xl text-center">
           Conheça nossos produtos
         </h2>
       </div>
 
-      <div className="flex flex-col h-full min-h-screen justify-center items-center w-full gap-4">
+      <div className="flex flex-col h-full min-h-screen justify-center items-center w-full gap-2 pb-8">
         {productsinfo.map((product) => (
           <ProductSectionCard key={product.title} {...product} />
         ))}
