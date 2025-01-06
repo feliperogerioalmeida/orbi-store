@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex flex-col">
+        <div className="flex h-full flex-col">
           <AuthProvider>
             <div className="mt-4 fixed">
               <LandingPageNav />
