@@ -1,0 +1,95 @@
+import { Calculator, HouseIcon, MenuIcon, Smartphone } from "lucide-react";
+import { Button } from "./ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
+import Logo from "@/app/_components/logo";
+import Link from "next/link";
+import Image from "next/image";
+
+const LandingPageNav = () => {
+  return (
+    <div className="flex flex-row w-[100vw] items-center justify-center">
+      <div className="absolute top-4 left-4">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="outline">
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={"left"} className="w-[20rem]">
+            <SheetHeader>
+              <SheetTitle className="text-left text-lg font-semibold">
+                Menu
+              </SheetTitle>
+            </SheetHeader>
+
+            <div className="mt-4 flex flex-col gap-2">
+              <SheetClose asChild>
+                <Link href="/">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    <HouseIcon size={16} />
+                    Home
+                  </Button>
+                </Link>
+              </SheetClose>
+
+              <SheetClose asChild>
+                <Link href="/">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    <Smartphone size={16} />
+                    Produtos
+                  </Button>
+                </Link>
+              </SheetClose>
+
+              <SheetClose asChild>
+                <Link href="/">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    <Image
+                      src="/logoIconBlack.svg"
+                      alt="Orbi Store"
+                      width={16}
+                      height={16}
+                      className="h-auto object-contain"
+                    />
+                    Orbi Store
+                  </Button>
+                </Link>
+              </SheetClose>
+
+              <SheetClose asChild>
+                <Link href="/">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    <Calculator size={16} />
+                    Simulação de Upgrade
+                  </Button>
+                </Link>
+              </SheetClose>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+      <Logo className="w-[30%]" />
+    </div>
+  );
+};
+
+export default LandingPageNav;
