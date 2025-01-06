@@ -1,6 +1,7 @@
 import { Card, CardDescription, CardHeader } from "@/app/_components/ui/card";
 import AboutSectionCard from "./aboutSectionCard";
 import Image from "next/image";
+import ORBI_CONSTANTS from "@/app/constants";
 
 const AboutSection = () => {
   const aboutSectionInfo = [
@@ -38,8 +39,7 @@ const AboutSection = () => {
     },
     {
       title: "Contato",
-      description:
-        "Atendimento direto e personalizado pelo WhatsApp (+55 71 99973-2369) ou Instagram (@store.orbi). Estamos aqui para você, de forma rápida e eficiente.",
+      description: `Atendimento direto e personalizado pelo WhatsApp (${ORBI_CONSTANTS.CONTACT.WHATSAPP}) ou Instagram (${ORBI_CONSTANTS.CONTACT.INSTAGRAM}). Estamos aqui para você, de forma rápida e eficiente.`,
       image: "/whatsapp.png",
     },
   ];
