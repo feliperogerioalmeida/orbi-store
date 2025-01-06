@@ -1,5 +1,7 @@
 import { Button } from "@/app/_components/ui/button";
+import ORBI_CONSTANTS from "@/app/constants";
 import Image from "next/image";
+import Link from "next/link";
 
 const HomeSection = () => {
   return (
@@ -11,27 +13,36 @@ const HomeSection = () => {
           </span>
           Conectando você ao futuro!
         </h1>
+        <p className=" relative text-xl text-center text-white text-shadow mt-2">
+          Qualidade e confiança em tecnologia premium.
+        </p>
+        <span className="absolute top-0 left-0 text-black -z-10 blur-sm">
+          Qualidade e confiança em tecnologia premium.
+        </span>
 
         <Button
+          asChild
           size="lg"
           variant="secondary"
-          className="mt-4 hover:bg-primary hover:text-white group flex items-center "
+          className="mt-4 hover:bg-primary hover:text-white group flex items-center space-x-2"
         >
-          <Image
-            src="/whatsAppIconBlack.svg"
-            alt="whatsAppIcon"
-            width={16}
-            height={16}
-            className="group-hover:hidden"
-          />
-          <Image
-            src="/whatsAppIconWhite.svg"
-            alt="whatsAppIconHover"
-            width={16}
-            height={16}
-            className="hidden group-hover:block"
-          />
-          <p className=" font-bold text-lg">Falar com um especialista</p>
+          <Link href={ORBI_CONSTANTS.LINKS.WHATSAPP_URL}>
+            <Image
+              src="/whatsAppIconBlack.svg"
+              alt="whatsAppIcon"
+              width={20}
+              height={20}
+              className="group-hover:hidden"
+            />
+            <Image
+              src="/whatsAppIconWhite.svg"
+              alt="whatsAppIconHover"
+              width={20}
+              height={20}
+              className="hidden group-hover:block"
+            />
+            <p className="font-bold text-lg">Falar com um especialista</p>
+          </Link>
         </Button>
       </div>
       <div className="h-[50%] w-auto min-w-screem relative">
