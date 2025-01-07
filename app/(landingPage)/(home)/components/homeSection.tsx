@@ -1,5 +1,5 @@
 import { Button } from "@/app/_components/ui/button";
-import ORBI_CONSTANTS from "@/app/constants";
+import ORBI_CONSTANTS from "@/app/constants/constants";
 import Image from "next/image";
 import Link from "next/link";
 

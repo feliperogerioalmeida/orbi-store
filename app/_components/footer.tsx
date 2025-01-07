@@ -1,4 +1,4 @@
-import ORBI_CONSTANTS from "../constants";
+import ORBI_CONSTANTS from "../constants/constants";
 
 const Footer = () => {
   return (

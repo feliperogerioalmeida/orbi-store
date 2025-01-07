@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/app/_components/ui/accordion";
-import ORBI_CONSTANTS from "@/app/constants";
+import ORBI_CONSTANTS from "@/app/constants/constants";
 
 const FAQ = () => {
   const faq = [

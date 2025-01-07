@@ -1,7 +1,7 @@
 import { Card, CardDescription, CardHeader } from "@/app/_components/ui/card";
 import AboutSectionCard from "./aboutSectionCard";
 import Image from "next/image";
-import ORBI_CONSTANTS from "@/app/constants";
+import ORBI_CONSTANTS from "@/app/constants/constants";
 
 const AboutSection = () => {
   const aboutSectionInfo = [
