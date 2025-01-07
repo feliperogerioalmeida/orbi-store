@@ -1,4 +1,10 @@
-import { Calculator, HouseIcon, MenuIcon, Smartphone } from "lucide-react";
+import {
+  Calculator,
+  CircleHelp,
+  HouseIcon,
+  MenuIcon,
+  Smartphone,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Sheet,
@@ -35,7 +41,7 @@ const LandingPageNav = () => {
 
             <div className="mt-4 flex flex-col gap-2">
               <SheetClose asChild>
-                <Link href="/">
+                <Link href="#home">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
@@ -47,7 +53,7 @@ const LandingPageNav = () => {
               </SheetClose>
 
               <SheetClose asChild>
-                <Link href="/">
+                <Link href="#products">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
@@ -59,7 +65,7 @@ const LandingPageNav = () => {
               </SheetClose>
 
               <SheetClose asChild>
-                <Link href="/">
+                <Link href="#about">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
@@ -77,7 +83,19 @@ const LandingPageNav = () => {
               </SheetClose>
 
               <SheetClose asChild>
-                <Link href="/">
+                <Link href="#faq">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    <CircleHelp size={16} />
+                    Perguntas Frequentes
+                  </Button>
+                </Link>
+              </SheetClose>
+
+              <SheetClose asChild>
+                <Link href="/simulacao-upgrade">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"

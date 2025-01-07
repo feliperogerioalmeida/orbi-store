@@ -35,7 +35,10 @@ const ProductsSection = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat">
+    <div
+      id="products"
+      className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat"
+    >
       <div className="flex pt-[120px]">
         <h2 className=" text-white text-4xl text-center px-4">
           Conheça nossos produtos

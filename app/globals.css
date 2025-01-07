@@ -74,6 +74,18 @@ body {
   }
 }
 
+::-webkit-scrollbar {
+  width: 0.45rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #171717;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #044d6e;
+  border-radius: 999px;
+}
 /* 
 #044D6E
 hsl(199, 93%, 22%)
