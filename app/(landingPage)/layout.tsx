@@ -22,6 +22,22 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/icon-512x512.png",
   },
+  openGraph: {
+    title: "Orbi Store",
+    description:
+      "Os melhores iPhones e acessórios premium com atendimento de qualidade!",
+    siteName: "Orbi Store",
+    images: [
+      {
+        url: "/icon-512x512.png",
+        width: 1200,
+        height: 630,
+        alt: "Orbi Store - Loja de produtos Apple",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
