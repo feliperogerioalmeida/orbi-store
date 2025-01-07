@@ -14,7 +14,7 @@ import Image from "next/image";
 
 const LandingPageNav = () => {
   return (
-    <div className="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-center bg-black/50 backdrop-blur-md pt-2">
+    <div className="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-center bg-black/50 backdrop-blur-md py-2">
       <div className="absolute top-4 left-4">
         <Sheet>
           <SheetTrigger asChild>

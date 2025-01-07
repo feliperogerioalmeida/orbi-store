@@ -36,20 +36,19 @@ const ProductsSection = () => {
 
   return (
     <div className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat">
-      <div className="flex pt-36 ">
-        <h2 className=" text-white text-5xl text-center">
+      <div className="flex pt-[120px]">
+        <h2 className=" text-white text-4xl text-center px-4">
           Conheça nossos produtos
         </h2>
       </div>
 
-      <div className="flex flex-col h-full min-h-screen justify-start items-center w-full gap-8 pt-4 ">
+      <div className="flex flex-col h-full min-h-screen justify-start items-center w-full gap-8 pt-10 ">
         {productsInfo.map((product) => (
           <ProductSectionCard key={product.title} {...product} />
         ))}
       </div>
 
-      {/* Linha divisória no final */}
-      <div className="w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+      <div className=" mt-1 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };
