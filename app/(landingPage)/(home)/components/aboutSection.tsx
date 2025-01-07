@@ -1,4 +1,3 @@
-import { Card, CardDescription, CardHeader } from "@/app/_components/ui/card";
 import AboutSectionCard from "./aboutSectionCard";
 import Image from "next/image";
 import ORBI_CONSTANTS from "@/app/constants/constants";
@@ -48,28 +47,6 @@ const AboutSection = () => {
       <div className="flex">
         <h2 className=" text-white text-5xl text-center">Sobre a Orbi Store</h2>
       </div>
-
-      <Card className="w-[90%] flex flex-col items-center justify-center bg-products-cards-bg border-0 shadow-md p-3">
-        <CardHeader className="text-white font-bold text-xl">
-          Missão, Visão e Valores
-        </CardHeader>
-        <CardDescription className="flex flex-col gap-2">
-          <p className="text-xs text-white">
-            <span className="font-semibold text-sm text-white">Missão: </span>
-            Focar em entregar produtos de alta qualidade com um atendimento
-            premium.
-          </p>
-          <p className=" text-xs text-white">
-            <span className="font-semibold text-sm text-white">Visão: </span>
-            Ser referência em produtos Apple no mercado digital de Salvador e
-            Brasil.
-          </p>
-          <p className=" text-white text-xs">
-            <span className="font-semibold text-sm text-white">Valores: </span>
-            Transparência, qualidade, atendimento humano, e respeito ao cliente.
-          </p>
-        </CardDescription>
-      </Card>
 
       {aboutSectionInfo.map((about) => (
         <AboutSectionCard key={about.title} {...about} />
