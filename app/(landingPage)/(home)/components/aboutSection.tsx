@@ -8,19 +8,19 @@ const AboutSection = () => {
       title: "Inovação e Qualidade",
       description:
         "Somos apaixonados por tecnologia e comprometidos em entregar o que há de melhor no universo Apple. Cada produto é selecionado com rigor para garantir a sua satisfação.",
-      image: "/inovacaoEQualidade.png",
+      image: "/images/aboutSection/inovacaoEQualidade.png",
     },
     {
       title: "Design e Funcionalidade",
       description:
         "Acessórios que unem praticidade e elegância, projetados para elevar sua experiência com tecnologia sem abrir mão do estilo.",
-      image: "/designEFuncionalidade.png",
+      image: "/images/aboutSection/designEFuncionalidade.png",
     },
     {
       title: "Suporte e Assistência",
       description:
         "Conte com uma equipe altamente capacitada para suporte técnico e manutenção, assegurando o desempenho ideal dos seus dispositivos.",
-      image: "/suporteEAssistencia.png",
+      image: "/images/aboutSection/suporteEAssistencia.png",
     },
   ];
   const aboutSectionInfo2 = [

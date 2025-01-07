@@ -6,31 +6,31 @@ const ProductsSection = () => {
       title: "iPhones Novos",
       description:
         "Modelos lacrados, com 1 ano de garantia da Apple. Qualidade garantida para quem busca o melhor em tecnologia.",
-      image: "/iphonesNovos.png",
+      image: "/images/productsSection/iphonesNovos.png",
     },
     {
       title: "iPhones Seminovos",
       description:
         "Dispositivos rigorosamente avaliados, com bateria acima de 80%, peças 100% originais e garantia de 3 meses. Perfeitos para quem busca qualidade a um preço acessível.",
-      image: "/iphonesSeminovos.png",
+      image: "/images/productsSection/iphonesSeminovos.png",
     },
     {
       title: "Acessórios",
       description:
         "Carregadores, capas, películas e muito mais. Produtos originais e premium para complementar seu iPhone, iPad ou Apple Watch.",
-      image: "/acessorios.png",
+      image: "/images/productsSection/acessorios.png",
     },
     {
       title: "Caixas de Som e Alexa",
       description:
         "Explore som de alta qualidade com as caixas JBL e torne sua casa mais inteligente com dispositivos Alexa. Produtos lacrados e com garantia de 1 ano.",
-      image: "/jblAlexa.png",
+      image: "/images/productsSection/jblAlexa.png",
     },
     {
       title: "Produtos Apple e Muito Mais",
       description:
         "De MacBooks a Apple Watch, passando por AirPods e o revolucionário Apple Vision. Encontre tudo da Apple e muito mais aqui.",
-      image: "/produtosApple.png",
+      image: "/images/productsSection/produtosApple.png",
     },
   ];
 

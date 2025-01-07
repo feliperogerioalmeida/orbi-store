@@ -50,7 +50,7 @@ const HomeSection = () => {
       </div>
       <div className="h-[50%] w-auto min-w-screem relative">
         <Image
-          src="/homePerson.png"
+          src="/images/background/homePerson.png"
           alt="homePerson"
           layout="fill"
           objectFit="cover"
