@@ -121,7 +121,7 @@ const FAQ = () => {
   return (
     <div
       id="faq"
-      className="flex flex-col items-center min-h-[100vh] h-full w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat gap-4 "
+      className="flex flex-col items-center min-h-screen h-full w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat gap-4 "
     >
       <div className=" pt-[120px] flex flex-col w-[90%] gap-2">
         <h2 className=" text-white text-4xl text-center px-4">FAQ</h2>
