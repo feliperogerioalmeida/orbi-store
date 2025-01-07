@@ -68,8 +68,9 @@ const AboutSection = () => {
               width={100}
               height={100}
               alt={about.title}
+              className="object-contain w-auto h-auto"
             />
-            <p className="text-white font-regular w-auto h-auto text-xs">
+            <p className="text-white font-regular text-xs">
               {about.description}
             </p>
           </div>
