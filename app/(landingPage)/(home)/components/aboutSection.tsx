@@ -67,10 +67,9 @@ const AboutSection = () => {
               src={about.image}
               width={100}
               height={100}
-              layout="responsive"
               alt={about.title}
             />
-            <p className="text-white font-regular text-xs">
+            <p className="text-white font-regular w-auto h-auto text-xs">
               {about.description}
             </p>
           </div>
