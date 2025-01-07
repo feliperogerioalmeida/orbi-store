@@ -45,7 +45,7 @@ const AboutSection = () => {
   return (
     <div
       id="about"
-      className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-10 pb-4"
+      className="flex flex-col items-center h-full min-h-[100vh] w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-10 pb-4"
     >
       <div className=" pt-[120px] flex">
         <h2 className=" text-white text-4xl text-center px-4">
