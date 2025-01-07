@@ -45,7 +45,7 @@ const AboutSection = () => {
   return (
     <div
       id="about"
-      className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-10 pb-4"
+      className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-6"
     >
       <div className=" pt-[120px] flex">
         <h2 className=" text-white text-4xl text-center px-4">
@@ -57,7 +57,7 @@ const AboutSection = () => {
         <AboutSectionCard key={about.title} {...about} />
       ))}
 
-      <div className="flex flex-col h-auto pt-3 w-full px-4 gap-8 text-center">
+      <div className="flex flex-col pt-3 w-full px-4 gap-6 text-center">
         {aboutSectionInfo2.map((about) => (
           <div
             key={about.title}
