@@ -57,7 +57,7 @@ const AboutSection = () => {
         <AboutSectionCard key={about.title} {...about} />
       ))}
 
-      <div className="flex flex-col pt-3 w-[90%] gap-8 text-center">
+      <div className="flex flex-col  h-auto pt-3 w-[90%] gap-8 text-center">
         {aboutSectionInfo2.map((about) => (
           <div
             key={about.title}
