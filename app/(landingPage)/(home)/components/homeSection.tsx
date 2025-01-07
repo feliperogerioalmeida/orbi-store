@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const HomeSection = () => {
   return (
-    <div className="items-center min-h-screen w-full bg-[url('/homeBg.jpg')] bg-cover bg-center">
+    <div className="items-center min-h-screen w-full bg-custom-bg-1 bg-cover bg-center">
       <div className="flex flex-col justify-center items-center h-[50%] ">
         <h1 className=" relative text-5xl font-extrabold text-center text-white text-shadow">
           <span className="absolute top-0 left-0 text-black -z-10 blur-sm">

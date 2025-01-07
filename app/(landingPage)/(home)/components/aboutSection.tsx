@@ -44,7 +44,7 @@ const AboutSection = () => {
     },
   ];
   return (
-    <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/stars2Bg.png')] bg-cover bg-center bg-no-repeat pt-28 gap-4 pb-4">
+    <div className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat pt-28 gap-4 pb-4">
       <div className="flex">
         <h2 className=" text-white text-5xl text-center">Sobre a Orbi Store</h2>
       </div>

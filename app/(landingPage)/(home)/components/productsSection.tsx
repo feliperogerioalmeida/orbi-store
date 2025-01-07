@@ -35,7 +35,7 @@ const ProductsSection = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center h-full min-h-screen w-full bg-[url('/starsBg.png')] bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat">
       <div className="flex pt-36 ">
         <h2 className=" text-white text-5xl text-center">
           Conheça nossos produtos

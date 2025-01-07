@@ -15,6 +15,9 @@ export default {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "products-cards-bg":
           "linear-gradient(45deg, rgba(108,108,108,0.7) 0%, rgba(88,88,88,0.2) 100%);",
+        "custom-bg-1": "url('/homeBG.jpg')",
+        "custom-bg-2": "url('/starsBG.png')",
+        "custom-bg-3": "url('/stars2BG.png')",
       },
       colors: {
         background: "hsl(var(--background))",
