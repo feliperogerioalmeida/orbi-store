@@ -28,18 +28,18 @@ const AboutSection = () => {
       title: "Pagamento",
       description:
         "Facilitamos sua compra com opções como PIX, cartão de débito ou crédito em até 18 parcelas. Flexibilidade para você adquirir o melhor em tecnologia.",
-      image: "/images/vector/creditCard.png",
+      image: "/images/aboutSection/creditCard.png",
     },
     {
       title: "Entregas",
       description:
         "Entregamos em locais convenientes como os shoppings da Bahia, Salvador, Paralela e Barra, ou em uma cafeteria com Wi-Fi, proporcionando conforto e praticidade.",
-      image: "/images/vector/parcel.png",
+      image: "/images/aboutSection/parcel.png",
     },
     {
       title: "Contato",
       description: `Atendimento direto e personalizado pelo WhatsApp (${ORBI_CONSTANTS.CONTACT.WHATSAPP}) ou Instagram (${ORBI_CONSTANTS.CONTACT.INSTAGRAM}). Estamos aqui para você, de forma rápida e eficiente.`,
-      image: "/images/vector/whatsapp.png",
+      image: "/images/aboutSection/whatsapp.png",
     },
   ];
   return (
