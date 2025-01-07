@@ -73,6 +73,46 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
+model iPhone {
+  id         String      @id @default(cuid())
+  model      String
+  colors     Color[]
+  capacities Capacity[]
+  conditions Condition[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Color {
+  id       String @id @default(cuid())
+  name     String
+  imageUrl String
+  iphoneId String
+  iphone   iPhone @relation(fields: [iphoneId], references: [id], onDelete: Cascade)
+}
+
+model Capacity {
+  id        String      @id @default(cuid())
+  size      String
+  iphoneId  String
+  iphone    iPhone      @relation(fields: [iphoneId], references: [id], onDelete: Cascade)
+  Condition Condition[]
+}
+
+model Condition {
+  id              String   @id @default(cuid())
+  conditionType   String
+  capacityId      String
+  capacity        Capacity @relation(fields: [capacityId], references: [id], onDelete: Cascade)
+  costPrice       Float
+  sellingPrice    Float
+  maxUpgradePrice Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  iPhone          iPhone?  @relation(fields: [iPhoneId], references: [id])
+  iPhoneId        String?
+}
+
 enum Role {
   USER
   ADMIN
