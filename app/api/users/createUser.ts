@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       lastName,
       email,
       password: hashedPassword,
-      role: "USER", // Apenas usuários padrão são criados
+      role: "EMPLOYEE",
     },
   });
 
