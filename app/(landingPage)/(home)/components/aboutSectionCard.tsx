@@ -9,7 +9,7 @@ interface AboutSectionProps {
 const AboutSectionCard = ({ title, description, image }: AboutSectionProps) => {
   return (
     <Card
-      className="w-[90%] h-[300px] max-h-390px flex flex-col items-center justify-end bg-fill bg-center bg-no-repeat border-0 shadow-md"
+      className="w-[90%] h-[300px] max-h-[390px] flex flex-col items-center justify-end bg-fill bg-center bg-no-repeat border-0 shadow-md"
       style={{
         backgroundImage: `url(${image})`,
       }}
