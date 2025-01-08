@@ -111,7 +111,8 @@ model Condition {
 }
 
 enum Role {
-  USER
+  EMPLOYEE
+  CLIENT
   ADMIN
   MASTER
 }
