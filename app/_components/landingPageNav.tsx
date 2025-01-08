@@ -1,7 +1,10 @@
+"use client";
 import {
   Calculator,
   CircleHelp,
   HouseIcon,
+  LogInIcon,
+  LogOutIcon,
   MenuIcon,
   Smartphone,
 } from "lucide-react";
@@ -10,6 +13,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -17,8 +21,20 @@ import {
 import Logo from "@/app/_components/logo";
 import Link from "next/link";
 import Image from "next/image";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Separator } from "./ui/separator";
 
 const LandingPageNav = () => {
+  const { data, status } = useSession();
+  const handleLoginClick = async () => {
+    await signIn();
+  };
+
+  const handleLogOutClick = async () => {
+    await signOut();
+  };
+
   return (
     <div className="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-center bg-black/50 backdrop-blur-md py-2">
       <div className="absolute top-4 left-4">
@@ -32,79 +48,133 @@ const LandingPageNav = () => {
               <MenuIcon color="white" />
             </Button>
           </SheetTrigger>
-          <SheetContent side={"left"} className="w-[20rem]">
+          <SheetContent
+            side={"left"}
+            className="w-[20rem] h-full flex flex-col"
+          >
             <SheetHeader>
               <SheetTitle className="text-left text-lg font-semibold">
                 Menu
               </SheetTitle>
             </SheetHeader>
 
-            <div className="mt-4 flex flex-col gap-2">
-              <SheetClose asChild>
-                <Link href="/#home">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                  >
-                    <HouseIcon size={16} />
-                    Home
-                  </Button>
-                </Link>
-              </SheetClose>
+            {status == "authenticated" && data?.user && (
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 py-4">
+                  <Avatar>
+                    <AvatarFallback>
+                      {data.user.name?.[0].toUpperCase()}
+                    </AvatarFallback>
 
-              <SheetClose asChild>
-                <Link href="/#products">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                  >
-                    <Smartphone size={16} />
-                    Produtos
-                  </Button>
-                </Link>
-              </SheetClose>
+                    {data.user.image && <AvatarImage src={data.user.image} />}
+                  </Avatar>
 
-              <SheetClose asChild>
-                <Link href="/#about">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                  >
-                    <Image
-                      src="/logoIconBlack.svg"
-                      alt="Orbi Store"
-                      width={16}
-                      height={16}
-                      className="h-auto object-contain"
-                    />
-                    Orbi Store
-                  </Button>
-                </Link>
-              </SheetClose>
+                  <div className="flex flex-col">
+                    <p className="font-medium">
+                      {" "}
+                      {data.user.firstName} <span> {data.user.lastName}</span>
+                    </p>
+                    <p className="text-xs opacity-75">{data.user.email}</p>
+                  </div>
+                </div>
+                <Separator />
+              </div>
+            )}
+            <div className="flex flex-col h-full justify-between">
+              <div className="mt-4 flex flex-col gap-2">
+                <SheetClose asChild>
+                  <Link href="/#home">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                    >
+                      <HouseIcon size={16} />
+                      Home
+                    </Button>
+                  </Link>
+                </SheetClose>
 
-              <SheetClose asChild>
-                <Link href="/#faq">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                  >
-                    <CircleHelp size={16} />
-                    Perguntas Frequentes
-                  </Button>
-                </Link>
-              </SheetClose>
+                <SheetClose asChild>
+                  <Link href="/#products">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                    >
+                      <Smartphone size={16} />
+                      Produtos
+                    </Button>
+                  </Link>
+                </SheetClose>
 
-              <SheetClose asChild>
-                <Link href="/simulacao-upgrade">
+                <SheetClose asChild>
+                  <Link href="/#about">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                    >
+                      <Image
+                        src="/logoIconBlack.svg"
+                        alt="Orbi Store"
+                        width={16}
+                        height={16}
+                        className="h-auto object-contain"
+                      />
+                      Orbi Store
+                    </Button>
+                  </Link>
+                </SheetClose>
+
+                <SheetClose asChild>
+                  <Link href="/#faq">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                    >
+                      <CircleHelp size={16} />
+                      Perguntas Frequentes
+                    </Button>
+                  </Link>
+                </SheetClose>
+
+                <SheetClose asChild>
+                  <Link href="/simulacao-upgrade">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                    >
+                      <Calculator size={16} />
+                      Simulação de Upgrade
+                    </Button>
+                  </Link>
+                </SheetClose>
+              </div>
+
+              <SheetFooter className="justify-self-end">
+                {status == "unauthenticated" && (
                   <Button
-                    variant="outline"
+                    onClick={handleLoginClick}
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                    asChild
+                  >
+                    <Link href="/login">
+                      <LogInIcon size={16} />
+                      Fazer Login
+                    </Link>
+                  </Button>
+                )}
+
+                {status == "authenticated" && (
+                  <Button
+                    onClick={handleLogOutClick}
+                    variant="ghost"
                     className="w-full justify-start gap-2"
                   >
-                    <Calculator size={16} />
-                    Simulação de Upgrade
+                    <LogOutIcon size={16} />
+                    Fazer Logout
                   </Button>
-                </Link>
-              </SheetClose>
+                )}
+              </SheetFooter>
             </div>
           </SheetContent>
         </Sheet>

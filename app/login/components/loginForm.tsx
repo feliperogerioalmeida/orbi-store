@@ -56,7 +56,7 @@ const LoginForm = () => {
 
   return (
     <Card className="flex flex-col items-center justify-center max-w-[400px] max-h-[400px] h-[80%] w-[90%]">
-      <CardContent className="flex flex-col items-center gap-2">
+      <CardContent className="flex flex-col items-center gap-4">
         <Logo className="w-[80%]" />
         <form
           className="w-full flex flex-col items-center gap-4"
