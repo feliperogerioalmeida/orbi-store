@@ -26,8 +26,8 @@ const LandingPageNav = () => {
           <SheetTrigger asChild>
             <Button
               size={"icon"}
-              variant="ghost"
-              className="hover:bg-transparent hover:border-black hover:border-[1px] border-white border-[1px]"
+              variant="default"
+              className=" hover:border-[1px] hover:border-white "
             >
               <MenuIcon color="white" />
             </Button>
