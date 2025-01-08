@@ -37,7 +37,6 @@ CREATE TABLE "Condition" (
     "maxUpgradePrice" DOUBLE PRECISION NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "iPhoneId" TEXT,
 
     CONSTRAINT "Condition_pkey" PRIMARY KEY ("id")
 );
@@ -50,6 +49,3 @@ ALTER TABLE "Capacity" ADD CONSTRAINT "Capacity_iphoneId_fkey" FOREIGN KEY ("iph
 
 -- AddForeignKey
 ALTER TABLE "Condition" ADD CONSTRAINT "Condition_capacityId_fkey" FOREIGN KEY ("capacityId") REFERENCES "Capacity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Condition" ADD CONSTRAINT "Condition_iPhoneId_fkey" FOREIGN KEY ("iPhoneId") REFERENCES "iPhone"("id") ON DELETE SET NULL ON UPDATE CASCADE;
