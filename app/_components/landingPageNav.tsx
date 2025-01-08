@@ -41,7 +41,7 @@ const LandingPageNav = () => {
 
             <div className="mt-4 flex flex-col gap-2">
               <SheetClose asChild>
-                <Link href="#home">
+                <Link href="/#home">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
@@ -53,7 +53,7 @@ const LandingPageNav = () => {
               </SheetClose>
 
               <SheetClose asChild>
-                <Link href="#products">
+                <Link href="/#products">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
@@ -65,7 +65,7 @@ const LandingPageNav = () => {
               </SheetClose>
 
               <SheetClose asChild>
-                <Link href="#about">
+                <Link href="/#about">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
@@ -83,7 +83,7 @@ const LandingPageNav = () => {
               </SheetClose>
 
               <SheetClose asChild>
-                <Link href="#faq">
+                <Link href="/#faq">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-2"
