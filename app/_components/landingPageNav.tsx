@@ -21,15 +21,12 @@ import {
 import Logo from "@/app/_components/logo";
 import Link from "next/link";
 import Image from "next/image";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 
 const LandingPageNav = () => {
   const { data, status } = useSession();
-  const handleLoginClick = async () => {
-    await signIn();
-  };
 
   const handleLogOutClick = async () => {
     await signOut();
@@ -152,7 +149,6 @@ const LandingPageNav = () => {
               <SheetFooter className="justify-self-end">
                 {status == "unauthenticated" && (
                   <Button
-                    onClick={handleLoginClick}
                     variant="ghost"
                     className="w-full justify-start gap-2"
                     asChild
