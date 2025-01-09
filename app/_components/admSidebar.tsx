@@ -8,6 +8,7 @@ import {
   FileText,
   Users,
   LogOutIcon,
+  PackageSearchIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -69,10 +70,18 @@ const AdmSidebar = () => {
     },
   ];
 
-  // const sidebarLinks =
-  //   activeWorkspace === "MASTER" && userRole === "MASTER"
-  //     ? masterLinks
-  //     : admLinks;
+  const admLinks = [
+    {
+      href: "/dashboard",
+      label: "Dashboard",
+      icon: BarChart2,
+    },
+    {
+      href: "/products",
+      label: "Produtos",
+      icon: PackageSearchIcon,
+    },
+  ];
 
   return (
     <Sidebar>
@@ -131,36 +140,48 @@ const AdmSidebar = () => {
       </SidebarHeader>
       <SidebarContent className="pt-6">
         <SidebarMenu className="flex flex-col items-center justify-center w-full">
-          {userRole === "MASTER" && activeWorkspace === "MASTER" ? (
-            masterLinks.map((link) => (
-              <SidebarMenuItem
-                key={link.label}
-                className="w-full flex items-center justify-center"
-              >
-                <SidebarMenuButton
-                  asChild
-                  variant="default"
-                  className={`flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
+          {userRole === "MASTER" && activeWorkspace === "MASTER"
+            ? masterLinks.map((link) => (
+                <SidebarMenuItem
+                  key={link.label}
+                  className="w-full flex items-center justify-center"
                 >
-                  <Link href={link.href}>
-                    <link.icon />
-                    {link.label}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))
-          ) : (
-            <div className="flex">
-              <p>teste</p>
-            </div>
-          )}
+                  <SidebarMenuButton
+                    asChild
+                    variant="default"
+                    className={`flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
+                  >
+                    <Link href={link.href}>
+                      <link.icon />
+                      {link.label}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))
+            : admLinks.map((link) => (
+                <SidebarMenuItem
+                  key={link.label}
+                  className="w-full flex items-center justify-center"
+                >
+                  <SidebarMenuButton
+                    asChild
+                    variant="default"
+                    className={`flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
+                  >
+                    <Link href={link.href}>
+                      <link.icon />
+                      {link.label}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <Button
           variant="ghost"
           onClick={() => signOut()}
-          className="flex justify-start"
+          className="flex justify-start mb-2"
         >
           <LogOutIcon />
           Fazer Logout
