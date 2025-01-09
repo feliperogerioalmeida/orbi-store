@@ -19,7 +19,6 @@ export const authOptions: AuthOptions = {
           throw new Error("Email e senha são obrigatórios.");
         }
 
-        // Verifica se o usuário existe no banco
         const user = await db.user.findUnique({
           where: { email: credentials.email },
         });
@@ -48,7 +47,7 @@ export const authOptions: AuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt", // Usando JWT
+    strategy: "jwt",
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
