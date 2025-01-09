@@ -29,7 +29,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import Link from "next/link";
 
 const AdmSidebar = () => {
@@ -44,27 +44,27 @@ const AdmSidebar = () => {
 
   const masterLinks = [
     {
-      href: "/dashboard",
+      href: "/master/dashboard",
       label: "Dashboard",
       icon: BarChart2,
     },
     {
-      href: "/users",
+      href: "/master/users",
       label: "Usuários",
       icon: Users,
     },
     {
-      href: "/activity-log",
+      href: "/master/activity-log",
       label: "Log de Atividades",
       icon: FileText,
     },
     {
-      href: "/upgrades",
+      href: "/master/relatorio-upgrades",
       label: "Relatórios de Upgrades",
       icon: CircleFadingArrowUp,
     },
     {
-      href: "/app-reviews",
+      href: "/master/app-reviews",
       label: "Avaliações do App",
       icon: Star,
     },
@@ -72,12 +72,12 @@ const AdmSidebar = () => {
 
   const admLinks = [
     {
-      href: "/dashboard",
+      href: "/adm/dashboard",
       label: "Dashboard",
       icon: BarChart2,
     },
     {
-      href: "/products",
+      href: "/adm/products",
       label: "Produtos",
       icon: PackageSearchIcon,
     },
@@ -117,14 +117,20 @@ const AdmSidebar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
                   <DropdownMenuItem
-                    onClick={() => setActiveWorkspace("MASTER")}
+                    onClick={() => {
+                      setActiveWorkspace("MASTER");
+                      redirect("/master/dashboard");
+                    }}
                     className="flex items-center justify-between"
                   >
                     <span>Master Workspace</span>
                     {activeWorkspace === "MASTER" ? <Check /> : ""}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => setActiveWorkspace("ADM")}
+                    onClick={() => {
+                      setActiveWorkspace("ADM");
+                      redirect("/adm/dashboard");
+                    }}
                     className="flex items-center justify-between"
                   >
                     <span>Orbi Workspace</span>
