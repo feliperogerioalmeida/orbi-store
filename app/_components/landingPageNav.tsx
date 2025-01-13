@@ -6,6 +6,7 @@ import {
   LogInIcon,
   LogOutIcon,
   MenuIcon,
+  Monitor,
   Smartphone,
 } from "lucide-react";
 import { Button } from "./ui/button";
@@ -78,7 +79,7 @@ const LandingPageNav = () => {
               </div>
             )}
             <div className="flex flex-col h-full justify-between">
-              <div className="mt-4 flex flex-col gap-2">
+              <div className="flex flex-col gap-2">
                 <SheetClose asChild>
                   <Link href="/#home">
                     <Button
@@ -161,14 +162,32 @@ const LandingPageNav = () => {
                 )}
 
                 {status == "authenticated" && (
-                  <Button
-                    onClick={handleLogOutClick}
-                    variant="ghost"
-                    className="w-full justify-start gap-2"
-                  >
-                    <LogOutIcon size={16} />
-                    Fazer Logout
-                  </Button>
+                  <div className="flex flex-col gap-1">
+                    {data.user.role === "ADMIN" ||
+                      (data.user.role === "MASTER" && (
+                        <Button
+                          asChild
+                          variant="ghost"
+                          className="w-full justify-start gap-2"
+                        >
+                          <Link
+                            href={`/${data.user.role.toLowerCase()}/dashboard`}
+                          >
+                            <Monitor size={16} />
+                            Painel Administrativo
+                          </Link>
+                        </Button>
+                      ))}
+
+                    <Button
+                      onClick={handleLogOutClick}
+                      variant="ghost"
+                      className="w-full justify-start gap-2"
+                    >
+                      <LogOutIcon size={16} />
+                      Fazer Logout
+                    </Button>
+                  </div>
                 )}
               </SheetFooter>
             </div>

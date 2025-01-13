@@ -8,7 +8,6 @@ import { signIn } from "next-auth/react";
 import { z } from "zod";
 import { useState } from "react";
 
-// Esquema de validação com Zod
 const loginSchema = z.object({
   email: z.string().email("Email inválido").nonempty("O email é obrigatório"),
   password: z
@@ -22,19 +21,16 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(null); // Reseta mensagens de erro
+    setErrorMessage(null);
 
     const formData = new FormData(e.currentTarget);
 
-    // Dados do formulário
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
-      // Valida os dados do formulário com Zod
       const validatedData = loginSchema.parse({ email, password });
 
-      // Faz a autenticação com o NextAuth
       const result = await signIn("credentials", {
         redirect: false,
         email: validatedData.email,
@@ -42,12 +38,11 @@ const LoginForm = () => {
       });
 
       if (result?.error) {
-        setErrorMessage("Credenciais inválidas."); // Define erro de autenticação
+        setErrorMessage("Credenciais inválidas.");
       } else {
-        window.location.href = "/dashboard"; // Redireciona ao dashboard
+        window.location.href = "/";
       }
     } catch (error) {
-      // Exibe os erros de validação
       if (error instanceof z.ZodError) {
         setErrorMessage(error.errors.map((err) => err.message).join("\n"));
       }
