@@ -8,7 +8,11 @@ export async function GET() {
     const iphones = await prisma.iPhone.findMany({
       include: {
         colors: true,
-        capacities: true,
+        capacities: {
+          include: {
+            conditions: true,
+          },
+        },
       },
     });
 

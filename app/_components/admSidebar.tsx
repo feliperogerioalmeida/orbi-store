@@ -9,6 +9,7 @@ import {
   Users,
   LogOutIcon,
   PackageSearchIcon,
+  DollarSign,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -57,6 +58,11 @@ const AdmSidebar = () => {
       href: "/master/activity-log",
       label: "Log de Atividades",
       icon: FileText,
+    },
+    {
+      href: "/master/precificacao",
+      label: "Precificação",
+      icon: DollarSign,
     },
     {
       href: "/master/relatorio-upgrades",

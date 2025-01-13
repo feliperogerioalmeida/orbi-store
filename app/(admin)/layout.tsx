@@ -7,6 +7,7 @@ import { authOptions } from "../_lib/auth";
 import { redirect } from "next/navigation";
 import AdmSidebar from "../_components/admSidebar";
 import { SidebarProvider, SidebarTrigger } from "../_components/ui/sidebar";
+import { Toaster } from "@/app/_components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -72,6 +73,7 @@ export default async function AdminLayout({
             <div className="flex h-screen w-full flex-col">
               <SidebarTrigger />
               <div className="flex-1 w-full">{children}</div>
+              <Toaster />
             </div>
           </SidebarProvider>
         </AuthProvider>
