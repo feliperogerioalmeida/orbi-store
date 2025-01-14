@@ -15,10 +15,12 @@ export async function PUT(
   }
 
   try {
+    // Obtendo o corpo da requisição
     const body = await request.json();
 
     const { costPrice, sellingPrice, maxUpgradePrice } = body;
 
+    // Validando os dados recebidos
     if (
       typeof costPrice !== "number" ||
       typeof sellingPrice !== "number" ||
@@ -30,6 +32,7 @@ export async function PUT(
       );
     }
 
+    // Atualizando a condição no banco de dados
     const updatedCondition = await db.condition.update({
       where: { id },
       data: {
@@ -39,9 +42,12 @@ export async function PUT(
       },
     });
 
+    // Retornando a resposta de sucesso
     return NextResponse.json(updatedCondition, { status: 200 });
   } catch (error) {
     console.error("Erro ao atualizar a condição:", error);
+
+    // Retornando a resposta de erro genérico
     return NextResponse.json(
       { error: "Erro ao atualizar a condição no banco de dados." },
       { status: 500 },
