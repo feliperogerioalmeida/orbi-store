@@ -135,13 +135,13 @@ const LandingPageNav = () => {
                 </SheetClose>
 
                 <SheetClose asChild>
-                  <Link href="/simulacao-upgrade">
+                  <Link href="/simulacao-credito">
                     <Button
                       variant="outline"
                       className="w-full justify-start gap-2"
                     >
                       <Calculator size={16} />
-                      Simulação de Upgrade
+                      Simulação de Crédito
                     </Button>
                   </Link>
                 </SheetClose>
