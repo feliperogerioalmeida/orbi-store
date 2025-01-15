@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Simulation {
+  id             String   @id @default(uuid())
+  userId         String? // Usuário logado, se disponível
+  user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model          String
+  color          String
+  capacity       String
+  batteryHealth  String
+  issues         String[]
+  estimatedValue Float
+  createdAt      DateTime @default(now())
+}
+
 model User {
   id            String          @id @default(uuid())
   email         String          @unique
@@ -21,6 +34,17 @@ model User {
   accounts      Account[]
   Authenticator Authenticator[]
   sessions      Session[]
+  simulations   Simulation[]
+  reviews       Review[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int      @default(0)
+  comment   String?
+  createdAt DateTime @default(now())
 }
 
 model Account {
@@ -74,12 +98,12 @@ model Authenticator {
 }
 
 model iPhone {
-  id         String      @id @default(cuid())
+  id         String     @id @default(cuid())
   model      String
   colors     Color[]
   capacities Capacity[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model Color {
@@ -91,10 +115,10 @@ model Color {
 }
 
 model Capacity {
-  id        String      @id @default(cuid())
-  size      String
-  iphoneId  String
-  iphone    iPhone      @relation(fields: [iphoneId], references: [id], onDelete: Cascade)
+  id         String      @id @default(cuid())
+  size       String
+  iphoneId   String
+  iphone     iPhone      @relation(fields: [iphoneId], references: [id], onDelete: Cascade)
   conditions Condition[]
 }
 
