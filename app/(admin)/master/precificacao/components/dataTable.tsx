@@ -37,6 +37,13 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/app/_components/ui/dropdown-menu";
 import { useToast } from "@/app/_hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/app/_components/ui/dialog";
+import Image from "next/image";
 
 interface ConditionProps {
   id: string;
@@ -52,9 +59,14 @@ interface CapacityProps {
   conditions: ConditionProps[];
 }
 
+interface colorsProps {
+  name: string;
+  imageUrl: string;
+}
 interface iPhoneProps {
   id: string;
   model: string;
+  colors: colorsProps[];
   capacities: CapacityProps[];
 }
 
@@ -76,6 +88,17 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
       ),
     ),
   );
+
+  const [selectediPhone, setSelectediPhone] = useState<iPhoneProps | null>(
+    null,
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleViewClick = (model: string) => {
+    const iphone = iphones.find((iphone) => iphone.model === model);
+    setSelectediPhone(iphone || null);
+    setIsDialogOpen(true);
+  };
 
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
   const [editedValues, setEditedValues] = useState<{
@@ -403,7 +426,11 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
             >
               <Edit className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleViewClick(row.original.model)}
+            >
               <Eye className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="sm">
@@ -508,6 +535,49 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="w-[80%] rounded-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg">
+              {selectediPhone?.model}
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectediPhone ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <p className="font-bold text-sm">Cores Disponíveis:</p>
+                <div className="flex flex-wrap w-[90%] gap-4">
+                  {selectediPhone.colors.map((color) => (
+                    <div key={color.name} className="flex items-center gap-1">
+                      <Image
+                        src={color.imageUrl}
+                        width={15}
+                        height={15}
+                        alt={selectediPhone.model}
+                      />
+                      <p className="text-xs">{color.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className="font-bold text-sm">Capacidades:</p>
+                <div className="flex flex-wrap w-[90%] gap-4">
+                  {selectediPhone.capacities.map((capacity) => (
+                    <p key={capacity.id} className="text-xs">
+                      {capacity.size}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p>iPhone não encontrado.</p>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
