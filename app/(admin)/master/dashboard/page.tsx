@@ -13,7 +13,7 @@ const DashboardPage = async () => {
   }
 
   if (session.user.role !== "MASTER") {
-    redirect(`/${session.user.role}/dashboard`);
+    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
   }
 
   const simulations = await db.simulation.findMany({
