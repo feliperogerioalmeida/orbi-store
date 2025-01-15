@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import AuthProvider from "../_providers/auth";
+import { Toaster } from "../_components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,6 +59,7 @@ export default function RootLayout({
         <div className="flex h-full flex-col">
           <AuthProvider>
             <div className="flex-1">{children}</div>
+            <Toaster />
           </AuthProvider>
         </div>
       </body>
