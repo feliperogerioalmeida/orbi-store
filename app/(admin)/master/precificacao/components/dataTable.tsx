@@ -461,12 +461,15 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
   });
 
   return (
-    <div>
-      <div className="rounded-md border">
-        <Table>
+    <div className="h-full">
+      <div className="rounded-md border border-gray-300 overflow-hidden">
+        <Table className="w-full border-collapse">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+                className="bg-gray-100 border-b border-gray-300"
+              >
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     className="text-left text-nowrap text-sm"
@@ -489,7 +492,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
-                      className="text-sm text-nowrap text-left"
+                      className="text-sm text-nowrap text-left p-2"
                       key={cell.id}
                     >
                       {flexRender(

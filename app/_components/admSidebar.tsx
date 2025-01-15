@@ -65,8 +65,8 @@ const AdmSidebar = () => {
       icon: DollarSign,
     },
     {
-      href: "/master/relatorio-upgrades",
-      label: "Relatórios de Upgrades",
+      href: "/master/relatorio-simulacoes",
+      label: "Relatórios de Simulações",
       icon: CircleFadingArrowUp,
     },
     {
