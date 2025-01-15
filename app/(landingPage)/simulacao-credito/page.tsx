@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
@@ -14,6 +14,10 @@ import {
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
 import ORBI_CONSTANTS from "@/app/constants/constants";
+import { signIn, useSession } from "next-auth/react";
+import { useToast } from "@/app/_hooks/use-toast";
+import { useSearchParams } from "next/navigation";
+import { ToastAction } from "@/app/_components/ui/toast";
 
 type Color = {
   name: string;
@@ -38,6 +42,8 @@ type iPhone = {
 };
 
 const CreditSimulator = () => {
+  const { data: session } = useSession();
+  const { toast } = useToast();
   const [iphones, setIphones] = useState<iPhone[]>([]);
   const [selectedModel, setSelectedModel] = useState<iPhone | null>(null);
   const [selectedColor, setSelectedColor] = useState<Color | null>(null);
@@ -47,6 +53,7 @@ const CreditSimulator = () => {
   const [batteryHealth, setBatteryHealth] = useState<string | null>(null);
   const [issues, setIssues] = useState<string[]>([]);
   const [estimatedValue, setEstimatedValue] = useState<number | null>(null);
+  const [simulationId, setSimulationId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchIphones = async () => {
@@ -64,8 +71,16 @@ const CreditSimulator = () => {
     );
   };
 
-  const calculateValue = () => {
-    if (!selectedCapacity || !batteryHealth) return;
+  const calculateValue = async () => {
+    if (!selectedCapacity || !batteryHealth) {
+      toast({
+        title: "Erro",
+        description:
+          "Selecione todos os campos obrigatórios antes de calcular.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const seminovoCondition = selectedCapacity.conditions.find(
       (condition) =>
@@ -74,16 +89,17 @@ const CreditSimulator = () => {
     );
 
     if (!seminovoCondition) {
-      console.error(
-        "Condição seminovo não encontrada para a capacidade selecionada!",
-      );
+      toast({
+        title: "Erro",
+        description:
+          "Condição seminovo não encontrada para a capacidade selecionada.",
+        variant: "destructive",
+      });
       setEstimatedValue(0);
       return;
     }
 
     let baseValue = seminovoCondition.maxUpgradePrice;
-
-    console.log("Valor base da condição seminovo:", baseValue);
 
     if (batteryHealth === "<80%") baseValue -= 500;
     if (batteryHealth === "80%-85%") baseValue -= 300;
@@ -95,8 +111,143 @@ const CreditSimulator = () => {
     if (issues.includes("Flash Não Funciona")) baseValue -= 300;
     if (issues.includes("Bateria Trocada")) baseValue -= 200;
 
-    setEstimatedValue(baseValue > 0 ? baseValue : 0);
+    const calculatedValue = baseValue > 0 ? baseValue : 0;
+    setEstimatedValue(calculatedValue);
+
+    await saveSimulation(calculatedValue);
   };
+
+  const searchParams = useSearchParams();
+  const urlSimulationId = searchParams.get("simulationId");
+
+  const saveSimulation = async (calculatedValue: number) => {
+    if (
+      !selectedModel ||
+      !selectedColor ||
+      !selectedCapacity ||
+      !batteryHealth
+    ) {
+      toast({
+        title: "Erro ao salvar simulação",
+        description: "Todos os campos obrigatórios devem ser preenchidos.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const payload = {
+      userId: session?.user?.id || null,
+      model: selectedModel?.model,
+      color: selectedColor?.name,
+      capacity: selectedCapacity?.size,
+      batteryHealth,
+      issues: issues.length > 0 ? issues : [],
+      estimatedValue: calculatedValue,
+    };
+
+    try {
+      const response = await fetch("/api/simulations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Erro recebido da API:", errorData);
+        throw new Error(errorData.error || "Erro ao salvar simulação.");
+      }
+
+      const data = await response.json();
+
+      // Defina o simulationId após salvar a simulação
+      setSimulationId(data.id);
+
+      // Exiba apenas um toast dependendo da sessão
+      if (!session) {
+        toast({
+          title: "Simulação salva como visitante!",
+          description: "Faça login para vincular esta simulação à sua conta.",
+          action: (
+            <ToastAction altText="Fazer Login">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  signIn(undefined, {
+                    callbackUrl: `/simulacao-credito?simulationId=${data.id}`,
+                  });
+                }}
+              >
+                Fazer Login
+              </Button>
+            </ToastAction>
+          ),
+        });
+      } else {
+        toast({
+          title: "Sucesso!",
+          description: "Sua simulação foi salva com sucesso.",
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao salvar simulação:", error);
+      toast({
+        title: "Erro ao salvar simulação",
+        description: "Ocorreu um erro ao salvar a simulação. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const linkSimulation = useCallback(async () => {
+    if (!simulationId || !session?.user?.id) return;
+
+    try {
+      const response = await fetch(`/api/simulations/${simulationId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session.user.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao vincular simulação.");
+      }
+
+      // Apenas um toast ao vincular a simulação
+      toast({
+        title: "Simulação vinculada com sucesso!",
+        description: "Sua simulação agora está associada à sua conta.",
+      });
+
+      // Remove o simulationId da URL após o link
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("simulationId");
+      window.history.replaceState(null, "", "?" + params.toString());
+    } catch (error) {
+      console.error("Erro ao vincular simulação:", error);
+      toast({
+        title: "Erro ao vincular simulação",
+        description: "Não foi possível vincular a simulação. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  }, [simulationId, session?.user?.id, searchParams, toast]);
+
+  useEffect(() => {
+    if (
+      session?.user?.id &&
+      urlSimulationId &&
+      urlSimulationId !== simulationId
+    ) {
+      setSimulationId(urlSimulationId);
+    }
+  }, [session?.user?.id, urlSimulationId, simulationId]);
+
+  useEffect(() => {
+    if (session?.user?.id && simulationId) {
+      linkSimulation();
+    }
+  }, [session?.user?.id, simulationId, linkSimulation]);
 
   const resetSimulation = () => {
     setSelectedModel(null);
