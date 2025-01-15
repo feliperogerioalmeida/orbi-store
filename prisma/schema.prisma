@@ -9,13 +9,13 @@ datasource db {
 
 model Simulation {
   id             String   @id @default(uuid())
-  userId         String? // Usuário logado, se disponível
+  userId         String? 
   user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   model          String
   color          String
   capacity       String
   batteryHealth  String
-  issues         String[]
+  issues         String
   estimatedValue Float
   createdAt      DateTime @default(now())
 }

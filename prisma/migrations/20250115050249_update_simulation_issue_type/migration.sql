@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Simulation" ALTER COLUMN "issues" SET NOT NULL,
+ALTER COLUMN "issues" SET DATA TYPE TEXT;
