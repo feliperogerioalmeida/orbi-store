@@ -64,10 +64,11 @@ export default function RootLayout({
             <div className="fixed z-10 w-full">
               <LandingPageNav />
             </div>
-
-            <div className="flex-1">{children}</div>
-            <Toaster />
-            <Footer />
+            <div className="flex min-h-screen w-full flex-col">
+              <div className="flex-1 w-full ">{children}</div>
+              <Toaster />
+              <Footer />
+            </div>
           </AuthProvider>
         </div>
       </body>
