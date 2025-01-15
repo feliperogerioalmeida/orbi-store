@@ -488,7 +488,7 @@ async function main() {
                   maxUpgradePrice: 0,
                 },
                 {
-                  conditionType: "Semi-novo",
+                  conditionType: "Seminovo",
                   costPrice: 0,
                   sellingPrice: 0,
                   maxUpgradePrice: 0,

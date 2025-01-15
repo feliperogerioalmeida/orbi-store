@@ -70,34 +70,32 @@ const CreditSimulator = () => {
     const seminovoCondition = selectedCapacity.conditions.find(
       (condition) =>
         condition.conditionType.trim().toLowerCase() ===
-        "semi-novo".toLowerCase(),
+        "seminovo".toLowerCase(),
     );
 
     if (!seminovoCondition) {
       console.error(
         "Condição seminovo não encontrada para a capacidade selecionada!",
       );
-      setEstimatedValue(0); // Define o valor estimado como 0 para evitar erros
+      setEstimatedValue(0);
       return;
     }
 
-    let baseValue = seminovoCondition.maxUpgradePrice; // Valor inicial para seminovo
+    let baseValue = seminovoCondition.maxUpgradePrice;
 
     console.log("Valor base da condição seminovo:", baseValue);
 
-    // Penalizações baseadas na saúde da bateria
     if (batteryHealth === "<80%") baseValue -= 500;
     if (batteryHealth === "80%-85%") baseValue -= 300;
     if (batteryHealth === ">85%") baseValue -= 200;
 
-    // Penalizações baseadas nos problemas informados
     if (issues.includes("Tela Trocada")) baseValue -= 300;
     if (issues.includes("Face ID Defeituoso")) baseValue -= 800;
     if (issues.includes("Vidro Traseiro Quebrado")) baseValue -= 400;
     if (issues.includes("Flash Não Funciona")) baseValue -= 300;
     if (issues.includes("Bateria Trocada")) baseValue -= 200;
 
-    setEstimatedValue(baseValue > 0 ? baseValue : 0); // Garantir que o valor final não seja negativo
+    setEstimatedValue(baseValue > 0 ? baseValue : 0);
   };
 
   const resetSimulation = () => {
@@ -128,7 +126,6 @@ Valor Estimado: R$ ${estimatedValue}`;
     <div className="pt-[120px] text-white px-4 h-full w-full min-h-screen flex flex-col gap-8 bg-custom-bg-2">
       <h1 className="text-3xl font-bold text-center">Simulação de Crédito</h1>
 
-      {/* Imagem Principal */}
       {selectedModel && selectedColor && (
         <div className="flex justify-center">
           <Image
@@ -141,10 +138,8 @@ Valor Estimado: R$ ${estimatedValue}`;
         </div>
       )}
 
-      {/* Simulação de Escolha */}
       {estimatedValue === null ? (
         <>
-          {/* Seleção do Modelo */}
           <div>
             <h2 className="text-lg font-bold mb-2">1. Escolha o Modelo</h2>
             <Select
@@ -168,7 +163,6 @@ Valor Estimado: R$ ${estimatedValue}`;
             </Select>
           </div>
 
-          {/* Seleção da Cor */}
           {selectedModel && (
             <div>
               <h2 className="text-lg font-bold mb-2">2. Escolha a Cor</h2>
@@ -189,7 +183,6 @@ Valor Estimado: R$ ${estimatedValue}`;
             </div>
           )}
 
-          {/* Seleção da Capacidade */}
           {selectedColor && (
             <div>
               <h2 className="text-lg font-bold mb-2">
@@ -214,7 +207,6 @@ Valor Estimado: R$ ${estimatedValue}`;
             </div>
           )}
 
-          {/* Checklist de Problemas */}
           {selectedCapacity && (
             <div>
               <h2 className="text-lg font-bold mb-2">
@@ -240,7 +232,6 @@ Valor Estimado: R$ ${estimatedValue}`;
             </div>
           )}
 
-          {/* Saúde da Bateria */}
           {selectedCapacity && (
             <div>
               <h2 className="text-lg font-bold mb-2">5. Saúde da Bateria</h2>
@@ -264,7 +255,6 @@ Valor Estimado: R$ ${estimatedValue}`;
             </div>
           )}
 
-          {/* Botão de Calcular */}
           {batteryHealth && (
             <Button size="lg" variant="secondary" onClick={calculateValue}>
               Calcular Valor
@@ -272,7 +262,6 @@ Valor Estimado: R$ ${estimatedValue}`;
           )}
         </>
       ) : (
-        // Resumo da Simulação
         <div className="text-center">
           <h2 className="text-xl font-bold">Resumo da Simulação</h2>
           <p>Modelo: {selectedModel?.model}</p>
@@ -292,7 +281,6 @@ Valor Estimado: R$ ${estimatedValue}`;
         </div>
       )}
 
-      {/* Link para Voltar */}
       <Button asChild className="text-blue-500" variant="link">
         <Link href="/" passHref>
           Voltar para o Início
