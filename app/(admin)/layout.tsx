@@ -6,7 +6,11 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../_lib/auth";
 import { redirect } from "next/navigation";
 import AdmSidebar from "../_components/admSidebar";
-import { SidebarProvider, SidebarTrigger } from "../_components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "../_components/ui/sidebar";
 import { Toaster } from "@/app/_components/ui/toaster";
 
 const geistSans = Geist({
@@ -68,13 +72,17 @@ export default async function AdminLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <SidebarProvider>
+          <SidebarProvider defaultOpen={false}>
             <AdmSidebar />
-            <div className="flex h-screen w-full flex-col">
-              <SidebarTrigger />
-              <div className="flex-1 w-full">{children}</div>
-              <Toaster />
-            </div>
+            <SidebarInset>
+              <div className="flex h-screen w-full flex-col">
+                <div className="p-2">
+                  <SidebarTrigger className="mt-1" />
+                </div>
+                <div className="flex-1 w-full">{children}</div>
+                <Toaster />
+              </div>
+            </SidebarInset>
           </SidebarProvider>
         </AuthProvider>
       </body>

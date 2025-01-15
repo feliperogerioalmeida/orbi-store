@@ -90,7 +90,7 @@ const AdmSidebar = () => {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader>
         {userRole === "MASTER" ? (
           <SidebarMenu className="flex flex-col items-center">

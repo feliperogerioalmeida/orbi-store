@@ -14,9 +14,19 @@ const DashboardPage = async () => {
   }
 
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center gap-4">
-      <h1>Bem-vindo ao MASTER Dashboard</h1>
-      <p>Olá, {session.user.email}!</p>
+    <div className="grid grid-cols-2 w-full items-center justify-center gap-4 p-2">
+      <div className="flex flex-col bg-accent w-full p-2 rounded-md gap-1 h-min-[80px] h-[80px] justify-between">
+        <p className="text-xs ">Usuários</p>
+        <p className="text-2xl font-bold">2</p>
+      </div>
+      <div className="flex flex-col bg-accent w-full p-2 rounded-md gap-1 h-min-[80px] h-[80px] justify-between">
+        <p className="text-xs ">Simulações</p>
+        <p className="text-2xl font-bold">2</p>
+      </div>
+      <div className="flex flex-col bg-accent w-full p-2 rounded-md gap-1 h-min-[80px] h-[80px] justify-between">
+        <p className="text-xs ">Avaliação Média</p>
+        <p className="text-2xl font-bold">2</p>
+      </div>
     </div>
   );
 };
