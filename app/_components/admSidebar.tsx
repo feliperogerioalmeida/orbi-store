@@ -91,33 +91,35 @@ const AdmSidebar = () => {
 
   return (
     <Sidebar variant="inset" collapsible="icon">
-      <SidebarHeader>
+      <SidebarHeader className="w-full">
         {userRole === "MASTER" ? (
-          <SidebarMenu className="flex flex-col items-center">
-            <SidebarMenuItem className="pt-6 w-[90%] ">
+          <SidebarMenu className="flex flex-col w-full items-center">
+            <SidebarMenuItem className="pt-6 w-[95%]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
                     variant="outline"
-                    className="flex justify-between items-center h-12"
+                    className="flex items-center justify-start h-12 pl-1"
                   >
-                    <div className="flex gap-3 items-center">
+                    <div className="flex aspect-square h-full w-auto">
                       <Image
                         src="/icon-192x192.png"
                         alt="Orbi Store"
                         width={40}
                         height={40}
-                        className="rounded-full"
+                        className=" rounded-full h-full w-full"
                       />
-                      <div className="flex flex-col">
-                        <h2 className="text-sm font-bold">Orbi Store</h2>
-                        <p className="text-xs text-gray-400 font-semibold">
-                          {activeWorkspace === "MASTER"
-                            ? "Master Dashboard"
-                            : "Orbi Dashboard"}
-                        </p>
-                      </div>
                     </div>
+
+                    <div className="flex flex-col">
+                      <h2 className="text-sm font-bold">Orbi Store</h2>
+                      <p className="text-xs text-gray-400 font-semibold">
+                        {activeWorkspace === "MASTER"
+                          ? "Master Dashboard"
+                          : "Orbi Dashboard"}
+                      </p>
+                    </div>
+
                     <ChevronsUpDown className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
@@ -156,7 +158,7 @@ const AdmSidebar = () => {
             ? masterLinks.map((link) => (
                 <SidebarMenuItem
                   key={link.label}
-                  className="w-full flex items-center justify-center"
+                  className="w-full flex items-center justify-center "
                 >
                   <SidebarMenuButton
                     asChild
@@ -190,14 +192,20 @@ const AdmSidebar = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <Button
-          variant="ghost"
-          onClick={() => signOut()}
-          className="flex justify-start mb-2"
-        >
-          <LogOutIcon />
-          Fazer Logout
-        </Button>
+        <SidebarMenu className="flex flex-col items-center justify-center w-full">
+          <SidebarMenuItem className="w-full flex items-center justify-center">
+            <SidebarMenuButton asChild className="w-[90%]">
+              <Button
+                variant="ghost"
+                onClick={() => signOut()}
+                className="flex justify-start mb-2"
+              >
+                <LogOutIcon />
+                Fazer Logout
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
