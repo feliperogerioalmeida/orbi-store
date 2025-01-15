@@ -248,12 +248,12 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
       header: ({ column }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-between">
+            <Button variant="ghost" className="w-full justify-start p-0">
               Modelo
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className=" ml-4">
             <DropdownMenuItem
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
@@ -268,10 +268,10 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
               (value) => (
                 <DropdownMenuCheckboxItem
                   key={value}
-                  checked={filters.model?.has(value) || false}
                   onCheckedChange={() => handleFilterChange("model", value)}
+                  className="justify-start w-full pl-2"
                 >
-                  {value}
+                  {value} {filters.model?.has(value) ? "✔" : ""}
                 </DropdownMenuCheckboxItem>
               ),
             )}
@@ -284,7 +284,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
       header: ({ column }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-between">
+            <Button variant="ghost" className="w-full justify-start p-0">
               Capacidade
               <ChevronDown className="h-4 w-4" />
             </Button>
@@ -304,10 +304,10 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
               (value) => (
                 <DropdownMenuCheckboxItem
                   key={value}
-                  checked={filters.capacity?.has(value) || false}
                   onCheckedChange={() => handleFilterChange("capacity", value)}
+                  className="justify-start w-full pl-2"
                 >
-                  {value}
+                  {value} {filters.capacity?.has(value) ? "✔" : ""}
                 </DropdownMenuCheckboxItem>
               ),
             )}
@@ -320,7 +320,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
       header: ({ column }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-between">
+            <Button variant="ghost" className="w-full justify-start p-0">
               Condição
               <ChevronDown className="h-4 w-4" />
             </Button>
@@ -340,12 +340,12 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
               (value) => (
                 <DropdownMenuCheckboxItem
                   key={value}
-                  checked={filters.conditionType?.has(value) || false}
                   onCheckedChange={() =>
                     handleFilterChange("conditionType", value)
                   }
+                  className="justify-start w-full pl-2"
                 >
-                  {value}
+                  {value} {filters.conditionType?.has(value) ? "✔" : ""}
                 </DropdownMenuCheckboxItem>
               ),
             )}
@@ -389,7 +389,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
     },
     {
       accessorKey: "maxUpgradePrice",
-      header: "Preço Máximo de Upgrade",
+      header: "Preço de Repasse",
       cell: ({ row }) =>
         editingRowId === row.original.id ? (
           <input
@@ -463,7 +463,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
   return (
     <div className="h-full">
       <div className="rounded-md border border-gray-300 overflow-hidden">
-        <Table className="w-full border-collapse">
+        <Table className="w-full border-collapse ">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
@@ -472,7 +472,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
               >
                 {headerGroup.headers.map((header) => (
                   <TableHead
-                    className="text-left text-nowrap text-sm"
+                    className={`${header.id === "actions" ? "text-center" : "text-left"} text-nowrap text-sm`}
                     key={header.id}
                   >
                     {header.isPlaceholder
