@@ -2,8 +2,20 @@ import { SidebarTrigger } from "@/app/_components/ui/sidebar";
 import DataTable from "./components/dataTable";
 import { db } from "@/app/_lib/prisma";
 import { Separator } from "@/app/_components/ui/separator";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/_lib/auth";
+import { redirect } from "next/navigation";
 
 const PricingPage = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user) {
+    redirect("/login");
+  }
+
+  if (session.user.role !== "MASTER") {
+    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
+  }
   const fetchIphones = async () => {
     const iphones = await db.iPhone.findMany({
       include: {
