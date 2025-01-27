@@ -15,7 +15,7 @@ const HomeSection = () => {
           alt="homePerson"
           width={700}
           height={800}
-          className="absolute -left-32 bottom-0 "
+          className="absolute -left-32 bottom-0 lg:w-[50%] lg:left-0"
         />
       </div>
       <div className="flex flex-col justify-center items-center h-[50%] z-10">
