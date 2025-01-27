@@ -34,8 +34,8 @@ const LandingPageNav = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-center bg-black/50 backdrop-blur-md py-2">
-      <div className="absolute top-4 left-4 lg:left-5 lg:top-5 md:left-5 md:top-5">
+    <div className="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-center bg-black/50 backdrop-blur-md py-2 ">
+      <div className="absolute top-[25%] left-[1rem] lg:left-[1.25rem] md:left-[1.25rem]">
         <Sheet>
           <SheetTrigger asChild>
             <Button size={"icon"} variant="secondary">
