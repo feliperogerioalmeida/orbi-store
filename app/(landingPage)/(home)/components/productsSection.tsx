@@ -48,7 +48,7 @@ const ProductsSection = () => {
         ))}
       </div>
 
-      <div className=" justify-self-end relative bottom-0 mt-1 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+      <div className=" justify-self-end relative bottom-0 mt-auto w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };

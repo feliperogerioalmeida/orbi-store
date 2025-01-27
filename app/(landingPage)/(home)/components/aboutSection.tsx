@@ -1,6 +1,7 @@
 import AboutSectionCard from "./aboutSectionCard";
 import Image from "next/image";
 import ORBI_CONSTANTS from "@/app/constants/constants";
+import SectionTitle from "@/app/_components/sectionTitle";
 
 const AboutSection = () => {
   const aboutSectionInfo = [
@@ -45,38 +46,35 @@ const AboutSection = () => {
   return (
     <div
       id="about"
-      className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-6"
+      className="flex flex-col flex-grow items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-6 lg:gap-10"
     >
-      <div className=" pt-[120px] flex">
-        <h2 className=" text-white text-4xl text-center px-4">
-          Sobre a Orbi Store
-        </h2>
+      <SectionTitle title="Por que escolher a Orbi Store?" />
+      <div className="flex flex-col  items-center h-auto w-full gap-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:px-4 lg:mt-32">
+        {aboutSectionInfo.map((about) => (
+          <AboutSectionCard key={about.title} {...about} />
+        ))}
       </div>
 
-      {aboutSectionInfo.map((about) => (
-        <AboutSectionCard key={about.title} {...about} />
-      ))}
-
-      <div className="flex flex-col pt-3 w-full px-4 gap-6 text-center">
+      <div className="flex flex-col pt-3 w-full px-4 gap-6 text-center md:grid md:grid-cols-3 lg:mt-32">
         {aboutSectionInfo2.map((about) => (
           <div
             key={about.title}
-            className="flex flex-col justify-center items-center gap-4"
+            className="flex flex-col justify-center items-center gap-4 "
           >
             <Image
               src={about.image}
               width={100}
               height={100}
               alt={about.title}
-              className="object-contain w-auto h-auto"
+              className="object-contain w-auto h-auto aspect-square lg:w-24 lg:h-24"
             />
-            <p className="text-white font-regular text-xs">
+            <p className="text-white font-regular text-sm">
               {about.description}
             </p>
           </div>
         ))}
       </div>
-      <div className="w-full mt-1 h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+      <div className="w-full mt-auto h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };
