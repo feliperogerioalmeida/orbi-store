@@ -143,8 +143,8 @@ const LandingPageNav = () => {
                 </SheetClose>
               </div>
 
-              <SheetFooter className="flex flex-col w-full sm:justify-start">
-                <div className="flex flex-col h-full justify-between">
+              <SheetFooter className="flex flex-col w-full sm:justify-start ">
+                <div className="flex flex-col h-full justify-between w-full">
                   <div className="flex flex-col gap-2">
                     {status == "unauthenticated" && (
                       <SheetClose asChild>
