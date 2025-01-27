@@ -1,3 +1,4 @@
+import SectionTitle from "@/app/_components/sectionTitle";
 import ProductSectionCard from "./productSectionCard";
 
 const ProductsSection = () => {
@@ -37,21 +38,17 @@ const ProductsSection = () => {
   return (
     <div
       id="products"
-      className="flex flex-col items-center h-full min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat"
+      className="flex flex-col h-full items-center justify-evenly min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat"
     >
-      <div className="flex pt-[120px]">
-        <h2 className=" text-white text-4xl text-center px-4">
-          Conheça nossos produtos
-        </h2>
-      </div>
+      <SectionTitle title="Nossos Produtos" />
 
-      <div className="flex flex-col h-full min-h-screen justify-start items-center w-full gap-8 pt-10 ">
+      <div className="flex flex-col h-full justify-start items-center w-full gap-6 pt-10 md:grid-cols-2 md:grid md:gap-1 md:p-0 lg:grid-cols-3 lg:grid lg:gap-6 lg:p-1 lg:h-auto">
         {productsInfo.map((product) => (
           <ProductSectionCard key={product.title} {...product} />
         ))}
       </div>
 
-      <div className=" mt-1 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+      <div className=" justify-self-end relative bottom-0 mt-1 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };
