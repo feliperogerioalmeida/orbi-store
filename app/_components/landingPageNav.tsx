@@ -35,7 +35,7 @@ const LandingPageNav = () => {
 
   return (
     <div className="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-center bg-black/50 backdrop-blur-md py-2">
-      <div className="absolute top-4 left-4">
+      <div className="absolute top-4 left-4 lg:left-5 lg:top-5 md:left-5 md:top-5">
         <Sheet>
           <SheetTrigger asChild>
             <Button size={"icon"} variant="secondary">
@@ -143,54 +143,59 @@ const LandingPageNav = () => {
                 </SheetClose>
               </div>
 
-              <SheetFooter className="justify-self-end">
-                {status == "unauthenticated" && (
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-2"
-                    asChild
-                  >
-                    <Link href="/login">
-                      <LogInIcon size={16} />
-                      Fazer Login
-                    </Link>
-                  </Button>
-                )}
+              <SheetFooter className="flex flex-col w-full sm:justify-start">
+                <div className="flex flex-col h-full justify-between">
+                  <div className="flex flex-col gap-2">
+                    {status == "unauthenticated" && (
+                      <SheetClose asChild>
+                        <Link href="/login">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start gap-2"
+                          >
+                            <LogInIcon size={16} />
+                            Fazer Login
+                          </Button>
+                        </Link>
+                      </SheetClose>
+                    )}
 
-                {status == "authenticated" && (
-                  <div className="flex flex-col gap-1">
-                    {data.user.role === "ADMIN" ||
-                      (data.user.role === "MASTER" && (
+                    {status == "authenticated" && (
+                      <div className="flex flex-col gap-1">
+                        {data.user.role === "ADMIN" ||
+                          (data.user.role === "MASTER" && (
+                            <Button
+                              asChild
+                              variant="ghost"
+                              className="w-full justify-start gap-2"
+                            >
+                              <Link
+                                href={`/${data.user.role.toLowerCase()}/dashboard`}
+                              >
+                                <Monitor size={16} />
+                                Painel Administrativo
+                              </Link>
+                            </Button>
+                          ))}
+
                         <Button
-                          asChild
+                          onClick={handleLogOutClick}
                           variant="ghost"
                           className="w-full justify-start gap-2"
                         >
-                          <Link
-                            href={`/${data.user.role.toLowerCase()}/dashboard`}
-                          >
-                            <Monitor size={16} />
-                            Painel Administrativo
-                          </Link>
+                          <LogOutIcon size={16} />
+                          Fazer Logout
                         </Button>
-                      ))}
-
-                    <Button
-                      onClick={handleLogOutClick}
-                      variant="ghost"
-                      className="w-full justify-start gap-2"
-                    >
-                      <LogOutIcon size={16} />
-                      Fazer Logout
-                    </Button>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </SheetFooter>
             </div>
           </SheetContent>
         </Sheet>
       </div>
-      <Logo className="w-[30%]" />
+      <Logo className="w-[30%] lg:w-[10%] md:w-[20%]" />
     </div>
   );
 };
