@@ -46,7 +46,7 @@ const AboutSection = () => {
   return (
     <div
       id="about"
-      className="flex flex-col flex-grow items-center h-full min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-6 lg:gap-10"
+      className="flex flex-col flex-grow items-center h-full sm:min-h-screen w-full bg-custom-bg-3 bg-cover bg-center bg-no-repeat gap-6 lg:gap-10"
     >
       <SectionTitle title="Por que escolher a Orbi Store?" />
       <div className="flex flex-col  items-center h-auto w-full gap-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:px-4 lg:mt-32">

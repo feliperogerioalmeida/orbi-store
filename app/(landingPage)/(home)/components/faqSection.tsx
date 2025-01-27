@@ -1,3 +1,4 @@
+import SectionTitle from "@/app/_components/sectionTitle";
 import {
   Accordion,
   AccordionContent,
@@ -121,30 +122,33 @@ const FAQ = () => {
   return (
     <div
       id="faq"
-      className="flex flex-col items-center min-h-screen h-full w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat gap-4 "
+      className="flex flex-col items-center sm:min-h-screen h-full w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat gap-4 "
     >
-      <div className=" pt-[120px] flex flex-col w-[90%] gap-2">
-        <h2 className=" text-white text-4xl text-center px-4">FAQ</h2>
-        <p className="text-xs text-white text-center">
-          Frequented Asked Questions
-        </p>
+      <SectionTitle title="Perguntas Frequentes" />
+
+      <div className="flex flex-col w-[90%] max-w-screen-lg h-full gap-2 md:w-[80%] lg:w-[70%]">
         <Accordion
           type="single"
           collapsible
-          className="w-full text-white py-2 gap-4 flex flex-col h-auto"
+          className="w-full text-white py-2 gap-4 flex flex-col"
         >
           {faq.map((faqItem) => (
             <AccordionItem key={faqItem.index} value={faqItem.index}>
               <AccordionTrigger>
-                <h3 className="font-extrabold text-sm">{faqItem.question}</h3>
+                <h3 className="font-extrabold text-sm md:text-lg lg:text-lg">
+                  {faqItem.question}
+                </h3>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="text-xs">{faqItem.answer}</p>
+                <p className="text-xs md:text-sm lg:text-sm">
+                  {faqItem.answer}
+                </p>
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
       </div>
+      <div className="w-full mt-auto h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };

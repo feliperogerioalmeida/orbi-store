@@ -64,8 +64,8 @@ export default function RootLayout({
             <div className="fixed z-30 w-full">
               <LandingPageNav />
             </div>
-            <div className="flex min-h-screen w-full flex-col">
-              <div className="flex-1 w-full ">{children}</div>
+            <div className="flex min-h-screen h-auto w-full flex-col">
+              <div className="flex-1 w-full mt-auto ">{children}</div>
               <Toaster />
               <Footer />
             </div>
