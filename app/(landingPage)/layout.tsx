@@ -61,7 +61,7 @@ export default function RootLayout({
       >
         <div className="flex h-full flex-col">
           <AuthProvider>
-            <div className="fixed z-10 w-full">
+            <div className="fixed z-30 w-full">
               <LandingPageNav />
             </div>
             <div className="flex min-h-screen w-full flex-col">
