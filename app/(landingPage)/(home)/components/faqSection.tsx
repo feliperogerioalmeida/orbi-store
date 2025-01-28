@@ -122,15 +122,15 @@ const FAQ = () => {
   return (
     <div
       id="faq"
-      className="flex flex-col items-center sm:min-h-screen h-full w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat gap-4 "
+      className="flex flex-col flex-gorw items-center h-full w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat"
     >
       <SectionTitle title="Perguntas Frequentes" />
 
-      <div className="flex flex-col w-[90%] max-w-screen-lg h-full gap-2 md:w-[80%] lg:w-[70%]">
+      <div className="flex flex-col w-[90%] max-w-screen-lg h-auto gap-4 md:w-[80%] lg:w-[70%]">
         <Accordion
           type="single"
           collapsible
-          className="w-full text-white py-2 gap-4 flex flex-col"
+          className="w-full text-white py-2 flex flex-col gap-4"
         >
           {faq.map((faqItem) => (
             <AccordionItem key={faqItem.index} value={faqItem.index}>
@@ -148,6 +148,7 @@ const FAQ = () => {
           ))}
         </Accordion>
       </div>
+
       <div className="w-full mt-auto h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
