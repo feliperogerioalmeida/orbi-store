@@ -189,7 +189,6 @@ const CreditSimulator = () => {
           ),
         });
       } else {
-        // Defina a flag como true para evitar o link desnecessário
         setIsDirectSave(true);
         toast({
           title: "Sucesso!",
@@ -225,7 +224,6 @@ const CreditSimulator = () => {
         description: "Sua simulação agora está associada à sua conta.",
       });
 
-      // Remove o simulationId da URL após vincular
       const params = new URLSearchParams(window.location.search);
       params.delete("simulationId");
       window.history.replaceState(null, "", "?" + params.toString());
@@ -263,25 +261,29 @@ Saúde da Bateria: ${batteryHealth}\n
 Problemas: ${issues.join(", ")}\n
 Valor Estimado: R$ ${estimatedValue}`;
 
-    const whatsappUrl = `https://wa.me/${ORBI_CONSTANTS.CONTACT.WHATSAPP}?text=${encodeURIComponent(
+    const whatsappUrl = `${ORBI_CONSTANTS.LINKS.WHATSAPP_URL}?text=${encodeURIComponent(
       message,
     )}`;
     window.open(whatsappUrl, "_blank");
   };
 
   return (
-    <div className="pt-[120px] text-white px-4 h-full w-full min-h-screen flex flex-col gap-8 bg-custom-bg-2">
+    <div className="pt-[120px] text-white px-4 h-full w-full min-h-screen flex flex-col gap-8 bg-custom-bg-2 bg-fill bg-center bg-no-repeat bg-cover">
       <h1 className="text-3xl font-bold text-center">Simulação de Crédito</h1>
 
-      {selectedModel && selectedColor && (
+      {selectedModel && selectedColor ? (
         <div className="flex justify-center">
           <Image
             src={selectedColor.imageUrl}
             alt={`${selectedModel.model} - ${selectedColor.name}`}
             width={150}
             height={150}
-            className="object-cover rounded-lg"
+            className="object-cover rounded-lg lg:h-[300px] lg:w-[250px] lg:object-fill "
           />
+        </div>
+      ) : (
+        <div className="flex justify-center">
+          <div className="w-[150px] h-[px205] lg:h-[300px] "></div>
         </div>
       )}
 
