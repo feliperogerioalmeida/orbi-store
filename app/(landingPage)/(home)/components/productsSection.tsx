@@ -38,17 +38,17 @@ const ProductsSection = () => {
   return (
     <div
       id="products"
-      className="flex flex-col h-full items-center justify-evenly min-h-screen w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat"
+      className="flex flex-col flex-grow h-full items-center justify-evenly w-full bg-custom-bg-2 bg-cover bg-center bg-no-repeat"
     >
       <SectionTitle title="Nossos Produtos" />
 
-      <div className="flex flex-col h-full justify-start items-center w-full gap-6 pt-10 md:grid-cols-2 md:grid md:gap-1 md:p-0 lg:grid-cols-3 lg:grid lg:gap-6 lg:p-1 lg:h-auto">
+      <div className="flex flex-col h-full justify-start items-center w-full gap-6 pt-10 md:grid-cols-2 md:grid md:gap-1 md:p-0 lg:grid-cols-3 lg:grid lg:gap-8 lg:p-1 lg:h-auto lg:mt-[120px]">
         {productsInfo.map((product) => (
           <ProductSectionCard key={product.title} {...product} />
         ))}
       </div>
 
-      <div className=" justify-self-end relative bottom-0 mt-auto w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+      <div className="w-full lg:mt-32 mt-2 h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
     </div>
   );
 };
