@@ -418,7 +418,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
             </Button>
           </div>
         ) : (
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-center">
             <Button
               variant="ghost"
               size="sm"
