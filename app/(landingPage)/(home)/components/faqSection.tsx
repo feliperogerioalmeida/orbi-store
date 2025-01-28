@@ -5,21 +5,41 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/app/_components/ui/accordion";
+import { Button } from "@/app/_components/ui/button";
 import ORBI_CONSTANTS from "@/app/constants/constants";
+import Link from "next/link";
 
 const FAQ = () => {
   const faq = [
     {
       index: "1",
       question: "A Orbi aceita meu celular como parte do pagamento?",
-      answer:
-        "Sim! Aceitamos seu celular como parte do pagamento. Clique [aqui](#) para fazer uma simulação do valor de crédito que podemos oferecer.",
+      answer: (
+        <div>
+          Sim! Aceitamos seu celular como parte do pagamento.{" "}
+          <Link href="/simulacao-credito">
+            <Button variant="link" className="p-0">
+              Clique Aqui
+            </Button>
+          </Link>{" "}
+          para fazer uma simulação do valor de crédito que podemos oferecer.
+        </div>
+      ),
     },
     {
       index: "2",
       question: "A Orbi compra aparelhos usados diretamente das pessoas?",
-      answer:
-        "Sim, também compramos aparelhos usados. Para vender seu dispositivo, clique [aqui](#) e faça uma simulação do valor.",
+      answer: (
+        <div>
+          Sim, também compramos aparelhos usados. Para vender seu dispositivo,{" "}
+          <Link href="/simulacao-credito">
+            <Button variant="link" className="p-0">
+              Clique Aqui
+            </Button>
+          </Link>{" "}
+          e faça uma simulação do valor.
+        </div>
+      ),
     },
     {
       index: "3",

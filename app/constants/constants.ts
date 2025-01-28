@@ -1,6 +1,6 @@
 const ORBI_CONSTANTS = {
   CONTACT: {
-    WHATSAPP: "+55 71 99973-2369",
+    WHATSAPP: "+55 71 98298-8282",
     INSTAGRAM: "@store.orbi",
     EMAIL: "contato@orbi.com",
   },
@@ -9,7 +9,7 @@ const ORBI_CONSTANTS = {
     NAME: "Orbi Store Eletrônicos e Acessórios LTDA",
   },
   LINKS: {
-    WHATSAPP_URL: "https://wa.me/5571999732369",
+    WHATSAPP_URL: "https://wa.me/5571982988282",
     INSTAGRAM_URL: "https://instagram.com/store.orbi",
   },
 };
