@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    // Verifica se o token é válido
+    console.log("Token recebido:", token);
+
     if (!token) {
       return NextResponse.json(
         { error: "Você precisa estar autenticado para realizar essa ação." },
@@ -25,7 +26,14 @@ export async function POST(req: NextRequest) {
       role: requestedRole,
     } = await req.json();
 
-    // Verifica se todos os campos obrigatórios foram fornecidos
+    console.log("Dados recebidos no body:", {
+      firstName,
+      lastName,
+      email,
+      password,
+      requestedRole,
+    });
+
     if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios." },
@@ -33,7 +41,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verifica se o usuário já existe
     const existingUser = await db.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json(
@@ -43,9 +50,7 @@ export async function POST(req: NextRequest) {
     }
     let role: Role = "CLIENT";
 
-    // Valida e ajusta o role, se necessário
     if (requestedRole === "MASTER") {
-      // Apenas usuários MASTER podem criar outro MASTER
       if (token.role !== "MASTER") {
         return NextResponse.json(
           {
@@ -56,7 +61,6 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Verifica se já existe um MASTER no banco
       const masterUser = await db.user.findFirst({ where: { role: "MASTER" } });
       if (masterUser) {
         return NextResponse.json(
@@ -67,7 +71,6 @@ export async function POST(req: NextRequest) {
 
       role = "MASTER";
     } else if (requestedRole === "ADMIN") {
-      // Apenas MASTER pode criar usuários ADMIN
       if (token.role !== "MASTER") {
         return NextResponse.json(
           { error: "Somente usuários MASTER podem criar usuários ADMIN." },
@@ -87,10 +90,8 @@ export async function POST(req: NextRequest) {
       role = "EMPLOYEE";
     }
 
-    // Hash da senha
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Criação do novo usuário no banco
     const newUser = await db.user.create({
       data: {
         firstName,
