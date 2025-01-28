@@ -45,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/_components/ui/select";
+import { useToast } from "@/app/_hooks/use-toast";
 
 interface UserProps {
   id: string;
@@ -92,6 +93,9 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
   } | null>(null);
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [allUsers, setAllUsers] = useState<UserProps[]>(users);
+
+  const { toast } = useToast();
 
   const handleEditClick = (row: UserProps) => {
     setEditingRowId(row.id);
@@ -114,7 +118,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
   };
 
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => {
+    return allUsers.filter((user) => {
       const firstNameFilter = filters.firstName
         ? user.firstName.toLowerCase().includes(filters.firstName.toLowerCase())
         : true;
@@ -127,7 +131,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
 
       return firstNameFilter && lastNameFilter && roleFilter;
     });
-  }, [users, filters]);
+  }, [allUsers, filters]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -146,6 +150,56 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
     setTimeout(() => {
       inputRefs.current[key]?.focus();
     }, 0);
+  };
+
+  const handleSaveClick = async () => {
+    if (editingRowId && editedValues) {
+      try {
+        const response = await fetch(`/api/users/updateUser`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: editingRowId,
+            firstName: editedValues.firstName,
+            lastName: editedValues.lastName,
+            role: editedValues.role,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Erro ao atualizar usuário.");
+        }
+
+        const updatedUser = await response.json();
+
+        setAllUsers((prevAllUsers) =>
+          prevAllUsers.map((user) =>
+            user.id === updatedUser.user.id ? updatedUser.user : user,
+          ),
+        );
+
+        toast({
+          title: "Sucesso!",
+          description: "Usuário atualizado com sucesso.",
+        });
+
+        setEditingRowId(null);
+        setEditedValues(null);
+      } catch (error) {
+        console.error("Erro ao salvar usuário:", error);
+        toast({
+          variant: "destructive",
+          title: "Erro ao salvar usuário",
+          description:
+            error instanceof Error
+              ? error.message
+              : "Algo deu errado. Tente novamente.",
+        });
+      }
+    }
   };
 
   const columns: ColumnDef<UserProps>[] = [
@@ -422,7 +476,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
       cell: ({ row }) =>
         editingRowId === row.original.id ? (
           <div className="flex gap-2 justify-center">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleSaveClick}>
               Salvar
             </Button>
             <Button variant="destructive" size="sm" onClick={handleCancelClick}>
@@ -550,7 +604,6 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
         </Table>
       </div>
 
-      {/* Paginação */}
       <div className="flex items-center justify-center py-4 gap-2">
         <Button
           variant="ghost"

@@ -409,7 +409,7 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
       header: "Ações",
       cell: ({ row }) =>
         editingRowId === row.original.id ? (
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-center">
             <Button variant="outline" size="sm" onClick={handleSaveClick}>
               Salvar
             </Button>
