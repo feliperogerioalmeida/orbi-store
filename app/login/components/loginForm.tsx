@@ -7,6 +7,7 @@ import Logo from "@/app/_components/logo";
 import { signIn } from "next-auth/react";
 import { z } from "zod";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido").nonempty("O email é obrigatório"),
@@ -18,13 +19,13 @@ const loginSchema = z.object({
 
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(null);
+    setErrorMessage(null); // Limpa mensagens antigas de erro
 
     const formData = new FormData(e.currentTarget);
-
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
@@ -38,9 +39,13 @@ const LoginForm = () => {
       });
 
       if (result?.error) {
-        setErrorMessage("Credenciais inválidas.");
+        setErrorMessage("Credenciais inválidas. Por favor, tente novamente.");
       } else {
-        window.location.href = "/";
+        // Redireciona para o callbackUrl ou página inicial
+        const callbackUrl = new URLSearchParams(window.location.search).get(
+          "callbackUrl",
+        );
+        router.push(callbackUrl || "/");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -66,7 +71,7 @@ const LoginForm = () => {
           <Input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Senha"
             className="w-[80%]"
           />
           {errorMessage && (

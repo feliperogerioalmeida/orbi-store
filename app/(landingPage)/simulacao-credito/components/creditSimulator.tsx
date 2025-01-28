@@ -14,9 +14,9 @@ import {
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
 import ORBI_CONSTANTS from "@/app/constants/constants";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useToast } from "@/app/_hooks/use-toast";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ToastAction } from "@/app/_components/ui/toast";
 
 type Color = {
@@ -56,6 +56,7 @@ const CreditSimulator = () => {
   const [simulationId, setSimulationId] = useState<string | null>(null);
   const [isDirectSave, setIsDirectSave] = useState(false); // Flag para diferenciar save direto e link
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     const urlSimulationId = searchParams.get("simulationId");
@@ -178,9 +179,9 @@ const CreditSimulator = () => {
               <Button
                 variant="ghost"
                 onClick={() => {
-                  signIn(undefined, {
-                    callbackUrl: `/simulacao-credito?simulationId=${data.id}`,
-                  });
+                  router.push(
+                    `/login?callbackUrl=/simulacao-credito?simulationId=${data.id}`,
+                  );
                 }}
               >
                 Fazer Login
