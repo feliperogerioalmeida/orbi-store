@@ -261,9 +261,14 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
             >
               Ordenar <ArrowUpDown className="h-4 w-4 ml-2" />
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => clearFilter("model")}>
-              Limpar Filtro
-            </DropdownMenuItem>
+            {filters.model && (
+              <DropdownMenuItem
+                onClick={() => clearFilter("model")}
+                className="text-red-500"
+              >
+                Limpar Filtro
+              </DropdownMenuItem>
+            )}
             {Array.from(new Set(data.map((item) => item.model))).map(
               (value) => (
                 <DropdownMenuCheckboxItem
@@ -297,9 +302,14 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
             >
               Ordenar <ArrowUpDown className="h-4 w-4 ml-2" />
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => clearFilter("capacity")}>
-              Limpar Filtro
-            </DropdownMenuItem>
+            {filters.capacity && (
+              <DropdownMenuItem
+                onClick={() => clearFilter("capacity")}
+                className="text-red-500"
+              >
+                Limpar Filtro
+              </DropdownMenuItem>
+            )}
             {Array.from(new Set(data.map((item) => item.capacity))).map(
               (value) => (
                 <DropdownMenuCheckboxItem
@@ -333,9 +343,15 @@ const DataTable = ({ iphones }: { iphones: iPhoneProps[] }) => {
             >
               Ordenar <ArrowUpDown className="h-4 w-4 ml-2" />
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => clearFilter("conditionType")}>
-              Limpar Filtro
-            </DropdownMenuItem>
+            {filters.conditionType && (
+              <DropdownMenuItem
+                onClick={() => clearFilter("conditionType")}
+                className="text-red-500"
+              >
+                Limpar Filtro
+              </DropdownMenuItem>
+            )}
+
             {Array.from(new Set(data.map((item) => item.conditionType))).map(
               (value) => (
                 <DropdownMenuCheckboxItem

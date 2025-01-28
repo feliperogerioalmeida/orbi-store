@@ -10,6 +10,8 @@ import {
   LogOutIcon,
   PackageSearchIcon,
   DollarSign,
+  HelpCircle,
+  Settings,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -192,7 +194,28 @@ const AdmSidebar = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu className="flex flex-col items-center justify-center w-full">
+        <SidebarMenu className="flex flex-col items-center justify-center w-full gap-1">
+          <SidebarMenuItem className="w-full flex items-center justify-center">
+            <SidebarMenuButton asChild className="w-[90%]">
+              <Button variant="ghost" asChild className="flex justify-start">
+                <Link href={""}>
+                  <Settings />
+                  Configurações
+                </Link>
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem className="w-full flex items-center justify-center">
+            <SidebarMenuButton asChild className="w-[90%]">
+              <Button variant="ghost" asChild className="flex justify-start">
+                <Link href={""}>
+                  <HelpCircle />
+                  Central de Ajuda
+                </Link>
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
           <SidebarMenuItem className="w-full flex items-center justify-center">
             <SidebarMenuButton asChild className="w-[90%]">
               <Button
