@@ -91,7 +91,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
     role?: string;
   } | null>(null);
 
-  const [focusedField, setFocusedField] = useState<string | null>(null); // Campo atualmente focado
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleEditClick = (row: UserProps) => {
     setEditingRowId(row.id);
@@ -100,17 +100,17 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
       lastName: row.lastName,
       role: row.role,
     });
-    setFocusedField("firstName"); // Inicia o foco no primeiro campo
+    setFocusedField("firstName");
   };
 
   const handleCancelClick = () => {
     setEditingRowId(null);
     setEditedValues(null);
-    setFocusedField(null); // Limpa o campo focado
+    setFocusedField(null);
   };
 
   const handleInputFocus = (field: string) => {
-    setFocusedField(field); // Atualiza o campo atualmente focado
+    setFocusedField(field);
   };
 
   const filteredUsers = useMemo(() => {
@@ -139,7 +139,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
       delete updatedFilters[key];
       return updatedFilters;
     });
-    setDropdownFocus(key); // Mantém o foco no input após limpar
+    setDropdownFocus(key);
   };
 
   const focusInput = (key: string) => {
@@ -208,7 +208,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
               }))
             }
             onFocus={() => handleInputFocus("firstName")}
-            autoFocus={focusedField === "firstName"} // Foco automático se for o campo atual
+            autoFocus={focusedField === "firstName"}
             className="w-full text-sm p-2 border rounded-md"
           />
         ) : (
@@ -274,7 +274,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
               }))
             }
             onFocus={() => handleInputFocus("lastName")}
-            autoFocus={focusedField === "lastName"} // Foco automático se for o campo atual
+            autoFocus={focusedField === "lastName"}
             className="w-full text-sm p-2 border rounded-md"
           />
         ) : (
@@ -339,7 +339,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
           >
             <SelectTrigger
               onFocus={() => handleInputFocus("role")}
-              autoFocus={focusedField === "role"} // Foco automático se for o campo atual
+              autoFocus={focusedField === "role"}
               className="w-full text-sm"
             >
               <SelectValue placeholder="Selecione o tipo" />
