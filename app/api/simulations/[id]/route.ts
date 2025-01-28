@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function PUT(request: NextRequest) {
   try {
     const { pathname } = new URL(request.url);
-    const simulationId = pathname.split("/").pop(); // Extrai o ID da simulação da URL
+    const simulationId = pathname.split("/").pop();
 
     if (!simulationId) {
       return NextResponse.json(

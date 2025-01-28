@@ -27,7 +27,6 @@ export const authOptions: AuthOptions = {
           throw new Error("Usuário ou senha inválidos.");
         }
 
-        // Verifica a senha
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password,

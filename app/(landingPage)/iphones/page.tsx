@@ -74,7 +74,6 @@ const iPhonesPage = async () => {
       </div>
     );
   } catch (error) {
-    // Converte o erro para uma mensagem legível
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
 

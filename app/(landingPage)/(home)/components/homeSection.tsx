@@ -58,13 +58,6 @@ const HomeSection = () => {
         </Button>
       </div>
       <div className="h-[50%] w-auto min-w-screem relative md:hidden lg:hidden">
-        {/* <Image
-          src="/images/background/homePerson.png"
-          alt="homePerson"
-          layout="fill"
-          objectFit="cover"
-          className="absolute bottom-0"
-        /> */}
         <Image
           src="/images/background/homePerson.png"
           alt="homePerson"

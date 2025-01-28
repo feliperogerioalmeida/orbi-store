@@ -23,7 +23,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(null); // Limpa mensagens antigas de erro
+    setErrorMessage(null);
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
@@ -41,7 +41,6 @@ const LoginForm = () => {
       if (result?.error) {
         setErrorMessage("Credenciais inválidas. Por favor, tente novamente.");
       } else {
-        // Redireciona para o callbackUrl ou página inicial
         const callbackUrl = new URLSearchParams(window.location.search).get(
           "callbackUrl",
         );

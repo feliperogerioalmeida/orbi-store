@@ -54,7 +54,7 @@ const CreditSimulator = () => {
   const [issues, setIssues] = useState<string[]>([]);
   const [estimatedValue, setEstimatedValue] = useState<number | null>(null);
   const [simulationId, setSimulationId] = useState<string | null>(null);
-  const [isDirectSave, setIsDirectSave] = useState(false); // Flag para diferenciar save direto e link
+  const [isDirectSave, setIsDirectSave] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -62,7 +62,7 @@ const CreditSimulator = () => {
     const urlSimulationId = searchParams.get("simulationId");
     if (urlSimulationId) {
       setSimulationId(urlSimulationId);
-      setIsDirectSave(false); // Reset da flag para simulações via URL
+      setIsDirectSave(false);
     }
   }, [searchParams]);
 
