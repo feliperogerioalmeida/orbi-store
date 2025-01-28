@@ -18,6 +18,7 @@ export default {
         "custom-bg-1": "url('/images/background/homeBG.jpg')",
         "custom-bg-2": "url('/images/background/starsBG.png')",
         "custom-bg-3": "url('/images/background/stars2BG.png')",
+        "custom-bg-4": "linear-gradient(90deg, #17232b 0%, #395d70 100%);",
       },
       colors: {
         background: "hsl(var(--background))",
