@@ -1,10 +1,9 @@
-import { SidebarTrigger } from "@/app/_components/ui/sidebar";
 import DataTable from "./components/dataTable";
 import { db } from "@/app/_lib/prisma";
-import { Separator } from "@/app/_components/ui/separator";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/_lib/auth";
 import { redirect } from "next/navigation";
+import CustomSidebarTrigger from "@/app/_components/customSidebarTrigger";
 
 const PricingPage = async () => {
   const session = await getServerSession(authOptions);
@@ -34,11 +33,8 @@ const PricingPage = async () => {
 
   return (
     <div className="flex flex-col justify-center p-4 gap-3 ">
-      <div className="flex items-center gap-2">
-        <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="mr-2 h-4" />
-        <h1 className="text-2xl font-bold ">Precificação de iPhones</h1>
-      </div>
+      <CustomSidebarTrigger content="Precificação de iPhones" />
+
       <DataTable iphones={iphones} />
     </div>
   );
