@@ -8,10 +8,18 @@ import {
   FileText,
   Users,
   LogOutIcon,
-  PackageSearchIcon,
   DollarSign,
   HelpCircle,
   Settings,
+  LayoutDashboard,
+  UsersRound,
+  ShoppingCart,
+  Banknote,
+  Landmark,
+  Package,
+  Wrench,
+  Calculator,
+  Braces,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -82,12 +90,47 @@ const AdmSidebar = () => {
     {
       href: "/adm/dashboard",
       label: "Dashboard",
-      icon: BarChart2,
+      icon: LayoutDashboard,
     },
     {
-      href: "/adm/products",
-      label: "Produtos",
-      icon: PackageSearchIcon,
+      href: "/adm/clients",
+      label: "Clientes",
+      icon: UsersRound,
+    },
+    {
+      href: "/adm/purchases",
+      label: "Compras",
+      icon: ShoppingCart,
+    },
+    {
+      href: "adm/sales",
+      label: "Vendas",
+      icon: Banknote,
+    },
+    {
+      href: "adm/financial",
+      label: "Financeiro",
+      icon: Landmark,
+    },
+    {
+      href: "adm/inventory",
+      label: "Estoque",
+      icon: Package,
+    },
+    {
+      href: "/adm/repair",
+      label: "Assistência Técnica",
+      icon: Wrench,
+    },
+    {
+      href: "adm/accounting",
+      label: "Contabilidade",
+      icon: Calculator,
+    },
+    {
+      href: "adm/parameterization",
+      label: "Parametrização",
+      icon: Braces,
     },
   ];
 
