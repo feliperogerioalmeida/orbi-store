@@ -36,6 +36,7 @@ model User {
   sessions      Session[]
   simulations   Simulation[]
   reviews       Review[]
+  position      String?
 }
 
 model Review {
@@ -140,3 +141,4 @@ enum Role {
   ADMIN
   MASTER
 }
+
