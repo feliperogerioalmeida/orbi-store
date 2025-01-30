@@ -13,7 +13,9 @@ const UsersListPage = async () => {
   }
 
   if (session.user.role !== "MASTER") {
-    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
+    redirect(
+      `/${session.user.role === "EMPLOYEE" || session.user.role === "ADMIN" ? "adm" : "client"}/dashboard`,
+    );
   }
 
   const users = await db.user.findMany({

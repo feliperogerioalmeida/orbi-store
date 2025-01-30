@@ -10,8 +10,11 @@ const ReviewsPage = async () => {
   }
 
   if (session.user.role !== "MASTER") {
-    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
+    redirect(
+      `/${session.user.role === "EMPLOYEE" || session.user.role === "ADMIN" ? "adm" : "client"}/dashboard`,
+    );
   }
+
   return (
     <div className="flex flex-col justify-center p-4 gap-3 ">
       <CustomSidebarTrigger content="Avaliações" />

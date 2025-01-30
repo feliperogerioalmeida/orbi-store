@@ -13,7 +13,9 @@ const SimulationsRequests = async () => {
   }
 
   if (session.user.role !== "MASTER") {
-    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
+    redirect(
+      `/${session.user.role === "EMPLOYEE" || session.user.role === "ADMIN" ? "adm" : "client"}/dashboard`,
+    );
   }
 
   const simulations = await db.simulation.findMany({

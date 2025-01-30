@@ -11,7 +11,9 @@ const LogsPage = async () => {
   }
 
   if (session.user.role !== "MASTER") {
-    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
+    redirect(
+      `/${session.user.role === "EMPLOYEE" || session.user.role === "ADMIN" ? "adm" : "client"}/dashboard`,
+    );
   }
 
   return (
