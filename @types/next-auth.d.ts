@@ -8,6 +8,7 @@ declare module "next-auth" {
       role: string;
       firstName: string;
       lastName: string;
+      position?: string;
     } & DefaultSession["user"];
   }
 
@@ -17,5 +18,6 @@ declare module "next-auth" {
     role: string;
     firstName: string;
     lastName: string;
+    position?: string;
   }
 }
