@@ -35,6 +35,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "./ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
@@ -42,6 +43,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { redirect, usePathname } from "next/navigation";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const AdmSidebar = () => {
   const { data: session } = useSession();
@@ -91,6 +93,11 @@ const AdmSidebar = () => {
       href: "/adm/dashboard",
       label: "Dashboard",
       icon: LayoutDashboard,
+    },
+    {
+      href: "/adm/documents",
+      label: "Relatórios",
+      icon: FileText,
     },
     {
       href: "/adm/clients",
@@ -144,7 +151,7 @@ const AdmSidebar = () => {
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
                     variant="outline"
-                    className="flex items-center justify-start h-12 pl-1"
+                    className="flex items-center justify-start h-12 pl-1 w-full"
                   >
                     <div className="flex aspect-square h-full w-auto">
                       <Image
@@ -152,11 +159,11 @@ const AdmSidebar = () => {
                         alt="Orbi Store"
                         width={40}
                         height={40}
-                        className=" rounded-full h-full w-full"
+                        className=" rounded-full h-full w-full "
                       />
                     </div>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col text-nowrap">
                       <h2 className="text-sm font-bold">Orbi Store</h2>
                       <p className="text-xs text-gray-400 font-semibold">
                         {activeWorkspace === "MASTER"
@@ -194,7 +201,32 @@ const AdmSidebar = () => {
             </SidebarMenuItem>
           </SidebarMenu>
         ) : (
-          <div>CRIAR ADM E CLIENT SIDEBAR</div>
+          <SidebarMenu className="flex flex-col w-full items-center">
+            <SidebarMenuItem className="pt-6 w-[95%]">
+              <div className="flex items-center gap-2 py-4">
+                <Avatar>
+                  <AvatarFallback>
+                    {session?.user.firstName?.[0].toUpperCase()}
+                    {session?.user.lastName?.[0].toUpperCase()}
+                  </AvatarFallback>
+
+                  {session?.user.image && (
+                    <AvatarImage src={session?.user.image} />
+                  )}
+                </Avatar>
+
+                <div className="flex flex-col group-data-[collapsible=icon]:hidden text-nowrap">
+                  <p className="font-medium">
+                    {" "}
+                    {session?.user.firstName}{" "}
+                    <span> {session?.user.lastName}</span>
+                  </p>
+                  <p className="text-xs opacity-75">{session?.user.position}</p>
+                </div>
+              </div>
+              <SidebarSeparator />
+            </SidebarMenuItem>
+          </SidebarMenu>
         )}
       </SidebarHeader>
       <SidebarContent className="pt-6">
@@ -203,12 +235,12 @@ const AdmSidebar = () => {
             ? masterLinks.map((link) => (
                 <SidebarMenuItem
                   key={link.label}
-                  className="w-full flex items-center justify-center "
+                  className="w-full flex items-center justify-center text-nowrap"
                 >
                   <SidebarMenuButton
                     asChild
                     variant="default"
-                    className={`flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
+                    className={`text-nowrap flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
                   >
                     <Link href={link.href}>
                       <link.icon />
@@ -220,7 +252,7 @@ const AdmSidebar = () => {
             : admLinks.map((link) => (
                 <SidebarMenuItem
                   key={link.label}
-                  className="w-full flex items-center justify-center"
+                  className="w-full flex items-center justify-center text-nowrap"
                 >
                   <SidebarMenuButton
                     asChild

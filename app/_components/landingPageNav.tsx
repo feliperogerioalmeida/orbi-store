@@ -57,7 +57,8 @@ const LandingPageNav = () => {
                 <div className="flex items-center gap-2 py-4">
                   <Avatar>
                     <AvatarFallback>
-                      {data.user.name?.[0].toUpperCase()}
+                      {data?.user.firstName?.[0].toUpperCase()}
+                      {data?.user.lastName?.[0].toUpperCase()}
                     </AvatarFallback>
 
                     {data.user.image && <AvatarImage src={data.user.image} />}
@@ -162,21 +163,22 @@ const LandingPageNav = () => {
 
                     {status == "authenticated" && (
                       <div className="flex flex-col gap-1">
-                        {data.user.role === "ADMIN" ||
-                          (data.user.role === "MASTER" && (
-                            <Button
-                              asChild
-                              variant="ghost"
-                              className="w-full justify-start gap-2"
+                        {(data.user.role === "MASTER" ||
+                          data.user.role === "ADMIN" ||
+                          data.user.role === "EMPLOYEE") && (
+                          <Button
+                            asChild
+                            variant="ghost"
+                            className="w-full justify-start gap-2"
+                          >
+                            <Link
+                              href={`/${data.user.role === "EMPLOYEE" || data.user.role === "ADMIN" ? "adm" : data.user.role.toLowerCase()}/dashboard`}
                             >
-                              <Link
-                                href={`/${data.user.role.toLowerCase()}/dashboard`}
-                              >
-                                <Monitor size={16} />
-                                Painel Administrativo
-                              </Link>
-                            </Button>
-                          ))}
+                              <Monitor size={16} />
+                              Painel Administrativo
+                            </Link>
+                          </Button>
+                        )}
 
                         <Button
                           onClick={handleLogOutClick}
