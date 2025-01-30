@@ -24,15 +24,8 @@ export async function POST(req: NextRequest) {
       email,
       password,
       role: requestedRole,
+      position,
     } = await req.json();
-
-    console.log("Dados recebidos no body:", {
-      firstName,
-      lastName,
-      email,
-      password,
-      requestedRole,
-    });
 
     if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(
@@ -48,6 +41,7 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+
     let role: Role = "CLIENT";
 
     if (requestedRole === "MASTER") {
@@ -90,6 +84,9 @@ export async function POST(req: NextRequest) {
       role = "EMPLOYEE";
     }
 
+    const validPosition =
+      role === "CLIENT" ? null : position || "Não especificado";
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = await db.user.create({
@@ -99,6 +96,7 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         role,
+        position: validPosition,
       },
     });
 
