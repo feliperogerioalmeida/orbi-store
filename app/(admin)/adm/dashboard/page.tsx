@@ -10,8 +10,12 @@ const DashboardPage = async () => {
     redirect("/login");
   }
 
-  if (session.user.role !== "MASTER") {
-    redirect(`/${session.user.role.toLocaleLowerCase()}/dashboard`);
+  if (
+    session.user.role !== "MASTER" &&
+    session.user.role !== "ADMIN" &&
+    session.user.role !== "EMPLOYEE"
+  ) {
+    redirect(`/client/dashboard`);
   }
   return (
     <div className="flex flex-col justify-start p-4 gap-3 w-full h-full overscroll-none">
