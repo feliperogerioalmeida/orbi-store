@@ -96,7 +96,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
   const [allUsers, setAllUsers] = useState<UserProps[]>(users);
 
   const handleUserAdded = (newUser: UserProps) => {
-    setAllUsers((prevUsers) => [newUser, ...prevUsers]); // Adicionar o novo usuário no topo da tabela
+    setAllUsers((prevUsers) => [newUser, ...prevUsers]);
   };
 
   const { toast } = useToast();
@@ -165,8 +165,8 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: editingRowId, // Incluindo o ID do usuário
-            data: editedValues, // Enviando todos os campos editados de forma genérica
+            id: editingRowId,
+            data: editedValues,
           }),
         });
 

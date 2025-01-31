@@ -32,7 +32,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Não permitir atualização do próprio papel
     if (userToUpdate.role === "MASTER" && userToUpdate.id === token.sub) {
       return NextResponse.json(
         { error: "Você não pode alterar seu próprio papel." },
@@ -40,7 +39,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Regras para alteração de senha
     if ("password" in data) {
       if (token.role !== "MASTER") {
         return NextResponse.json(
@@ -52,9 +50,7 @@ export async function PUT(req: NextRequest) {
       data.password = await bcrypt.hash(data.password, 12);
     }
 
-    // Regras para alteração de role
     if ("role" in data && data.role !== userToUpdate.role) {
-      // Apenas MASTER pode alterar papéis para ADMIN, EMPLOYEE ou CLIENT
       if (
         !(
           token.role === "MASTER" ||
@@ -72,7 +68,6 @@ export async function PUT(req: NextRequest) {
         );
       }
 
-      // Restringir alteração para CLIENT apenas para MASTER
       if (data.role === "CLIENT" && token.role !== "MASTER") {
         return NextResponse.json(
           { error: "Somente MASTER pode alterar papéis para CLIENT." },
@@ -80,7 +75,6 @@ export async function PUT(req: NextRequest) {
         );
       }
 
-      // ADMIN pode alterar apenas EMPLOYEE para EMPLOYEE
       if (
         token.role === "ADMIN" &&
         userToUpdate.role === "EMPLOYEE" &&
@@ -95,7 +89,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Verificar se as chaves do body são válidas
     const validFields = Object.keys(data).filter((key) =>
       ["firstName", "lastName", "role", "position", "password"].includes(key),
     );
@@ -107,7 +100,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Construir o objeto de atualização dinâmico
     const updateData = validFields.reduce(
       (acc: { [key: string]: string | number }, key) => {
         acc[key] = data[key];
@@ -116,7 +108,6 @@ export async function PUT(req: NextRequest) {
       {},
     );
 
-    // Atualizar o usuário no banco de dados
     const updatedUser = await db.user.update({
       where: { id },
       data: updateData,

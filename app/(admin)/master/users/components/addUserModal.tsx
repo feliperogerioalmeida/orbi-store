@@ -82,7 +82,7 @@ const AddUserModal = ({
         throw new Error(errorData.error || "Erro ao criar usuário.");
       }
 
-      const newUser = await response.json(); // Receber o novo usuário do back-end
+      const newUser = await response.json();
       onUserAdded(newUser.user);
 
       toast({
