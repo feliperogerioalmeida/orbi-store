@@ -95,6 +95,10 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [allUsers, setAllUsers] = useState<UserProps[]>(users);
 
+  const handleUserAdded = (newUser: UserProps) => {
+    setAllUsers((prevUsers) => [newUser, ...prevUsers]); // Adicionar o novo usuário no topo da tabela
+  };
+
   const { toast } = useToast();
 
   const handleEditClick = (row: UserProps) => {
@@ -161,10 +165,8 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: editingRowId,
-            firstName: editedValues.firstName,
-            lastName: editedValues.lastName,
-            role: editedValues.role,
+            id: editingRowId, // Incluindo o ID do usuário
+            data: editedValues, // Enviando todos os campos editados de forma genérica
           }),
         });
 
@@ -188,6 +190,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
 
         setEditingRowId(null);
         setEditedValues(null);
+        setFocusedField(null);
       } catch (error) {
         console.error("Erro ao salvar usuário:", error);
         toast({
@@ -629,6 +632,7 @@ const UsersTable = ({ users }: { users: UserProps[] }) => {
       <AddUserModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onUserAdded={handleUserAdded}
       />
     </div>
   );

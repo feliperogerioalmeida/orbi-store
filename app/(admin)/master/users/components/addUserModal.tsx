@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/app/_components/ui/dialog";
 import { useToast } from "@/app/_hooks/use-toast";
+import { User } from "@prisma/client";
 
 interface AddUserFormValues {
   firstName: string;
@@ -25,14 +26,17 @@ interface AddUserFormValues {
   email: string;
   password: string;
   role: string;
+  position: string;
 }
 
 const AddUserModal = ({
   isOpen,
   onClose,
+  onUserAdded,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onUserAdded: (user: User) => void;
 }) => {
   const { toast } = useToast();
 
@@ -50,6 +54,7 @@ const AddUserModal = ({
       email: "",
       password: "",
       role: "CLIENT",
+      position: "",
     },
   });
 
@@ -57,6 +62,15 @@ const AddUserModal = ({
 
   const onSubmit = async (data: AddUserFormValues) => {
     try {
+      if (data.role !== "CLIENT" && !data.position) {
+        toast({
+          variant: "destructive",
+          title: "Erro",
+          description:
+            "O campo de cargo é obrigatório para esse tipo de usuário.",
+        });
+        return;
+      }
       const response = await fetch("/api/users/createUser", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,6 +81,9 @@ const AddUserModal = ({
         const errorData = await response.json();
         throw new Error(errorData.error || "Erro ao criar usuário.");
       }
+
+      const newUser = await response.json(); // Receber o novo usuário do back-end
+      onUserAdded(newUser.user);
 
       toast({
         title: "Sucesso!",
@@ -161,6 +178,25 @@ const AddUserModal = ({
               </SelectContent>
             </Select>
           </div>
+          {role !== "CLIENT" && (
+            <div>
+              <label className="block text-sm font-medium">Cargo</label>
+              <Input
+                {...register("position", {
+                  required:
+                    role !== "CLIENT" &&
+                    "O campo de cargo é obrigatório para usuários não CLIENT.",
+                })}
+                placeholder="Digite o cargo"
+                className="w-full"
+              />
+              {errors.position && (
+                <p className="text-red-500 text-sm">
+                  {errors.position.message}
+                </p>
+              )}
+            </div>
+          )}
           <DialogFooter>
             <Button type="submit">Salvar</Button>
             <Button variant="ghost" onClick={onClose}>
