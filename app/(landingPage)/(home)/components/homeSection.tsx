@@ -7,7 +7,7 @@ const HomeSection = () => {
   return (
     <div
       id="home"
-      className="items-center min-h-screen w-full bg-custom-bg-1 bg-cover bg-center md:flex md:flex-row"
+      className="items-center sm:min-h-screen w-full bg-custom-bg-1 bg-cover bg-center md:flex md:flex-row"
     >
       <div className="h-[50%] w-[50%] min-w-screem hidden sm:hidden md:block lg:block">
         <Image
