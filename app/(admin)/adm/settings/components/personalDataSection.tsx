@@ -33,15 +33,26 @@ const PersonalDataSection = async (email: UserParameters) => {
               ? formatPhoneNumber(loggedUser.phoneNumber)
               : ""
           }
+          className="sm:text-xs"
         />
       </div>
       <div className="flex flex-col gap-2 w-full">
         <h4 className="font-bold text-xl pt-4 ">CPF</h4>
-        <Input type="text" disabled value={"064.212.405-18"}></Input>
+        <Input
+          type="text"
+          disabled
+          value={"064.212.405-18"}
+          className="sm:text-xs"
+        />
       </div>
       <div className="flex flex-col gap-2 w-full">
         <h4 className="font-bold text-xl pt-4 ">Chave Pix</h4>
-        <Input type="text" disabled value={"06421240518"}></Input>
+        <Input
+          type="text"
+          disabled
+          value={"06421240518"}
+          className="sm:text-xs"
+        />
       </div>
     </div>
   );

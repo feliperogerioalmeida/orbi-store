@@ -21,40 +21,47 @@ const AddressSection = async (email: UserParameters) => {
         type="text"
         disabled
         value={`${loggedUser?.address?.street ?? "Endereço"}`}
+        className="sm:text-xs"
       />
       <div className="flex w-full gap-2">
         <Input
           type="text"
           disabled
           value={`${loggedUser?.address?.number ?? "Numero"}`}
+          className="sm:text-xs"
         />
         <Input
           type="text"
           disabled
           value={`${loggedUser?.address?.city ?? "Cidade"}`}
+          className="sm:text-xs"
         />
       </div>
       <Input
         type="text"
         disabled
         value={`${loggedUser?.address?.complement ?? "Complemento"}`}
+        className="sm:text-xs"
       />
       <div className="flex w-full gap-2">
         <Input
           type="text"
           disabled
           value={`${loggedUser?.address?.zipCode ?? "CEP"}`}
+          className="sm:text-xs"
         />
         <Input
           type="text"
           disabled
           value={`${loggedUser?.address?.neighborhood ?? "Bairro"}`}
+          className="sm:text-xs"
         />
       </div>
       <Input
         type="text"
         disabled
         value={`${loggedUser?.address?.country ?? "Pais"}`}
+        className="sm:text-xs"
       />
     </div>
   );
