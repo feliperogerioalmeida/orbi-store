@@ -5,7 +5,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/app/_components/ui/tabs";
-
+import ProfileSection from "./components/profileSection";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/_lib/auth";
 import { redirect } from "next/navigation";
@@ -45,7 +45,9 @@ const SettingsPage = async () => {
             )}
           </TabsList>
           <TabsContent value="profile">
-            <div className="flex flex-col gap-4"></div>
+            <div className="flex flex-col gap-4">
+              <ProfileSection email={session?.user.email} />
+            </div>
           </TabsContent>
           <TabsContent value="company">Change your password here.</TabsContent>
           <TabsContent value="team">Change your password here.</TabsContent>
