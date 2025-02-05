@@ -37,6 +37,7 @@ model User {
   simulations   Simulation[]
   reviews       Review[]
   position      String?
+  phoneNumber   String?
 }
 
 model Review {
