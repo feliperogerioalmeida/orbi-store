@@ -240,7 +240,7 @@ const AdmSidebar = () => {
                   <SidebarMenuButton
                     asChild
                     variant="default"
-                    className={`text-nowrap flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
+                    className={`text-nowrap flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white hover:bg-primary hover:text-white"}`}
                   >
                     <Link href={link.href}>
                       <link.icon />
@@ -257,7 +257,7 @@ const AdmSidebar = () => {
                   <SidebarMenuButton
                     asChild
                     variant="default"
-                    className={`flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white"}`}
+                    className={`flex justify-start items-center h-10 w-[90%] ${path.includes(link.href) && "bg-primary text-white hover:bg-primary hover:text-white "}`}
                   >
                     <Link href={link.href}>
                       <link.icon />
@@ -272,8 +272,14 @@ const AdmSidebar = () => {
         <SidebarMenu className="flex flex-col items-center justify-center w-full gap-1">
           <SidebarMenuItem className="w-full flex items-center justify-center">
             <SidebarMenuButton asChild className="w-[90%]">
-              <Button variant="ghost" asChild className="flex justify-start">
-                <Link href={""}>
+              <Button
+                variant="ghost"
+                asChild
+                className={`flex justify-start ${path.includes("/settings") && "bg-primary text-white hover:bg-primary hover:text-white"} `}
+              >
+                <Link
+                  href={`/${userRole === "EMPLOYEE" || userRole === "ADMIN" ? "adm" : userRole?.toLowerCase()}/settings`}
+                >
                   <Settings />
                   Configurações
                 </Link>

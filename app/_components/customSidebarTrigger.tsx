@@ -7,7 +7,7 @@ interface CustomSidebarTriggerProps {
 
 const CustomSidebarTrigger = ({ content }: CustomSidebarTriggerProps) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 h-4" />
       <h1 className="text-2xl font-bold ">{content}</h1>
