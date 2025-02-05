@@ -11,6 +11,7 @@ import { authOptions } from "@/app/_lib/auth";
 import { redirect } from "next/navigation";
 import PersonalDataSection from "./components/personalDataSection";
 import AddressSection from "./components/addressSection";
+import { Button } from "@/app/_components/ui/button";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -27,7 +28,7 @@ const SettingsPage = async () => {
     redirect(`/client/dashboard`);
   }
   return (
-    <div className="flex flex-col justify-start p-4 gap-4 w-[90%] h-full overscroll-none">
+    <div className="flex flex-col justify-start p-4 gap-4 w-[90%] h-full overscroll-none ">
       <CustomSidebarTrigger content="Configurações" />
       <div className="w-full flex flex-col justify-start gap-3 items-start">
         <Tabs defaultValue="profile" className=" w-full">
@@ -51,6 +52,18 @@ const SettingsPage = async () => {
               <ProfileSection email={session?.user.email} />
               <PersonalDataSection email={session?.user.email} />
               <AddressSection email={session?.user.email} />
+              <div className="flex flex-col gap-2">
+                <div className="flex ">
+                  <Button variant="default" size="lg">
+                    Atualizar Perfil
+                  </Button>
+                </div>
+                <div className="flex ">
+                  <Button variant="outline" size="lg">
+                    Alterar Senha
+                  </Button>
+                </div>
+              </div>
             </div>
           </TabsContent>
           <TabsContent value="company">Change your password here.</TabsContent>
