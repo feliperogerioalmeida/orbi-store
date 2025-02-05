@@ -9,6 +9,7 @@ import ProfileSection from "./components/profileSection";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/_lib/auth";
 import { redirect } from "next/navigation";
+import PersonalDataSection from "./components/personalDataSection";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -47,6 +48,7 @@ const SettingsPage = async () => {
           <TabsContent value="profile">
             <div className="flex flex-col gap-4">
               <ProfileSection email={session?.user.email} />
+              <PersonalDataSection email={session?.user.email} />
             </div>
           </TabsContent>
           <TabsContent value="company">Change your password here.</TabsContent>
