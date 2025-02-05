@@ -19,49 +19,49 @@ const AddressSection = async (email: UserParameters) => {
       <h4 className="font-bold text-xl pt-4 ">Endereço</h4>
       <Input
         type="text"
-        disabled
         value={`${loggedUser?.address?.street ?? "Endereço"}`}
-        className="sm:text-xs"
+        disabled
+        className="text-xs md:text-sm lg:text-lg"
       />
       <div className="flex w-full gap-2">
         <Input
           type="text"
-          disabled
           value={`${loggedUser?.address?.number ?? "Numero"}`}
-          className="sm:text-xs"
+          disabled
+          className="text-xs md:text-sm lg:text-lg"
         />
         <Input
           type="text"
-          disabled
           value={`${loggedUser?.address?.city ?? "Cidade"}`}
-          className="sm:text-xs"
+          disabled
+          className="text-xs md:text-sm lg:text-lg"
         />
       </div>
       <Input
         type="text"
-        disabled
         value={`${loggedUser?.address?.complement ?? "Complemento"}`}
-        className="sm:text-xs"
+        disabled
+        className="text-xs md:text-sm lg:text-lg"
       />
       <div className="flex w-full gap-2">
         <Input
           type="text"
-          disabled
           value={`${loggedUser?.address?.zipCode ?? "CEP"}`}
-          className="sm:text-xs"
+          disabled
+          className="text-xs md:text-sm lg:text-lg"
         />
         <Input
           type="text"
-          disabled
           value={`${loggedUser?.address?.neighborhood ?? "Bairro"}`}
-          className="sm:text-xs"
+          disabled
+          className="text-xs md:text-sm lg:text-lg"
         />
       </div>
       <Input
         type="text"
-        disabled
         value={`${loggedUser?.address?.country ?? "Pais"}`}
-        className="sm:text-xs"
+        disabled
+        className="text-xs md:text-sm lg:text-lg"
       />
     </div>
   );
