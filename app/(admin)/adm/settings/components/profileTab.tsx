@@ -110,14 +110,14 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
               </div>
             </Avatar>
             <div className="flex flex-col">
-              <p className="text-lg font-semibold sm:text-sm">
+              <p className="text-sm font-semibold md:text-lg">
                 {loggedUser.loggedUser.firstName}{" "}
                 {loggedUser.loggedUser.lastName}
               </p>
-              <p className="text-sm sm:text-xs">
+              <p className="text-xs md:text-sm">
                 {loggedUser.loggedUser.position}
               </p>
-              <p className="text-sm sm:text-xs">
+              <p className="text-xs md:text-sm">
                 {loggedUser.loggedUser.email}
               </p>
             </div>
@@ -136,7 +136,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             }
             placeholder="Telefone"
             disabled={isDisabled}
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
         </div>
         <div className="flex flex-col gap-2 w-full">
@@ -146,7 +146,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             value={"064.212.405-18"}
             placeholder="CPF"
             disabled={isDisabled}
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
         </div>
         <div className="flex flex-col gap-2 w-full">
@@ -156,7 +156,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             value={"06421240518"}
             placeholder="Chave Pix"
             disabled={isDisabled}
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
         </div>
       </div>
@@ -169,7 +169,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             placeholder="CEP"
             disabled={isDisabled}
             onChange={handleCepChange}
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
           <Input
             type="text"
@@ -177,7 +177,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             placeholder="Bairro"
             onChange={(e) => handleInputChange(e, "neighborhood")}
             disabled
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
         </div>
         <div className="flex w-full gap-2">
@@ -186,7 +186,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             value={address.street}
             placeholder="Endereço"
             disabled
-            className="text-xs md:text-sm lg:text-lg w-[90%]"
+            className="text-xs md:text-sm  w-[80%] lg:w-[90%]"
           />
           <Input
             type="text"
@@ -194,7 +194,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             placeholder="Número"
             onChange={(e) => handleInputChange(e, "number")}
             disabled={isDisabled}
-            className="text-xs md:text-sm lg:text-lg w-[10%]"
+            className="text-xs md:text-sm  w-[20%] lg:w-[10%]"
           />
         </div>
         <div className="flex w-full gap-2">
@@ -204,7 +204,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             onChange={(e) => handleInputChange(e, "complement")}
             placeholder="Complemento"
             disabled={isDisabled}
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
           <Input
             type="text"
@@ -212,7 +212,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             placeholder="Cidade"
             onChange={(e) => handleInputChange(e, "city")}
             disabled
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
         </div>
         <div className="flex w-full gap-2">
@@ -222,7 +222,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             placeholder="Estado"
             onChange={(e) => handleInputChange(e, "state")}
             disabled
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
           <Input
             type="text"
@@ -230,7 +230,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
             placeholder="País"
             onChange={(e) => handleInputChange(e, "country")}
             disabled
-            className="text-xs md:text-sm lg:text-lg"
+            className="text-xs md:text-sm "
           />
         </div>
       </div>
