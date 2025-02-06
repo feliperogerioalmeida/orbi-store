@@ -33,6 +33,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
     state: loggedUser.loggedUser.address?.state || "",
     country: loggedUser.loggedUser.address?.state || "",
     zipCode: loggedUser.loggedUser.address?.zipCode || "",
+    companyId: loggedUser.loggedUser.address?.companyId || "",
   };
 
   const [address, setAddress] = useState<Address>(initialAddress);
