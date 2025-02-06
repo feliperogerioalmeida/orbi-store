@@ -42,6 +42,7 @@ export const authOptions: AuthOptions = {
           lastName: user.lastName || "",
           role: user.role,
           position: user.position || "",
+          image: user.image || "",
         };
       },
     }),
