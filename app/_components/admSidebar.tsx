@@ -278,7 +278,7 @@ const AdmSidebar = () => {
                 className={`flex justify-start ${path.includes("/settings") && "bg-primary text-white hover:bg-primary hover:text-white"} `}
               >
                 <Link
-                  href={`/${userRole === "EMPLOYEE" || userRole === "ADMIN" ? "adm" : userRole?.toLowerCase()}/settings`}
+                  href={`/${userRole === "EMPLOYEE" || userRole === "ADMIN" || userRole ? "adm" : "client"}/settings`}
                 >
                   <Settings />
                   Configurações
