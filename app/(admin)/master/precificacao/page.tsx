@@ -1,4 +1,4 @@
-import DataTable from "./components/dataTable";
+import DataTable from "./_components/dataTable";
 import { db } from "@/app/_lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/_lib/auth";

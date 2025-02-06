@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/_lib/auth";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
-import SimulationsTable from "./components/simulationsTable";
+import SimulationsTable from "./_components/simulationsTable";
 import { db } from "@/app/_lib/prisma";
 import CustomSidebarTrigger from "@/app/_components/customSidebarTrigger";
 

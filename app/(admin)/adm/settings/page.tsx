@@ -11,7 +11,7 @@ import { authOptions } from "@/app/_lib/auth";
 import { redirect } from "next/navigation";
 
 import { db } from "@/app/_lib/prisma";
-import ProfileTab from "./components/profileTab";
+import ProfileTab from "./_components/profileTab";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);

@@ -2,7 +2,7 @@ import { authOptions } from "@/app/_lib/auth";
 import { db } from "@/app/_lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
-import UsersTable from "./components/usersTable";
+import UsersTable from "./_components/usersTable";
 import CustomSidebarTrigger from "@/app/_components/customSidebarTrigger";
 
 const UsersListPage = async () => {
