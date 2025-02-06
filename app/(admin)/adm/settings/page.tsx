@@ -27,6 +27,7 @@ const SettingsPage = async () => {
   ) {
     redirect(`/client/dashboard`);
   }
+
   return (
     <div className="flex flex-col justify-start p-4 gap-4 w-full h-full overscroll-none">
       <CustomSidebarTrigger content="Configurações" />

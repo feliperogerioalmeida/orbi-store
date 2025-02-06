@@ -15,7 +15,7 @@ const AddressSection = async (email: UserParameters) => {
   });
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-4 w-full">
       <h4 className="font-bold text-xl pt-4 ">Endereço</h4>
       <Input
         type="text"
