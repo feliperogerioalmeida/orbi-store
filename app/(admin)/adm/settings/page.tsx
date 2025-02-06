@@ -5,18 +5,25 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/app/_components/ui/tabs";
-import ProfileSection from "./components/profileSection";
+
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/_lib/auth";
 import { redirect } from "next/navigation";
-import PersonalDataSection from "./components/personalDataSection";
-import AddressSection from "./components/addressSection";
-import { Button } from "@/app/_components/ui/button";
+
+import { db } from "@/app/_lib/prisma";
+import ProfileTab from "./components/profileTab";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
+  const loggedUser = await db.user.findUnique({
+    where: { email: session?.user.email },
+    include: {
+      address: true,
+    },
+  });
+
+  if (!session || !session.user || !loggedUser) {
     redirect("/login");
   }
 
@@ -49,23 +56,7 @@ const SettingsPage = async () => {
             )}
           </TabsList>
           <TabsContent value="profile">
-            <div className="flex flex-col gap-4">
-              <ProfileSection email={session?.user.email} />
-              <PersonalDataSection email={session?.user.email} />
-              <AddressSection email={session?.user.email} />
-              <div className="flex flex-col gap-2">
-                <div className="flex max-w-[120px]">
-                  <Button variant="default" size="lg" className="w-full">
-                    Atualizar Perfil
-                  </Button>
-                </div>
-                <div className="flex max-w-[120px]">
-                  <Button variant="outline" size="lg" className="w-full">
-                    Alterar Senha
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <ProfileTab loggedUser={loggedUser} />
           </TabsContent>
           <TabsContent value="company">Change your password here.</TabsContent>
           <TabsContent value="team">Change your password here.</TabsContent>
