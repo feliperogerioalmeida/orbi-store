@@ -18,6 +18,61 @@ interface ExtendedUser extends User {
 
 const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
   const [isDisabled, setIsDisabled] = useState(true);
+  const [cep, setCep] = useState(loggedUser.loggedUser.address?.zipCode || "");
+
+  const initialAddress = {
+    id: loggedUser.loggedUser.address?.id || "",
+    userId: loggedUser.loggedUser.address?.userId || "",
+    street: loggedUser.loggedUser.address?.street || "",
+    city: loggedUser.loggedUser.address?.city || "",
+    neighborhood: loggedUser.loggedUser.address?.neighborhood || "",
+    number: loggedUser.loggedUser.address?.number || "",
+    complement: loggedUser.loggedUser.address?.complement || "",
+    state: loggedUser.loggedUser.address?.state || "",
+    country: loggedUser.loggedUser.address?.state || "",
+    zipCode: loggedUser.loggedUser.address?.zipCode || "",
+  };
+
+  const [address, setAddress] = useState<Address>(initialAddress);
+
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
+    setCep(newCep);
+    setAddress((prev) => ({ ...prev, zipCode: newCep }));
+
+    if (newCep.length === 8) {
+      fetchAddressByCep(newCep);
+    }
+  };
+
+  const fetchAddressByCep = async (cep: string) => {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        setAddress((prev) => ({
+          ...prev,
+          street: data.logradouro || "",
+          city: data.localidade || "",
+          neighborhood: data.bairro || "",
+          zipCode: data.cep || cep,
+          complement: data.complemento || "",
+          state: data.estado || "",
+          country: "Brasil",
+        }));
+      }
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: keyof Address,
+  ) => {
+    setAddress((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
   const formatPhoneNumber = (phone: string) => {
     const digits = phone.replace(/\D/g, "");
@@ -27,6 +82,13 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
       (_, ddd, firstPart, secondPart) => `(${ddd}) ${firstPart}-${secondPart}`,
     );
   };
+
+  const handleCancelClick = () => {
+    setAddress(initialAddress);
+    setCep(initialAddress.zipCode);
+    setIsDisabled(true);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
@@ -72,6 +134,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
                 ? formatPhoneNumber(loggedUser.loggedUser.phoneNumber)
                 : ""
             }
+            placeholder="Telefone"
             disabled={isDisabled}
             className="text-xs md:text-sm lg:text-lg"
           />
@@ -81,6 +144,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
           <Input
             type="text"
             value={"064.212.405-18"}
+            placeholder="CPF"
             disabled={isDisabled}
             className="text-xs md:text-sm lg:text-lg"
           />
@@ -90,6 +154,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
           <Input
             type="text"
             value={"06421240518"}
+            placeholder="Chave Pix"
             disabled={isDisabled}
             className="text-xs md:text-sm lg:text-lg"
           />
@@ -97,52 +162,77 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
       </div>
       <div className="flex flex-col gap-4 w-full">
         <h4 className="font-bold text-xl pt-4 ">Endereço</h4>
-        <Input
-          type="text"
-          value={`${loggedUser.loggedUser.address?.street ?? "Endereço"}`}
-          disabled={isDisabled}
-          className="text-xs md:text-sm lg:text-lg"
-        />
         <div className="flex w-full gap-2">
           <Input
             type="text"
-            value={`${loggedUser.loggedUser.address?.number ?? "Numero"}`}
+            value={cep}
+            placeholder="CEP"
             disabled={isDisabled}
+            onChange={handleCepChange}
             className="text-xs md:text-sm lg:text-lg"
           />
           <Input
             type="text"
-            value={`${loggedUser.loggedUser.address?.city ?? "Cidade"}`}
-            disabled={isDisabled}
+            value={address.neighborhood}
+            placeholder="Bairro"
+            onChange={(e) => handleInputChange(e, "neighborhood")}
+            disabled
             className="text-xs md:text-sm lg:text-lg"
           />
         </div>
-        <Input
-          type="text"
-          value={`${loggedUser.loggedUser.address?.complement ?? "Complemento"}`}
-          disabled={isDisabled}
-          className="text-xs md:text-sm lg:text-lg"
-        />
         <div className="flex w-full gap-2">
           <Input
             type="text"
-            value={`${loggedUser.loggedUser.address?.zipCode ?? "CEP"}`}
+            value={address.street}
+            placeholder="Endereço"
+            disabled
+            className="text-xs md:text-sm lg:text-lg w-[90%]"
+          />
+          <Input
+            type="text"
+            value={address.number}
+            placeholder="Número"
+            onChange={(e) => handleInputChange(e, "number")}
+            disabled={isDisabled}
+            className="text-xs md:text-sm lg:text-lg w-[10%]"
+          />
+        </div>
+        <div className="flex w-full gap-2">
+          <Input
+            type="text"
+            value={address.complement || ""}
+            onChange={(e) => handleInputChange(e, "complement")}
+            placeholder="Complemento"
             disabled={isDisabled}
             className="text-xs md:text-sm lg:text-lg"
           />
           <Input
             type="text"
-            value={`${loggedUser.loggedUser.address?.neighborhood ?? "Bairro"}`}
-            disabled={isDisabled}
+            value={address.city}
+            placeholder="Cidade"
+            onChange={(e) => handleInputChange(e, "city")}
+            disabled
             className="text-xs md:text-sm lg:text-lg"
           />
         </div>
-        <Input
-          type="text"
-          value={`${loggedUser.loggedUser.address?.country ?? "Pais"}`}
-          disabled={isDisabled}
-          className="text-xs md:text-sm lg:text-lg"
-        />
+        <div className="flex w-full gap-2">
+          <Input
+            type="text"
+            value={address.state}
+            placeholder="Estado"
+            onChange={(e) => handleInputChange(e, "state")}
+            disabled
+            className="text-xs md:text-sm lg:text-lg"
+          />
+          <Input
+            type="text"
+            value={address.country}
+            placeholder="País"
+            onChange={(e) => handleInputChange(e, "country")}
+            disabled
+            className="text-xs md:text-sm lg:text-lg"
+          />
+        </div>
       </div>
       {isDisabled ? (
         <div className="flex flex-col gap-2">
@@ -174,7 +264,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
               variant="destructive"
               size="lg"
               className="w-full"
-              onClick={() => setIsDisabled(true)}
+              onClick={handleCancelClick}
             >
               Cancelar
             </Button>
