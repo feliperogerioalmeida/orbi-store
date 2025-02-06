@@ -11,8 +11,10 @@ import { Pencil } from "lucide-react";
 import { Input } from "@/app/_components/ui/input";
 import { Button } from "@/app/_components/ui/button";
 import { useState } from "react";
+import { Label } from "@/app/_components/ui/label";
+import { saveImage } from "../_actions/saveImage";
 
-interface ExtendedUser extends User {
+export interface ExtendedUser extends User {
   address?: Address | null;
 }
 
@@ -102,12 +104,30 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
               </AvatarFallback>
 
               {loggedUser.loggedUser.image && (
-                <AvatarImage src={loggedUser.loggedUser.image} />
+                <AvatarImage
+                  src={loggedUser.loggedUser.image}
+                  className="rounded-full"
+                />
               )}
 
-              <div className=" flex absolute right-0 bottom-0 bg-black rounded-full w-6 h-6 items-center justify-center cursor-pointer">
+              <Label
+                htmlFor="file-input"
+                className="absolute right-0 bottom-0 bg-black rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+              >
                 <Pencil size={16} color="#ffffff" strokeWidth={1.25} />
-              </div>
+              </Label>
+              <Input
+                id="file-input"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    saveImage(loggedUser, file);
+                  }
+                }}
+              />
             </Avatar>
             <div className="flex flex-col">
               <p className="text-sm font-semibold md:text-lg">
