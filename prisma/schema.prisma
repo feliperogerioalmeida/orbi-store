@@ -39,21 +39,61 @@ model User {
   position      String?
   phoneNumber   String?
   address       Address?
+  birthdate     DateTime?
+  cpf           String?
+  cnpj          String?
+  personType    PersonType?
+  fullName      String?
+  status        Status          @default(ACTIVE)
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  PENDING
+}
+
+enum PersonType {
+  FISICA
+  JURIDICA
+}
+
+model Company {
+  id                         String    @id @default(uuid())
+  name                       String?
+  socialName                 String?
+  cnpj                       String?   @unique
+  phoneNumber                String?
+  email                      String?   @unique
+  stateNumber                String?
+  creatioDate                DateTime?
+  Address                    Address?  @relation(fields: [addressId], references: [id])
+  digitalCertificate         String?
+  digitalCertificatePassword String?
+  lastNFEIssued              String?
+  NFESeries                  String?
+  lastInvoiceIssued          String?
+  invoiceSeries              String?
+  CSC                        String?
+  CSCId                      String?
+  addressId                  String?
 }
 
 model Address {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   street       String
   number       String
   city         String
   complement   String?
   zipCode      String
   neighborhood String
-  state      String
+  state        String
   country      String
-  userId       String   @unique
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  userId       String    @unique
+  user         User      @relation(fields: [userId], references: [id])
+  companyId    String?
+  Company      Company[]
 }
 
 model Review {
