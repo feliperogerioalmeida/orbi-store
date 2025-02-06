@@ -54,13 +54,13 @@ const SettingsPage = async () => {
               <PersonalDataSection email={session?.user.email} />
               <AddressSection email={session?.user.email} />
               <div className="flex flex-col gap-2">
-                <div className="flex ">
-                  <Button variant="default" size="lg">
+                <div className="flex max-w-[120px]">
+                  <Button variant="default" size="lg" className="w-full">
                     Atualizar Perfil
                   </Button>
                 </div>
-                <div className="flex ">
-                  <Button variant="outline" size="lg">
+                <div className="flex max-w-[120px]">
+                  <Button variant="outline" size="lg" className="w-full">
                     Alterar Senha
                   </Button>
                 </div>
