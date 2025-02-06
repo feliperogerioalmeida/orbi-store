@@ -44,17 +44,16 @@ const SettingsPage = async () => {
             <TabsTrigger value="profile" className="w-min-[100px] w-full">
               Perfil
             </TabsTrigger>
-            {loggedUser.role === "ADMIN" ||
-              (loggedUser.role === "MASTER" && (
-                <>
-                  <TabsTrigger value="company" className="w-min-[100px] w-full">
-                    Empresa
-                  </TabsTrigger>
-                  <TabsTrigger value="team" className="w-min-[100px] w-full">
-                    Time
-                  </TabsTrigger>
-                </>
-              ))}
+            {(loggedUser.role === "ADMIN" || loggedUser.role === "MASTER") && (
+              <>
+                <TabsTrigger value="company" className="w-min-[100px] w-full">
+                  Empresa
+                </TabsTrigger>
+                <TabsTrigger value="team" className="w-min-[100px] w-full">
+                  Time
+                </TabsTrigger>
+              </>
+            )}
           </TabsList>
           <TabsContent value="profile">
             <ProfileTab loggedUser={loggedUser} />
