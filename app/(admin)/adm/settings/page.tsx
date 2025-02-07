@@ -56,7 +56,7 @@ const SettingsPage = async () => {
             )}
           </TabsList>
           <TabsContent value="profile">
-            <ProfileTab loggedUser={loggedUser} />
+            <ProfileTab />
           </TabsContent>
           <TabsContent value="company">Change your password here.</TabsContent>
           <TabsContent value="team">Change your password here.</TabsContent>
