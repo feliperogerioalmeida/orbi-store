@@ -5,6 +5,7 @@ import AuthProvider from "../_providers/auth";
 import LandingPageNav from "../_components/landingPageNav";
 import Footer from "../_components/footer";
 import { Toaster } from "../_components/ui/toaster";
+import { UserProvider } from "../_providers/user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,14 +62,16 @@ export default function RootLayout({
       >
         <div className="flex h-full flex-col">
           <AuthProvider>
-            <div className="fixed z-30 w-full">
-              <LandingPageNav />
-            </div>
-            <div className="flex min-h-screen h-auto w-full flex-col">
-              <div className="flex-1 w-full mt-auto ">{children}</div>
-              <Toaster />
-              <Footer />
-            </div>
+            <UserProvider>
+              <div className="fixed z-30 w-full">
+                <LandingPageNav />
+              </div>
+              <div className="flex min-h-screen h-auto w-full flex-col">
+                <div className="flex-1 w-full mt-auto ">{children}</div>
+                <Toaster />
+                <Footer />
+              </div>
+            </UserProvider>
           </AuthProvider>
         </div>
       </body>

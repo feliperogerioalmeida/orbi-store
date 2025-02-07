@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import AdmSidebar from "../_components/admSidebar";
 import { SidebarInset, SidebarProvider } from "../_components/ui/sidebar";
 import { Toaster } from "@/app/_components/ui/toaster";
+import { UserProvider } from "../_providers/user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -68,15 +69,17 @@ export default async function AdminLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <SidebarProvider defaultOpen={false}>
-            <AdmSidebar />
-            <SidebarInset>
-              <div className="flex min-h-screen w-full flex-col">
-                <div className="flex-1 w-full ">{children}</div>
-                <Toaster />
-              </div>
-            </SidebarInset>
-          </SidebarProvider>
+          <UserProvider>
+            <SidebarProvider defaultOpen={false}>
+              <AdmSidebar />
+              <SidebarInset>
+                <div className="flex min-h-screen w-full flex-col">
+                  <div className="flex-1 w-full ">{children}</div>
+                  <Toaster />
+                </div>
+              </SidebarInset>
+            </SidebarProvider>
+          </UserProvider>
         </AuthProvider>
       </body>
     </html>
