@@ -1,8 +1,9 @@
 "use server";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { ExtendedUser } from "../_components/profileTab";
+
 import { db } from "@/app/_lib/prisma";
 import { redirect } from "next/navigation";
+import { ExtendedUser } from "../(admin)/adm/settings/_components/profileTab";
 
 export const saveImage = async (data: ExtendedUser, file: File) => {
   const client = new S3Client();

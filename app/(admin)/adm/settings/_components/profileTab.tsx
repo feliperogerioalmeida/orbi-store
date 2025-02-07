@@ -1,19 +1,13 @@
 "use client";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/app/_components/ui/avatar";
+
 import { Card, CardContent } from "@/app/_components/ui/card";
 
 import { User, Address } from "@prisma/client";
-import { Pencil } from "lucide-react";
+
 import { Input } from "@/app/_components/ui/input";
 import { Button } from "@/app/_components/ui/button";
 import { useState } from "react";
-import { Label } from "@/app/_components/ui/label";
-import { saveImage } from "../_actions/saveImage";
-import { getUser } from "../_actions/getUser";
+import AvatarComponent from "@/app/_components/avatarComponent";
 
 export interface ExtendedUser extends User {
   address?: Address | null;
@@ -21,7 +15,7 @@ export interface ExtendedUser extends User {
 
 const ProfileTab = (data: { loggedUser: ExtendedUser }) => {
   const [isDisabled, setIsDisabled] = useState(true);
-  const [user, setUser] = useState<ExtendedUser>(data.loggedUser);
+  const user = data.loggedUser;
   const [cep, setCep] = useState(user.address?.zipCode || "");
 
   const initialAddress = {
@@ -94,50 +88,17 @@ const ProfileTab = (data: { loggedUser: ExtendedUser }) => {
     setIsDisabled(true);
   };
 
-  const hadnleImageUpdateClick = async (data: ExtendedUser, file: File) => {
-    saveImage(data, file);
-    const user = await getUser(data.email);
-    if (!user) {
-      return console.error("Usuário não encontrado");
-    }
-    setUser(user);
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
         <h4 className="font-bold pl-2 text-xl pt-4">Perfil</h4>
         <Card className="p-0 w-full h-[100px] h-min-[50px] h-max-[100px]">
           <CardContent className=" p-0 pl-4 flex items-center h-full gap-2">
-            <Avatar className=" h-20 w-20 justify-self-center items-center overflow-visible">
-              <AvatarFallback>
-                {user.firstName?.[0].toUpperCase()}
-                {user.lastName?.[0].toUpperCase()}
-              </AvatarFallback>
-
-              {user.image && (
-                <AvatarImage src={user.image} className="rounded-full" />
-              )}
-
-              <Label
-                htmlFor="file-input"
-                className="absolute right-0 bottom-0 bg-black rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
-              >
-                <Pencil size={16} color="#ffffff" strokeWidth={1.25} />
-              </Label>
-              <Input
-                id="file-input"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    hadnleImageUpdateClick(user, file);
-                  }
-                }}
-              />
-            </Avatar>
+            <AvatarComponent
+              data={user}
+              className="h-20 w-20 justify-self-center items-center overflow-visible"
+              isEditable={true}
+            />
             <div className="flex flex-col">
               <p className="text-sm font-semibold md:text-lg">
                 {user.firstName} {user.lastName}
