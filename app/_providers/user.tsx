@@ -21,7 +21,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Atualize o estado do usuário com os dados da sessão
     if (session?.user?.email) {
       getUser(session.user.email).then(setUser);
     }
