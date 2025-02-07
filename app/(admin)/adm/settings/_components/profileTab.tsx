@@ -33,9 +33,14 @@ const ProfileTab = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [cep, setCep] = useState(user?.address?.zipCode || "");
   const [address, setAddress] = useState<Address>(initialAddress);
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
+  const [cpf, setCpf] = useState(user?.cpf || "");
+  const [pixKey, setPixKey] = useState(user?.pixKey || "");
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
+    const formattedCep = newCep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+    setCep(formattedCep);
     setCep(newCep);
     setAddress((prev) => ({ ...prev, zipCode: newCep }));
 
@@ -75,17 +80,32 @@ const ProfileTab = () => {
 
   const formatPhoneNumber = (phone: string) => {
     const digits = phone.replace(/\D/g, "");
-
     return digits.replace(
       /^(\d{2})(\d{5})(\d{4})$/,
       (_, ddd, firstPart, secondPart) => `(${ddd}) ${firstPart}-${secondPart}`,
     );
   };
 
+  const formatCpf = (cpf: string) => {
+    const digits = cpf.replace(/\D/g, "");
+    return digits.replace(
+      /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+      (_, part1, part2, part3, part4) => `${part1}.${part2}.${part3}-${part4}`,
+    );
+  };
+
+  const handlePixKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.value.replace(/\s/g, "");
+    setPixKey(key);
+  };
+
   const handleCancelClick = () => {
     setAddress(initialAddress);
     setCep(initialAddress.zipCode);
     setIsDisabled(true);
+    setPhoneNumber(user?.phoneNumber || "");
+    setCpf(user?.cpf || "");
+    setPixKey(user?.pixKey || "");
   };
 
   return (
@@ -113,10 +133,9 @@ const ProfileTab = () => {
           <h4 className="font-bold text-xl pt-4 ">Telefone</h4>
           <Input
             type="tel"
-            value={
-              user?.phoneNumber ? formatPhoneNumber(user?.phoneNumber) : ""
-            }
+            value={formatPhoneNumber(phoneNumber)}
             placeholder="Telefone"
+            onChange={(e) => setPhoneNumber(e.target.value)}
             disabled={isDisabled}
             className="text-xs md:text-sm "
           />
@@ -125,7 +144,8 @@ const ProfileTab = () => {
           <h4 className="font-bold text-xl pt-4 ">CPF</h4>
           <Input
             type="text"
-            value={"064.212.405-18"}
+            value={formatCpf(cpf)}
+            onChange={(e) => setCpf(e.target.value)}
             placeholder="CPF"
             disabled={isDisabled}
             className="text-xs md:text-sm "
@@ -135,7 +155,8 @@ const ProfileTab = () => {
           <h4 className="font-bold text-xl pt-4 ">Chave Pix</h4>
           <Input
             type="text"
-            value={"06421240518"}
+            value={pixKey}
+            onChange={handlePixKeyChange}
             placeholder="Chave Pix"
             disabled={isDisabled}
             className="text-xs md:text-sm "
