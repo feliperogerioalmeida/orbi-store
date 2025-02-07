@@ -16,6 +16,8 @@ export async function PUT(req: NextRequest) {
 
     const { id, data } = await req.json();
 
+    console.log("Payload recebido na rota:", { id, data });
+    // Validação de ID e dados
     if (!id || !data || typeof data !== "object") {
       return NextResponse.json(
         { error: "O ID do usuário e os dados são obrigatórios." },
@@ -23,7 +25,10 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const userToUpdate = await db.user.findUnique({ where: { id } });
+    const userToUpdate = await db.user.findUnique({
+      where: { id },
+      include: { address: true },
+    });
 
     if (!userToUpdate) {
       return NextResponse.json(
@@ -32,6 +37,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    // Impedir alteração de papel do próprio usuário
     if (userToUpdate.role === "MASTER" && userToUpdate.id === token.sub) {
       return NextResponse.json(
         { error: "Você não pode alterar seu próprio papel." },
@@ -39,6 +45,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    // Atualizar senha
     if ("password" in data) {
       if (token.role !== "MASTER") {
         return NextResponse.json(
@@ -50,6 +57,7 @@ export async function PUT(req: NextRequest) {
       data.password = await bcrypt.hash(data.password, 12);
     }
 
+    // Validação e restrições de papel
     if ("role" in data && data.role !== userToUpdate.role) {
       if (
         !(
@@ -89,25 +97,84 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    const validFields = Object.keys(data).filter((key) =>
-      ["firstName", "lastName", "role", "position", "password"].includes(key),
-    );
+    // Validação de endereço se for enviado
+    if (data.address) {
+      const requiredFields = [
+        "street",
+        "number",
+        "city",
+        "neighborhood",
+        "zipCode",
+        "state",
+        "country",
+      ];
 
-    if (validFields.length === 0) {
-      return NextResponse.json(
-        { error: "Nenhum campo válido para atualizar foi fornecido." },
-        { status: 400 },
+      const missingFields = requiredFields.filter(
+        (field) => !data.address[field],
       );
+
+      if (missingFields.length > 0) {
+        return NextResponse.json(
+          {
+            error: `Campos obrigatórios do endereço ausentes: ${missingFields.join(
+              ", ",
+            )}`,
+          },
+          { status: 400 },
+        );
+      }
     }
 
-    const updateData = validFields.reduce(
-      (acc: { [key: string]: string | number }, key) => {
-        acc[key] = data[key];
-        return acc;
-      },
-      {},
-    );
+    // Preparar dados para atualização
+    const validFields = [
+      "firstName",
+      "lastName",
+      "role",
+      "position",
+      "password",
+      "phoneNumber",
+      "cpf",
+      "pixKey",
+    ];
+    const updateData: Record<string, unknown> = {};
 
+    validFields.forEach((field) => {
+      if (data[field] !== undefined) {
+        updateData[field] = data[field];
+      }
+    });
+
+    // Atualizar endereço se enviado
+    if (data.address) {
+      const addressUpdate = {
+        street: data.address.street,
+        number: data.address.number,
+        city: data.address.city,
+        neighborhood: data.address.neighborhood,
+        zipCode: data.address.zipCode,
+        state: data.address.state,
+        country: data.address.country,
+        complement: data.address.complement || null,
+      };
+
+      if (userToUpdate.address?.id) {
+        await db.address.update({
+          where: { id: userToUpdate.address.id },
+          data: addressUpdate,
+        });
+      } else {
+        const newAddress = await db.address.create({
+          data: {
+            ...addressUpdate,
+            userId: id,
+          },
+        });
+
+        updateData.addressId = newAddress.id;
+      }
+    }
+
+    // Atualizar usuário no banco de dados
     const updatedUser = await db.user.update({
       where: { id },
       data: updateData,

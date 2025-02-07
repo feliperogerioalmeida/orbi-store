@@ -6,16 +6,17 @@ import { User, Address } from "@prisma/client";
 
 import { Input } from "@/app/_components/ui/input";
 import { Button } from "@/app/_components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AvatarComponent from "@/app/_components/avatarComponent";
 import { useUser } from "@/app/_providers/user";
+import { useToast } from "@/app/_hooks/use-toast";
 
 export interface ExtendedUser extends User {
   address?: Address | null;
 }
 
 const ProfileTab = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   const initialAddress = {
     id: user?.address?.id || "",
@@ -36,6 +37,30 @@ const ProfileTab = () => {
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
   const [cpf, setCpf] = useState(user?.cpf || "");
   const [pixKey, setPixKey] = useState(user?.pixKey || "");
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (user) {
+      setPhoneNumber(user.phoneNumber || "");
+      setCpf(user.cpf || "");
+      setPixKey(user.pixKey || "");
+      setCep(user.address?.zipCode || "");
+      setAddress({
+        id: user.address?.id || "",
+        userId: user.address?.userId || "",
+        street: user.address?.street || "",
+        city: user.address?.city || "",
+        neighborhood: user.address?.neighborhood || "",
+        number: user.address?.number || "",
+        complement: user.address?.complement || "",
+        state: user.address?.state || "",
+        country: user.address?.country || "",
+        zipCode: user.address?.zipCode || "",
+        companyId: user.address?.companyId || "",
+      });
+    }
+  }, [user]);
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
@@ -107,6 +132,49 @@ const ProfileTab = () => {
     setPixKey(user?.pixKey || "");
   };
 
+  const handleSaveClick = async (userId: string) => {
+    try {
+      const payload: Partial<ExtendedUser> = {
+        id: userId,
+        phoneNumber: phoneNumber || null,
+        cpf: cpf || null,
+        pixKey: pixKey || null,
+      };
+
+      if (
+        address &&
+        Object.values(address).some((value) => value !== "" && value !== null)
+      ) {
+        payload.address = address;
+      }
+
+      const response = await fetch("/api/users/updateUser", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: userId, data: payload }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Erro desconhecido");
+      }
+      setUser(result.user);
+      setIsDisabled(true);
+
+      toast({
+        title: "Sucesso!",
+        description: "Usuário atualizado com sucesso.",
+        variant: "default",
+      });
+    } catch (error: unknown) {
+      toast({
+        title: "Erro",
+        description: String(error) || "Não foi possível atualizar o usuário.",
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
@@ -257,7 +325,14 @@ const ProfileTab = () => {
       ) : (
         <div className="flex flex-col gap-2">
           <div className="flex max-w-[120px]">
-            <Button variant="outline" size="lg" className="w-full">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full"
+              onClick={() => {
+                if (user?.id) handleSaveClick(user.id);
+              }}
+            >
               Salvar
             </Button>
           </div>
