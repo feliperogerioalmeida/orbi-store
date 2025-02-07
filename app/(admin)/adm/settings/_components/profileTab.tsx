@@ -13,27 +13,29 @@ import { Button } from "@/app/_components/ui/button";
 import { useState } from "react";
 import { Label } from "@/app/_components/ui/label";
 import { saveImage } from "../_actions/saveImage";
+import { getUser } from "../_actions/getUser";
 
 export interface ExtendedUser extends User {
   address?: Address | null;
 }
 
-const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
+const ProfileTab = (data: { loggedUser: ExtendedUser }) => {
   const [isDisabled, setIsDisabled] = useState(true);
-  const [cep, setCep] = useState(loggedUser.loggedUser.address?.zipCode || "");
+  const [user, setUser] = useState<ExtendedUser>(data.loggedUser);
+  const [cep, setCep] = useState(user.address?.zipCode || "");
 
   const initialAddress = {
-    id: loggedUser.loggedUser.address?.id || "",
-    userId: loggedUser.loggedUser.address?.userId || "",
-    street: loggedUser.loggedUser.address?.street || "",
-    city: loggedUser.loggedUser.address?.city || "",
-    neighborhood: loggedUser.loggedUser.address?.neighborhood || "",
-    number: loggedUser.loggedUser.address?.number || "",
-    complement: loggedUser.loggedUser.address?.complement || "",
-    state: loggedUser.loggedUser.address?.state || "",
-    country: loggedUser.loggedUser.address?.state || "",
-    zipCode: loggedUser.loggedUser.address?.zipCode || "",
-    companyId: loggedUser.loggedUser.address?.companyId || "",
+    id: user.address?.id || "",
+    userId: user.address?.userId || "",
+    street: user.address?.street || "",
+    city: user.address?.city || "",
+    neighborhood: user.address?.neighborhood || "",
+    number: user.address?.number || "",
+    complement: user.address?.complement || "",
+    state: user.address?.state || "",
+    country: user.address?.state || "",
+    zipCode: user.address?.zipCode || "",
+    companyId: user.address?.companyId || "",
   };
 
   const [address, setAddress] = useState<Address>(initialAddress);
@@ -92,6 +94,15 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
     setIsDisabled(true);
   };
 
+  const hadnleImageUpdateClick = async (data: ExtendedUser, file: File) => {
+    saveImage(data, file);
+    const user = await getUser(data.email);
+    if (!user) {
+      return console.error("Usuário não encontrado");
+    }
+    setUser(user);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
@@ -100,15 +111,12 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
           <CardContent className=" p-0 pl-4 flex items-center h-full gap-2">
             <Avatar className=" h-20 w-20 justify-self-center items-center overflow-visible">
               <AvatarFallback>
-                {loggedUser.loggedUser.firstName?.[0].toUpperCase()}
-                {loggedUser.loggedUser.lastName?.[0].toUpperCase()}
+                {user.firstName?.[0].toUpperCase()}
+                {user.lastName?.[0].toUpperCase()}
               </AvatarFallback>
 
-              {loggedUser.loggedUser.image && (
-                <AvatarImage
-                  src={loggedUser.loggedUser.image}
-                  className="rounded-full"
-                />
+              {user.image && (
+                <AvatarImage src={user.image} className="rounded-full" />
               )}
 
               <Label
@@ -125,22 +133,17 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    saveImage(loggedUser, file);
+                    hadnleImageUpdateClick(user, file);
                   }
                 }}
               />
             </Avatar>
             <div className="flex flex-col">
               <p className="text-sm font-semibold md:text-lg">
-                {loggedUser.loggedUser.firstName}{" "}
-                {loggedUser.loggedUser.lastName}
+                {user.firstName} {user.lastName}
               </p>
-              <p className="text-xs md:text-sm">
-                {loggedUser.loggedUser.position}
-              </p>
-              <p className="text-xs md:text-sm">
-                {loggedUser.loggedUser.email}
-              </p>
+              <p className="text-xs md:text-sm">{user.position}</p>
+              <p className="text-xs md:text-sm">{user.email}</p>
             </div>
           </CardContent>
         </Card>
@@ -150,11 +153,7 @@ const ProfileTab = (loggedUser: { loggedUser: ExtendedUser }) => {
           <h4 className="font-bold text-xl pt-4 ">Telefone</h4>
           <Input
             type="tel"
-            value={
-              loggedUser.loggedUser.phoneNumber
-                ? formatPhoneNumber(loggedUser.loggedUser.phoneNumber)
-                : ""
-            }
+            value={user.phoneNumber ? formatPhoneNumber(user.phoneNumber) : ""}
             placeholder="Telefone"
             disabled={isDisabled}
             className="text-xs md:text-sm "
