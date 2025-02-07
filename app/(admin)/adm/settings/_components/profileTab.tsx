@@ -41,7 +41,6 @@ const ProfileTab = () => {
     const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
     const formattedCep = newCep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
     setCep(formattedCep);
-    setCep(newCep);
     setAddress((prev) => ({ ...prev, zipCode: newCep }));
 
     if (newCep.length === 8) {
