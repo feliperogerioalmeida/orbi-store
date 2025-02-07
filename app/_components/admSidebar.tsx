@@ -38,12 +38,14 @@ import {
   SidebarSeparator,
 } from "./ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { redirect, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import AvatarComponent from "./avatarComponent";
+import { getUser } from "../_actions/getUser";
+import { User } from "@prisma/client";
 
 const AdmSidebar = () => {
   const { data: session } = useSession();
@@ -52,6 +54,16 @@ const AdmSidebar = () => {
   >("MASTER");
 
   const userRole = session?.user?.role;
+
+  const email = session?.user?.email;
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (email) {
+      getUser(email).then((userData) => setUser(userData));
+    }
+  }, [email]);
 
   const path = usePathname();
 
@@ -204,16 +216,9 @@ const AdmSidebar = () => {
           <SidebarMenu className="flex flex-col w-full items-center">
             <SidebarMenuItem className="pt-6 w-[95%]">
               <div className="flex items-center gap-2 py-4">
-                <Avatar>
-                  <AvatarFallback>
-                    {session?.user.firstName?.[0].toUpperCase()}
-                    {session?.user.lastName?.[0].toUpperCase()}
-                  </AvatarFallback>
-
-                  {session?.user.image && (
-                    <AvatarImage src={session?.user.image} />
-                  )}
-                </Avatar>
+                {user && (
+                  <AvatarComponent className="h-10 w-10" isEditable={false} />
+                )}
 
                 <div className="flex flex-col group-data-[collapsible=icon]:hidden text-nowrap">
                   <p className="font-medium">

@@ -1,37 +1,38 @@
 "use client";
-import { User } from "@prisma/client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Label } from "./ui/label";
 import { Pencil } from "lucide-react";
 import { Input } from "./ui/input";
-import { saveImage } from "../_actions/saveImage";
-import { getUser } from "../_actions/getUser";
-import { useState } from "react";
+import { saveUserProfileImage } from "../_actions/saveUserProfileImage";
+import { useUser } from "../_providers/user";
 
 const AvatarComponent = ({
-  data,
   className,
   isEditable,
 }: {
-  data: User;
   className?: string;
   isEditable?: boolean;
 }) => {
-  const [user, setUser] = useState<User>(data);
-  const hadnleImageUpdateClick = async (data: User, file: File) => {
-    saveImage(data, file);
-    const user = await getUser(data.email);
-    if (!user) {
-      return console.error("Usuário não encontrado");
+  const { user, setUser } = useUser();
+
+  if (!user) return null;
+
+  const handleImageUpdateClick = async (file: File) => {
+    try {
+      const imageUrl = await saveUserProfileImage(user, file);
+
+      setUser({ ...user, image: imageUrl });
+    } catch (error) {
+      console.error("Erro ao atualizar imagem:", error);
     }
-    setUser(user);
   };
 
   return (
     <Avatar className={className}>
       <AvatarFallback>
-        {user.firstName?.[0].toUpperCase()}
-        {user.lastName?.[0].toUpperCase()}
+        {user.firstName?.[0]?.toUpperCase()}
+        {user.lastName?.[0]?.toUpperCase()}
       </AvatarFallback>
 
       {user.image && <AvatarImage src={user.image} className="rounded-full" />}
@@ -50,9 +51,7 @@ const AvatarComponent = ({
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) {
-                hadnleImageUpdateClick(user, file);
-              }
+              if (file) handleImageUpdateClick(file);
             }}
           />
         </>

@@ -8,30 +8,30 @@ import { Input } from "@/app/_components/ui/input";
 import { Button } from "@/app/_components/ui/button";
 import { useState } from "react";
 import AvatarComponent from "@/app/_components/avatarComponent";
+import { useUser } from "@/app/_providers/user";
 
 export interface ExtendedUser extends User {
   address?: Address | null;
 }
 
-const ProfileTab = (data: { loggedUser: ExtendedUser }) => {
-  const [isDisabled, setIsDisabled] = useState(true);
-  const user = data.loggedUser;
-  const [cep, setCep] = useState(user.address?.zipCode || "");
+const ProfileTab = () => {
+  const { user } = useUser();
 
   const initialAddress = {
-    id: user.address?.id || "",
-    userId: user.address?.userId || "",
-    street: user.address?.street || "",
-    city: user.address?.city || "",
-    neighborhood: user.address?.neighborhood || "",
-    number: user.address?.number || "",
-    complement: user.address?.complement || "",
-    state: user.address?.state || "",
-    country: user.address?.state || "",
-    zipCode: user.address?.zipCode || "",
-    companyId: user.address?.companyId || "",
+    id: user?.address?.id || "",
+    userId: user?.address?.userId || "",
+    street: user?.address?.street || "",
+    city: user?.address?.city || "",
+    neighborhood: user?.address?.neighborhood || "",
+    number: user?.address?.number || "",
+    complement: user?.address?.complement || "",
+    state: user?.address?.state || "",
+    country: user?.address?.state || "",
+    zipCode: user?.address?.zipCode || "",
+    companyId: user?.address?.companyId || "",
   };
-
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [cep, setCep] = useState(user?.address?.zipCode || "");
   const [address, setAddress] = useState<Address>(initialAddress);
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,16 +95,15 @@ const ProfileTab = (data: { loggedUser: ExtendedUser }) => {
         <Card className="p-0 w-full h-[100px] h-min-[50px] h-max-[100px]">
           <CardContent className=" p-0 pl-4 flex items-center h-full gap-2">
             <AvatarComponent
-              data={user}
               className="h-20 w-20 justify-self-center items-center overflow-visible"
               isEditable={true}
             />
             <div className="flex flex-col">
               <p className="text-sm font-semibold md:text-lg">
-                {user.firstName} {user.lastName}
+                {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-xs md:text-sm">{user.position}</p>
-              <p className="text-xs md:text-sm">{user.email}</p>
+              <p className="text-xs md:text-sm">{user?.position}</p>
+              <p className="text-xs md:text-sm">{user?.email}</p>
             </div>
           </CardContent>
         </Card>
@@ -114,7 +113,9 @@ const ProfileTab = (data: { loggedUser: ExtendedUser }) => {
           <h4 className="font-bold text-xl pt-4 ">Telefone</h4>
           <Input
             type="tel"
-            value={user.phoneNumber ? formatPhoneNumber(user.phoneNumber) : ""}
+            value={
+              user?.phoneNumber ? formatPhoneNumber(user?.phoneNumber) : ""
+            }
             placeholder="Telefone"
             disabled={isDisabled}
             className="text-xs md:text-sm "
