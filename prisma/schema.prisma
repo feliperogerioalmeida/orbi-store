@@ -44,6 +44,7 @@ model User {
   cnpj          String?
   personType    PersonType?
   fullName      String?
+  pixKey        String?
   status        Status          @default(ACTIVE)
 }
 
