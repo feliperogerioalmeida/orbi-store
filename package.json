@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "prisma generate",
-    "eslint:check": "eslint . --ext .ts,.tsx",
+    "eslint:check": "npx eslint . --ext .ts,.tsx",
     "prettier:check": "prettier --check ."
   },
   "dependencies": {
