@@ -10,7 +10,8 @@
     "lint": "next lint",
     "prepare": "prisma generate",
     "eslint:check": "npx eslint app/",
-    "prettier:check": "prettier --check app/"
+    "prettier:check": "prettier --check app/",
+    "test:prod": "ng test --browser=ChromeHeadless --watch=false --code-coverage"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
