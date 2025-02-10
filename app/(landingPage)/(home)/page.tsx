@@ -1,3 +1,4 @@
+"use client";
 import AboutSection from "./components/aboutSection";
 import FAQ from "./components/faqSection";
 import HomeSection from "./components/homeSection";
