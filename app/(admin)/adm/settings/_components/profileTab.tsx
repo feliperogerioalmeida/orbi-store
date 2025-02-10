@@ -66,7 +66,20 @@ const ProfileTab = () => {
     const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
     const formattedCep = newCep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
     setCep(formattedCep);
-    setAddress((prev) => ({ ...prev, zipCode: newCep }));
+
+    if (newCep.length < 8) {
+      setAddress((prev) => ({
+        ...prev,
+        street: "",
+        number: "",
+        city: "",
+        neighborhood: "",
+        complement: "",
+        state: "",
+        zipCode: newCep,
+        country: "",
+      }));
+    }
 
     if (newCep.length === 8) {
       fetchAddressByCep(newCep);
