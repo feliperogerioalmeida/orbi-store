@@ -11,7 +11,8 @@
     "prepare": "prisma generate",
     "eslint:check": "npx eslint app/",
     "prettier:check": "prettier --check app/",
-    "test:prod": "ng test --browser=ChromeHeadless --watch=false --code-coverage"
+    "test": "ng test",
+    "test:ci": "ng test --no-watch --no-progress --code-coverage --browsers=ChromeHeadless"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
