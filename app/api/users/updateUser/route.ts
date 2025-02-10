@@ -17,7 +17,7 @@ export async function PUT(req: NextRequest) {
     const { id, data } = await req.json();
 
     console.log("Payload recebido na rota:", { id, data });
-    // Validação de ID e dados
+
     if (!id || !data || typeof data !== "object") {
       return NextResponse.json(
         { error: "O ID do usuário e os dados são obrigatórios." },
@@ -37,7 +37,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Impedir alteração de papel do próprio usuário
     if (userToUpdate.role === "MASTER" && userToUpdate.id === token.sub) {
       return NextResponse.json(
         { error: "Você não pode alterar seu próprio papel." },
@@ -45,7 +44,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Atualizar senha
     if ("password" in data) {
       if (token.role !== "MASTER") {
         return NextResponse.json(
@@ -57,7 +55,6 @@ export async function PUT(req: NextRequest) {
       data.password = await bcrypt.hash(data.password, 12);
     }
 
-    // Validação e restrições de papel
     if ("role" in data && data.role !== userToUpdate.role) {
       if (
         !(
@@ -97,7 +94,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Validação de endereço se for enviado
     if (data.address) {
       const requiredFields = [
         "street",
@@ -125,7 +121,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Preparar dados para atualização
     const validFields = [
       "firstName",
       "lastName",
@@ -144,7 +139,6 @@ export async function PUT(req: NextRequest) {
       }
     });
 
-    // Atualizar endereço se enviado
     if (data.address) {
       const addressUpdate = {
         street: data.address.street,
@@ -174,7 +168,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Atualizar usuário no banco de dados
     const updatedUser = await db.user.update({
       where: { id },
       data: updateData,
