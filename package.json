@@ -9,8 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "prisma generate",
-    "eslint:check": "npx eslint . --ext .ts,.tsx",
-    "prettier:check": "prettier --check ."
+    "eslint:check": "npx eslint app/",
+    "prettier:check": "prettier --check app/"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
