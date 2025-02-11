@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/app/_lib/prisma";
 import ProfileTab from "./_components/profileTab";
+import CompanyTab from "./_components/companyTab";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -58,7 +59,9 @@ const SettingsPage = async () => {
           <TabsContent value="profile">
             <ProfileTab />
           </TabsContent>
-          <TabsContent value="company">Change your password here.</TabsContent>
+          <TabsContent value="company">
+            <CompanyTab />
+          </TabsContent>
           <TabsContent value="team">Change your password here.</TabsContent>
         </Tabs>
       </div>
