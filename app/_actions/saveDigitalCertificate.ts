@@ -1,3 +1,5 @@
+"use server";
+
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { Company } from "@prisma/client";
 import { db } from "../_lib/prisma";
@@ -12,7 +14,7 @@ export const saveDigitalCertificate = async (
 
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME,
-    ACL: "public-read",
+    ACL: "private",
     Key: key,
     Body: buffer,
   });
