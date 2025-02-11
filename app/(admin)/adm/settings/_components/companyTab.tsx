@@ -15,6 +15,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/app/_components/ui/calendar";
 import { format } from "date-fns";
 import { Label } from "@/app/_components/ui/label";
+import { saveDigitalCertificate } from "@/app/_actions/saveDigitalCertificate";
 
 interface ExtendedCompany extends Company {
   companyAddress: CompanyAddress | null;
@@ -53,7 +54,7 @@ const CompanyTab = () => {
   const [companyCreationDate, setCompanyCreationDate] = useState<Date | null>(
     company?.creationDate ? new Date(company.creationDate) : null,
   );
-  const [certificateFile, setCertificateFile] = useState<File | null>(null);
+  const [certificateUrl, setCertificateUrl] = useState<string | null>(null);
   const [certificatePassword, setCertificatePassword] = useState("");
   const [lastNfeIssued, setLastNfeIssued] = useState("");
   const [nfeSeries, setNfeSeries] = useState("");
@@ -79,6 +80,7 @@ const CompanyTab = () => {
             data.creationDate ? new Date(data.creationDate) : null,
           );
           setCep(data.companyAddress?.zipCode || "");
+          setCertificateUrl(data.digitalCertificate || null);
           setCertificatePassword(data.certificatePassword || "");
           setLastNfeIssued(data.lastNfeIssued || "");
           setNfeSeries(data.nfeSeries || "");
@@ -116,6 +118,7 @@ const CompanyTab = () => {
       setCompanyEmail(company.email || "");
       setCompanyName(company.name || "");
       setCompanyStateNumber(company.stateNumber || "");
+      setCertificateUrl(company.digitalCertificate || null);
       setCompanyCreationDate(
         company.creationDate ? new Date(company.creationDate) : null,
       );
@@ -155,7 +158,7 @@ const CompanyTab = () => {
     setCouponSeries(company?.couponSeries || "");
     setCsc(company?.CSC || "");
     setCscId(company?.CSCId || "");
-    setCertificateFile(null);
+    setCertificateUrl(company?.digitalCertificate || null);
     setIsDisabled(true);
   };
 
@@ -227,6 +230,23 @@ const CompanyTab = () => {
   ) => {
     setAddress((prev) => ({ ...prev, [field]: e.target.value }));
   };
+
+  const handleDigitalCertificate = async (company: Company, file: File) => {
+    try {
+      const digitalCertificateUrl = await saveDigitalCertificate(company, file);
+      setCertificateUrl(digitalCertificateUrl);
+      setCompany((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          digitalCertificate: digitalCertificateUrl,
+        };
+      });
+    } catch (error) {
+      console.error("Error updating certificate:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 w-full">
@@ -415,18 +435,21 @@ const CompanyTab = () => {
               type="file"
               id="certificate"
               className="hidden"
-              onChange={(e) => setCertificateFile(e.target.files?.[0] || null)}
+              onChange={(e) =>
+                e.target.files?.[0] &&
+                handleDigitalCertificate(company!, e.target.files[0])
+              }
               disabled={isDisabled}
             />
             <Label
               htmlFor="certificate"
               className={`text-xs md:text-sm w-full flex items-center justify-center py-2 rounded-md cursor-pointer transition-all ${
-                certificateFile
+                certificateUrl
                   ? "bg-blue-500 text-white"
                   : "bg-gray-300 text-gray-700"
               }`}
             >
-              {certificateFile ? "Edit Certificate" : "Add Certificate"}
+              {certificateUrl ? "Edit Certificate" : "Add Certificate"}
             </Label>
           </div>
           <div className="flex gap-2 md:w-[50%] ">
