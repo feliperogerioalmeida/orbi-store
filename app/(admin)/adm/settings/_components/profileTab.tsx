@@ -29,7 +29,6 @@ const ProfileTab = () => {
     state: user?.address?.state || "",
     country: user?.address?.state || "",
     zipCode: user?.address?.zipCode || "",
-    companyId: user?.address?.companyId || "",
   };
   const [isDisabled, setIsDisabled] = useState(true);
   const [cep, setCep] = useState(user?.address?.zipCode || "");
@@ -57,7 +56,6 @@ const ProfileTab = () => {
         state: user.address?.state || "",
         country: user.address?.country || "",
         zipCode: user.address?.zipCode || "",
-        companyId: user.address?.companyId || "",
       });
     }
   }, [user]);
