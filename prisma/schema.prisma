@@ -73,13 +73,11 @@ model Company {
   digitalCertificatePassword String?
   lastNFEIssued              String?
   NFESeries                  String?
-  lastCouponIssued          String?
-  couponSeries              String?
+  lastCouponIssued           String?
+  couponSeries               String?
   CSC                        String?
   CSCId                      String?
-  companyAddress             Address?        @relation(fields: [addressId], references: [id])
-  addressId                  String?
-  CompanyAddress             CompanyAddress?
+  companyAddress             CompanyAddress?
 }
 
 model CompanyAddress {
@@ -98,7 +96,7 @@ model CompanyAddress {
 }
 
 model Address {
-  id           String    @id @default(uuid())
+  id           String  @id @default(uuid())
   street       String
   number       String
   city         String
@@ -107,9 +105,8 @@ model Address {
   neighborhood String
   state        String
   country      String
-  userId       String    @unique
-  user         User      @relation(fields: [userId], references: [id])
-  Company      Company[]
+  userId       String  @unique
+  user         User    @relation(fields: [userId], references: [id])
 }
 
 model Review {
