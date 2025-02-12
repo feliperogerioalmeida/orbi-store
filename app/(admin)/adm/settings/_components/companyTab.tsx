@@ -16,6 +16,7 @@ import { Calendar } from "@/app/_components/ui/calendar";
 import { format } from "date-fns";
 import { Label } from "@/app/_components/ui/label";
 import { saveDigitalCertificate } from "@/app/_actions/saveDigitalCertificate";
+import { useToast } from "@/app/_hooks/use-toast";
 
 interface ExtendedCompany extends Company {
   companyAddress: CompanyAddress | null;
@@ -51,9 +52,10 @@ const CompanyTab = () => {
   const [companyStateNumber, setCompanyStateNumber] = useState(
     company?.stateNumber || "",
   );
-  const [companyCreationDate, setCompanyCreationDate] = useState<Date | null>(
-    company?.creationDate ? new Date(company.creationDate) : null,
-  );
+  const [companyCreationDate, setCompanyCreationDate] = useState<
+    Date | undefined
+  >(company?.creationDate ? new Date(company.creationDate) : undefined);
+
   const [certificateUrl, setCertificateUrl] = useState<string | null>(null);
   const [certificatePassword, setCertificatePassword] = useState("");
   const [lastNfeIssued, setLastNfeIssued] = useState("");
@@ -62,6 +64,8 @@ const CompanyTab = () => {
   const [couponSeries, setCouponSeries] = useState("");
   const [csc, setCsc] = useState("");
   const [cscId, setCscId] = useState("");
+
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -76,9 +80,7 @@ const CompanyTab = () => {
           setCompanyStateNumber(data.stateNumber || "");
           setPhoneNumber(data.phoneNumber || "");
           setCnpj(data.cnpj || "");
-          setCompanyCreationDate(
-            data.creationDate ? new Date(data.creationDate) : null,
-          );
+          setCompanyCreationDate(data.creationDate);
           setCep(data.companyAddress?.zipCode || "");
           setCertificateUrl(data.digitalCertificate || null);
           setCertificatePassword(data.certificatePassword || "");
@@ -88,6 +90,7 @@ const CompanyTab = () => {
           setCouponSeries(data.couponSeries || "");
           setCsc(data.csc || "");
           setCscId(data.cscId || "");
+          setCep(data.companyAddress?.zipCode || "");
           setAddress({
             id: data.companyAddress?.id || "",
             street: data.companyAddress?.street || "",
@@ -120,22 +123,12 @@ const CompanyTab = () => {
       setCompanyStateNumber(company.stateNumber || "");
       setCertificateUrl(company.digitalCertificate || null);
       setCompanyCreationDate(
-        company.creationDate ? new Date(company.creationDate) : null,
+        company.creationDate ? new Date(company.creationDate) : undefined,
       );
-      setCep(company.companyAddress?.zipCode || "");
-      setAddress({
-        id: company.companyAddress?.id || "",
-        street: company.companyAddress?.street || "",
-        city: company.companyAddress?.city || "",
-        neighborhood: company.companyAddress?.neighborhood || "",
-        number: company.companyAddress?.number || "",
-        complement: company.companyAddress?.complement || "",
-        state: company.companyAddress?.state || "",
-        ibge: company.companyAddress?.ibge || "",
-        country: company.companyAddress?.country || "",
-        zipCode: company.companyAddress?.zipCode || "",
-        companyId: company.companyAddress?.companyId || "",
-      });
+      if (company.companyAddress) {
+        setAddress(company.companyAddress);
+        setCep(company.companyAddress.zipCode || ""); // 🔥 Agora sempre atualiza o CEP corretamente
+      }
     }
   }, [company]);
 
@@ -147,7 +140,7 @@ const CompanyTab = () => {
     setCompanyName(company?.name || "");
     setCompanyStateNumber(company?.stateNumber || "");
     setCompanyCreationDate(
-      company?.creationDate ? new Date(company.creationDate) : null,
+      company?.creationDate ? new Date(company.creationDate) : undefined,
     );
     setCep(initialAddress.zipCode);
     setAddress(initialAddress);
@@ -163,9 +156,9 @@ const CompanyTab = () => {
   };
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
-    const formattedCep = newCep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
-    setCep(formattedCep);
+    const newCep = removeFormatting(e.target.value).slice(0, 8);
+
+    setCep(newCep);
 
     if (newCep.length < 8) {
       setAddress((prev) => ({
@@ -178,6 +171,7 @@ const CompanyTab = () => {
         state: "",
         zipCode: newCep,
         country: "",
+        ibge: "",
       }));
     }
 
@@ -201,11 +195,17 @@ const CompanyTab = () => {
           complement: data.complemento || "",
           state: data.estado || "",
           country: "Brasil",
+          ibge: data.ibge || "",
         }));
       }
     } catch (error) {
       console.error("Erro ao buscar CEP:", error);
     }
+  };
+
+  const formatCep = (cep: string) => {
+    const formatedCep = cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+    return formatedCep;
   };
 
   const formatPhoneNumber = (phone: string) => {
@@ -222,6 +222,10 @@ const CompanyTab = () => {
       /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
       "$1.$2.$3/$4-$5",
     );
+  };
+  const removeFormatting = (formatedValue: string) => {
+    const rawValue = formatedValue.replace(/\D/g, "");
+    return rawValue;
   };
 
   const handleAddressChange = (
@@ -244,6 +248,75 @@ const CompanyTab = () => {
       });
     } catch (error) {
       console.error("Error updating certificate:", error);
+    }
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      if (!company?.id) {
+        throw new Error("Company ID is missing");
+      }
+
+      const payload: Partial<ExtendedCompany> = {
+        cnpj: removeFormatting(cnpj) || null,
+        name: companyName || null,
+        socialName: companySocialName || null,
+        phoneNumber: removeFormatting(phoneNumber) || null,
+        email: companyEmail || null,
+        stateNumber: companyStateNumber || null,
+        creationDate: companyCreationDate || null,
+        digitalCertificatePassword: certificatePassword || null,
+        lastNFEIssued: lastNfeIssued || null,
+        NFESeries: nfeSeries || null,
+        lastCouponIssued: lastCouponIssued || null,
+        couponSeries: couponSeries || null,
+        CSC: csc || null,
+        CSCId: cscId || null,
+        digitalCertificate: certificateUrl || null,
+      };
+
+      if (
+        address &&
+        Object.values(address).some((value) => value !== "" && value !== null)
+      ) {
+        payload.companyAddress = {
+          ...address,
+          companyId: company.id,
+          zipCode: cep,
+        };
+      }
+
+      const response = await fetch("/api/company/updateCompany", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: company.id, data: payload }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Erro desconhecido");
+      }
+
+      console.log(result.companyAddress);
+      setCompany(result.company);
+      setAddress(result.companyAddress);
+      if (result.company.companyAddress?.zipCode) {
+        setCep(result.company.companyAddress.zipCode);
+      }
+      setIsDisabled(true);
+
+      toast({
+        title: "Sucesso!",
+        description: "Empresa atualizada com sucesso.",
+        variant: "default",
+      });
+    } catch (error: unknown) {
+      toast({
+        title: "Erro",
+        description: String(error) || "Não foi possível atualizar a empresa.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -286,9 +359,7 @@ const CompanyTab = () => {
                 placeholder="Telefone"
                 disabled={isDisabled}
                 className="text-xs md:text-sm w-[50%]"
-                onChange={(e) =>
-                  setPhoneNumber(formatPhoneNumber(e.target.value))
-                }
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
               <Input
                 type="email"
@@ -333,8 +404,8 @@ const CompanyTab = () => {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={companyCreationDate || undefined}
-                    onSelect={(day) => setCompanyCreationDate(day || null)}
+                    selected={companyCreationDate || undefined} // Nunca será null
+                    onSelect={(day) => setCompanyCreationDate(day || undefined)}
                     initialFocus
                   />
                 </PopoverContent>
@@ -348,7 +419,7 @@ const CompanyTab = () => {
         <div className="flex w-full gap-2">
           <Input
             type="text"
-            value={cep}
+            value={formatCep(cep)}
             placeholder="CEP"
             disabled={isDisabled}
             onChange={handleCepChange}
@@ -539,7 +610,12 @@ const CompanyTab = () => {
       ) : (
         <div className="flex flex-col gap-2">
           <div className="flex max-w-[120px]">
-            <Button variant="outline" size="lg" className="w-full">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full"
+              onClick={handleSaveClick}
+            >
               Salvar
             </Button>
           </div>
