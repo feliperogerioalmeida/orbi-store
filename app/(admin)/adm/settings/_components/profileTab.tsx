@@ -45,25 +45,28 @@ const ProfileTab = () => {
       setCpf(user.cpf || "");
       setPixKey(user.pixKey || "");
       setCep(user.address?.zipCode || "");
-      setAddress({
-        id: user.address?.id || "",
-        userId: user.address?.userId || "",
-        street: user.address?.street || "",
-        city: user.address?.city || "",
-        neighborhood: user.address?.neighborhood || "",
-        number: user.address?.number || "",
-        complement: user.address?.complement || "",
-        state: user.address?.state || "",
-        country: user.address?.country || "",
-        zipCode: user.address?.zipCode || "",
-      });
+      if (user.address) {
+        setAddress(user.address);
+        setCep(user.address.zipCode || "");
+      }
     }
   }, [user]);
 
+  const formatCep = (cep: string) => {
+    const formatedCep = cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+    return formatedCep;
+  };
+
+  const removeFormatting = (formatedValue: string) => {
+    const rawValue = formatedValue.replace(/\D/g, "");
+    return rawValue;
+  };
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCep = e.target.value.replace(/\D/g, "").slice(0, 8);
-    const formattedCep = newCep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
-    setCep(formattedCep);
+    const newCep = removeFormatting(
+      e.target.value.replace(/\D/g, "").slice(0, 8),
+    );
+
+    setCep(newCep);
 
     if (newCep.length < 8) {
       setAddress((prev) => ({
@@ -147,8 +150,8 @@ const ProfileTab = () => {
     try {
       const payload: Partial<ExtendedUser> = {
         id: userId,
-        phoneNumber: phoneNumber || null,
-        cpf: cpf || null,
+        phoneNumber: removeFormatting(phoneNumber) || null,
+        cpf: removeFormatting(cpf) || null,
         pixKey: pixKey || null,
       };
 
@@ -156,7 +159,10 @@ const ProfileTab = () => {
         address &&
         Object.values(address).some((value) => value !== "" && value !== null)
       ) {
-        payload.address = address;
+        payload.address = {
+          ...address,
+          zipCode: removeFormatting(cep),
+        };
       }
 
       const response = await fetch("/api/users/updateUser", {
@@ -170,7 +176,15 @@ const ProfileTab = () => {
       if (!response.ok) {
         throw new Error(result.error || "Erro desconhecido");
       }
-      setUser(result.user);
+
+      setCep(result.address.zipCode);
+      setAddress(result.address);
+
+      setUser({
+        ...result.user,
+        address: result.address,
+      });
+
       setIsDisabled(true);
 
       toast({
@@ -246,7 +260,7 @@ const ProfileTab = () => {
         <div className="flex w-full gap-2">
           <Input
             type="text"
-            value={cep}
+            value={formatCep(cep)}
             placeholder="CEP"
             disabled={isDisabled}
             onChange={handleCepChange}

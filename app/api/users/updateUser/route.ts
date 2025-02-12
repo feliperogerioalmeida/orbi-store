@@ -16,8 +16,6 @@ export async function PUT(req: NextRequest) {
 
     const { id, data } = await req.json();
 
-    console.log("Payload recebido na rota:", { id, data });
-
     if (!id || !data || typeof data !== "object") {
       return NextResponse.json(
         { error: "O ID do usuário e os dados são obrigatórios." },
@@ -176,6 +174,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({
       message: "Usuário atualizado com sucesso.",
       user: updatedUser,
+      address: data.address,
     });
   } catch (error) {
     console.error("Erro ao atualizar usuário:", error);

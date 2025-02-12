@@ -35,9 +35,6 @@ export async function PUT(req: Request) {
 
     const { companyAddress, ...companyData } = data;
 
-    console.log("data:", data);
-    console.log("companyData:", companyData);
-    console.log("companyAddress:", companyAddress);
     const updatedCompany = await db.company.update({
       where: { id },
       data: companyData,

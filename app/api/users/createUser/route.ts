@@ -9,8 +9,6 @@ export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    console.log("Token recebido:", token);
-
     if (!token) {
       return NextResponse.json(
         { error: "Você precisa estar autenticado para realizar essa ação." },

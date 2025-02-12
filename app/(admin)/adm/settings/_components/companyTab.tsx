@@ -127,7 +127,7 @@ const CompanyTab = () => {
       );
       if (company.companyAddress) {
         setAddress(company.companyAddress);
-        setCep(company.companyAddress.zipCode || ""); // 🔥 Agora sempre atualiza o CEP corretamente
+        setCep(company.companyAddress.zipCode || "");
       }
     }
   }, [company]);
@@ -298,7 +298,6 @@ const CompanyTab = () => {
         throw new Error(result.error || "Erro desconhecido");
       }
 
-      console.log(result.companyAddress);
       setCompany(result.company);
       setAddress(result.companyAddress);
       if (result.company.companyAddress?.zipCode) {
@@ -404,7 +403,7 @@ const CompanyTab = () => {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={companyCreationDate || undefined} // Nunca será null
+                    selected={companyCreationDate || undefined}
                     onSelect={(day) => setCompanyCreationDate(day || undefined)}
                     initialFocus
                   />

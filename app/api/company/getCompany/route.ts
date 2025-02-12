@@ -9,7 +9,6 @@ export async function GET() {
       },
     });
 
-    console.log("company data: ", companyData);
     if (!companyData) {
       return NextResponse.json(
         { error: "No company data found" },
