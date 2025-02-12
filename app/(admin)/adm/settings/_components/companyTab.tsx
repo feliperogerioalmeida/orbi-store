@@ -14,6 +14,7 @@ import { cn } from "@/app/_lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/app/_components/ui/calendar";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Label } from "@/app/_components/ui/label";
 import { saveDigitalCertificate } from "@/app/_actions/saveDigitalCertificate";
 import { useToast } from "@/app/_hooks/use-toast";
@@ -122,6 +123,13 @@ const CompanyTab = () => {
       setCompanyName(company.name || "");
       setCompanyStateNumber(company.stateNumber || "");
       setCertificateUrl(company.digitalCertificate || null);
+      setCertificatePassword(company.digitalCertificatePassword || "");
+      setLastNfeIssued(company.lastNFEIssued || "");
+      setNfeSeries(company.NFESeries || "");
+      setLastCouponIssued(company.lastCouponIssued || "");
+      setCouponSeries(company.couponSeries || "");
+      setCsc(company.CSC || "");
+      setCscId(company.CSCId || "");
       setCompanyCreationDate(
         company.creationDate ? new Date(company.creationDate) : undefined,
       );
@@ -392,7 +400,7 @@ const CompanyTab = () => {
                   >
                     <CalendarIcon />
                     {companyCreationDate ? (
-                      format(companyCreationDate, "PPP")
+                      format(companyCreationDate, "PPP", { locale: ptBR })
                     ) : (
                       <span className="text-xs md:text-sm">
                         Data de Abertura
@@ -598,11 +606,6 @@ const CompanyTab = () => {
               onClick={() => setIsDisabled(false)}
             >
               Atualizar Perfil
-            </Button>
-          </div>
-          <div className="flex max-w-[120px]">
-            <Button variant="outline" size="lg" className="w-full">
-              Alterar Senha
             </Button>
           </div>
         </div>
