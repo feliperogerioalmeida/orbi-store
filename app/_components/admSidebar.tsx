@@ -122,17 +122,17 @@ const AdmSidebar = () => {
       icon: ShoppingCart,
     },
     {
-      href: "adm/sales",
+      href: "/adm/sales",
       label: "Vendas",
       icon: Banknote,
     },
     {
-      href: "adm/financial",
+      href: "/adm/financial",
       label: "Financeiro",
       icon: Landmark,
     },
     {
-      href: "adm/inventory",
+      href: "/adm/inventory",
       label: "Estoque",
       icon: Package,
     },
@@ -142,12 +142,12 @@ const AdmSidebar = () => {
       icon: Wrench,
     },
     {
-      href: "adm/accounting",
+      href: "/adm/accounting",
       label: "Contabilidade",
       icon: Calculator,
     },
     {
-      href: "adm/parameterization",
+      href: "/adm/parametrization",
       label: "Parametrização",
       icon: Braces,
     },
