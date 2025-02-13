@@ -78,6 +78,7 @@ model Company {
   CSC                        String?
   CSCId                      String?
   companyAddress             CompanyAddress?
+  Movement                   Movement[]
 }
 
 model CompanyAddress {
@@ -210,4 +211,54 @@ enum Role {
   CLIENT
   ADMIN
   MASTER
+}
+
+model ChartOfAccounts {
+  id          String            @id @default(uuid())
+  code        String            @unique
+  name        String
+  type        AccountType
+  balance     Float             @default(0)
+  balanceType BalanceType
+  parentCode    String?
+  parent      ChartOfAccounts?  @relation("ParentChild", fields: [parentCode], references: [code])
+  children    ChartOfAccounts[] @relation("ParentChild")
+  isAnalytical Boolean           @default(false)
+  movements   Movement[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Movement {
+  id              String          @id @default(uuid())
+  companyId       String
+  company         Company         @relation(fields: [companyId], references: [id])
+  accountId       String
+  account         ChartOfAccounts @relation(fields: [accountId], references: [id])
+  type            MovementType
+  amount          Float
+  description     String
+  transactionDate DateTime        @default(now())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+enum BalanceType {
+  DEBIT
+  CREDIT
+  BOTH
+}
+
+enum MovementType {
+  DEBIT
+  CREDIT
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+  COST
 }
