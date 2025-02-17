@@ -214,19 +214,20 @@ enum Role {
 }
 
 model ChartOfAccounts {
-  id          String            @id @default(uuid())
-  code        String            @unique
-  name        String
-  type        AccountType
-  balance     Float             @default(0)
-  balanceType BalanceType
-  parentCode    String?
-  parent      ChartOfAccounts?  @relation("ParentChild", fields: [parentCode], references: [code])
-  children    ChartOfAccounts[] @relation("ParentChild")
+  id           String            @id @default(uuid())
+  code         String            @unique
+  name         String
+  type         AccountType
+  balance      Float             @default(0)
+  balanceType  BalanceType
+  parentCode   String?
+  parent       ChartOfAccounts?  @relation("ParentChild", fields: [parentCode], references: [code])
+  children     ChartOfAccounts[] @relation("ParentChild")
   isAnalytical Boolean           @default(false)
-  movements   Movement[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  movements    Movement[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  Bank         Bank?
 }
 
 model Movement {
@@ -261,4 +262,52 @@ enum AccountType {
   REVENUE
   EXPENSE
   COST
+}
+
+model Bank {
+  id                 String          @id @default(uuid())
+  name               String          @unique
+  accountCode        String          @unique
+  account            ChartOfAccounts @relation(fields: [accountCode], references: [code])
+  initialBalance     Decimal
+  initialBalanceDate DateTime
+  isActive           Boolean         @default(true)
+
+  formsOfReceiving ReceivingMethod[]
+  formsOfPayment   PaymentMethod[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ReceivingMethod {
+  id                String      @id @default(uuid())
+  bankId            String
+  bank              Bank        @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  method            PaymentType
+  receiveTimeInDays Int         @default(0)
+  taxRate           Decimal     @default(0)
+  typeOfRate        RateType?
+}
+
+model PaymentMethod {
+  id         String      @id @default(uuid())
+  bankId     String
+  bank       Bank        @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  method     PaymentType
+  taxRate    Decimal     @default(0)
+  typeOfRate RateType?
+}
+
+enum PaymentType {
+  PIX
+  CREDIT_CARD
+  DEBIT_CARD
+  BILL
+  CASH
+}
+
+enum RateType {
+  PERCENTAGE
+  CASH
 }
