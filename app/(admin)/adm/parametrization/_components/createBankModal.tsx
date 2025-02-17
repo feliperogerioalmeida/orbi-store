@@ -103,7 +103,6 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
   ) => {
     let formattedValue = value;
 
-    // Se o campo for "type", converter para "PERCENTAGE" ou "CASH"
     if (field === "type") {
       formattedValue = value === "Porcentagem" ? "PERCENTAGE" : "CASH";
     }
@@ -165,7 +164,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
           formsOfReceiving: Object.entries(receivableMethodsState).length
             ? Object.entries(receivableMethodsState).map(
                 ([method, values]) => ({
-                  method: paymentMethodMapping[method] || "PIX", // 🔥 Converte para PaymentType
+                  method: paymentMethodMapping[method] || "PIX",
                   receiveTimeInDays: Number(values?.receiveTime || 0),
                   taxRate: values?.taxRate ? Number(values.taxRate) : 0,
                   typeOfRate: values?.type
@@ -176,7 +175,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
             : [],
           formsOfPayment: Object.entries(paymentMethodsState).length
             ? Object.entries(paymentMethodsState).map(([method, values]) => ({
-                method: paymentMethodMapping[method] || "PIX", // 🔥 Converte para PaymentType
+                method: paymentMethodMapping[method] || "PIX",
                 taxRate: values?.taxRate ? Number(values.taxRate) : 0,
                 typeOfRate: values?.type
                   ? (values.type as RateType)
@@ -184,8 +183,6 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
               }))
             : [],
         };
-
-        console.log("🚀 Enviando Payload para `createBank`:", payload);
 
         const result = await createBank(payload);
 

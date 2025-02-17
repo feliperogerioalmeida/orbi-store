@@ -30,13 +30,13 @@ import CreateBankModal from "./createBankModal";
 interface Bank {
   id: string;
   name: string;
-  formsOfReceiving: string[];
-  formsOfPayment: string[];
+  formsOfReceiving: { method: string }[];
+  formsOfPayment: { method: string }[];
   hasMovements?: boolean;
 }
 
-const formatMethods = (methods: string[]) => {
-  return methods.length ? methods.map((m) => m.toUpperCase()).join(", ") : "-";
+const formatMethods = (methods: { method: string }[]) => {
+  return methods.length ? methods.map((m) => m.method).join(" | ") : "-";
 };
 
 const BankTable = () => {
@@ -51,12 +51,18 @@ const BankTable = () => {
     fetchData();
   }, []);
 
+  const formatBankName = (name: string) => {
+    return name.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase()); // 🔥 Capitaliza a primeira letra de cada palavra
+  };
+
   const columns: ColumnDef<Bank>[] = [
     {
       accessorKey: "name",
       header: "Nome do Banco",
       cell: ({ row }) => (
-        <span className="font-regular">{row.original.name}</span>
+        <span className="font-regular">
+          {formatBankName(row.original.name)}
+        </span>
       ),
     },
     {

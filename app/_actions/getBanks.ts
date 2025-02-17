@@ -2,6 +2,14 @@
 
 import { db } from "@/app/_lib/prisma";
 
+const paymentMethodMap: Record<string, string> = {
+  PIX: "Pix",
+  BILL: "Boleto",
+  CREDIT_CARD: "Cartão de Crédito",
+  DEBIT_CARD: "Cartão de Débito",
+  CASH: "Dinheiro",
+};
+
 export async function getBanks() {
   const banks = await db.bank.findMany({
     orderBy: { name: "asc" },
@@ -19,24 +27,12 @@ export async function getBanks() {
   return banks.map((bank) => ({
     id: bank.id,
     name: bank.name,
-    formsOfReceiving: Object.keys(bank.formsOfReceiving || {}).filter(
-      (method) =>
-        (
-          bank.formsOfReceiving as unknown as Record<
-            string,
-            { isActive: boolean }
-          >
-        )[method].isActive,
-    ),
-    formsOfPayment: Object.keys(bank.formsOfPayment || {}).filter(
-      (method) =>
-        (
-          bank.formsOfPayment as unknown as Record<
-            string,
-            { isActive: boolean }
-          >
-        )[method].isActive,
-    ),
+    formsOfReceiving: bank.formsOfReceiving
+      .map((r) => ({ method: paymentMethodMap[r.method] || r.method }))
+      .sort((a, b) => a.method.localeCompare(b.method)),
+    formsOfPayment: bank.formsOfPayment
+      .map((p) => ({ method: paymentMethodMap[p.method] || p.method }))
+      .sort((a, b) => a.method.localeCompare(b.method)),
     hasMovements: bank.account.movements.length > 0,
   }));
 }
