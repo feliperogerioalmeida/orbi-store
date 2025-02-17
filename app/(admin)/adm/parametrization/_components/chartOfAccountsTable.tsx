@@ -89,7 +89,13 @@ const ChartOfAccountsTable = () => {
         const indentLevel = account.code.split(".").length - 1;
 
         return (
-          <div style={{ paddingLeft: `${indentLevel * 12}px` }}>
+          <div
+            style={{
+              paddingLeft: `${indentLevel * 12}px`,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             {hasChildren ? (
               <Button
                 variant="ghost"
@@ -110,20 +116,30 @@ const ChartOfAccountsTable = () => {
     {
       accessorKey: "code",
       header: "Código",
-      cell: ({ row }) => (
-        <span className={row.original.isAnalytical ? "" : "font-bold"}>
-          {row.original.code}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const indentLevel = row.original.code.split(".").length - 1;
+        return (
+          <div style={{ paddingLeft: `${indentLevel * 12}px` }}>
+            <span className={row.original.isAnalytical ? "" : "font-bold"}>
+              {row.original.code}
+            </span>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "name",
       header: "Nome",
-      cell: ({ row }) => (
-        <span className={row.original.isAnalytical ? "" : "font-bold"}>
-          {toProperCase(row.original.name)}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const indentLevel = row.original.code.split(".").length - 1;
+        return (
+          <div style={{ paddingLeft: `${indentLevel * 12}px` }}>
+            <span className={row.original.isAnalytical ? "" : "font-bold"}>
+              {toProperCase(row.original.name)}
+            </span>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "isAnalytical",
