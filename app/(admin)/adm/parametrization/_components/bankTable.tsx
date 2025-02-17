@@ -16,14 +16,7 @@ import {
   TableRow,
 } from "@/app/_components/ui/table";
 import { Button } from "@/app/_components/ui/button";
-import {
-  Eye,
-  Pencil,
-  Plus,
-  BarChart,
-  Trash,
-  MoreHorizontal,
-} from "lucide-react";
+import { Eye, Pencil, BarChart, Trash, MoreHorizontal } from "lucide-react";
 import { getBanks } from "@/app/_actions/getBanks";
 import {
   DropdownMenu,
@@ -32,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
 import Link from "next/link";
+import CreateBankModal from "./createBankModal";
 
 interface Bank {
   id: string;
@@ -48,11 +42,12 @@ const formatMethods = (methods: string[]) => {
 const BankTable = () => {
   const [data, setData] = useState<Bank[]>([]);
 
+  const fetchData = async () => {
+    const result = await getBanks();
+    setData(result);
+  };
+
   useEffect(() => {
-    async function fetchData() {
-      const result = await getBanks();
-      setData(result);
-    }
     fetchData();
   }, []);
 
@@ -124,8 +119,8 @@ const BankTable = () => {
 
   return (
     <div className="relative mt-4">
-      <div className="mb-4  justify-end hidden  md:flex">
-        <Button>Criar Banco</Button>
+      <div className="mb-4 flex justify-end">
+        <CreateBankModal onBankCreated={fetchData} />
       </div>
       <div className="border rounded-lg overflow-hidden pl-2">
         <Table className="w-full">
@@ -167,10 +162,6 @@ const BankTable = () => {
           </TableBody>
         </Table>
       </div>
-
-      <Button className="fixed bottom-4 right-4 md:hidden rounded-full p-3 shadow-lg">
-        <Plus size={20} />
-      </Button>
     </div>
   );
 };
