@@ -54,7 +54,7 @@ const ChartOfAccountsTable = () => {
 
   const toggleExpand = (code: string) => {
     setExpanded((prev) => {
-      const isClosing = prev[code]; // Se já estiver expandido, estamos fechando
+      const isClosing = prev[code];
 
       const newExpanded = { ...prev, [code]: !prev[code] };
 
@@ -72,8 +72,8 @@ const ChartOfAccountsTable = () => {
   ) => {
     data.forEach((account) => {
       if (account.parentCode === parentCode) {
-        delete expandedState[account.code]; // Remove todas as filhas diretas
-        closeBranch(account.code, expandedState); // Fecha as subfilhas
+        delete expandedState[account.code];
+        closeBranch(account.code, expandedState);
       }
     });
   };

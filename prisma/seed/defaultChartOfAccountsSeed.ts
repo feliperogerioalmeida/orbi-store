@@ -1017,7 +1017,7 @@ async function seedDefaultAccounts() {
   if (!existingCash) {
     await db.bank.create({
       data: {
-        name: "Caixa",
+        name: "CAIXA",
         accountCode: cashAccount.code,
         initialBalance: 0,
         initialBalanceDate: new Date(),

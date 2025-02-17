@@ -33,11 +33,8 @@ export async function createBank(data: BankInput) {
       formsOfPayment,
     } = data;
 
-    // Nome sempre em UPPERCASE
     const upperCaseName = name.toUpperCase();
 
-    // Buscar conta contábil pai
-    console.log("🔹 Buscando conta contábil pai (1.1.1)...");
     const parentAccount = await db.chartOfAccounts.findUnique({
       where: { code: "1.1.1" },
     });
@@ -46,16 +43,12 @@ export async function createBank(data: BankInput) {
       throw new Error("Conta contábil pai não encontrada.");
     }
 
-    // Gerar código automático para a conta contábil
     const accountCode = `${parentAccount.code}.${
       (await db.chartOfAccounts.count({
         where: { parentCode: parentAccount.code },
       })) + 1
     }`;
 
-    console.log("✅ Gerado accountCode:", accountCode);
-
-    // Criar conta contábil
     console.log("🔹 Criando conta contábil...");
     const account = await db.chartOfAccounts.create({
       data: {
@@ -69,18 +62,6 @@ export async function createBank(data: BankInput) {
     });
     console.log("✅ Conta contábil criada:", account);
 
-    // Verificando Payload antes de salvar no banco
-    console.log("🔹 Dados finais para criação do banco:", {
-      name: upperCaseName,
-      accountCode,
-      initialBalance,
-      initialBalanceDate,
-      isActive,
-      formsOfReceiving,
-      formsOfPayment,
-    });
-
-    // Criar banco vinculado à conta contábil criada
     const bank = await db.bank.create({
       data: {
         name: upperCaseName,
