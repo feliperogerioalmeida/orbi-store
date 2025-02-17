@@ -124,7 +124,7 @@ const BankTable = () => {
 
   return (
     <div className="relative mt-4">
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4  justify-end hidden  md:flex">
         <Button>Criar Banco</Button>
       </div>
       <div className="border rounded-lg overflow-hidden pl-2">
