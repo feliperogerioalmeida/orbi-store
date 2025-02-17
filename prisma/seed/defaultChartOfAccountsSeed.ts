@@ -25,14 +25,7 @@ const defaultAccounts = [
     parentCode: "1.1",
     isAnalytical: false,
   },
-  {
-    name: "CAIXA",
-    code: "1.1.1.1",
-    type: "ASSET",
-    balanceType: "DEBIT",
-    parentCode: "1.1.1",
-    isAnalytical: true,
-  },
+
   {
     name: "CONTAS A RECEBER - CURTO PRAZO",
     code: "1.1.2",
@@ -937,7 +930,6 @@ const defaultAccounts = [
 async function seedDefaultAccounts() {
   console.log("🟢 Iniciando seed do plano de contas...");
 
-  // Criando primeiro as contas RAIZ (sem parentCode)
   for (const account of defaultAccounts.filter((a) => !a.parentCode)) {
     await db.chartOfAccounts.upsert({
       where: { code: account.code },
@@ -948,13 +940,12 @@ async function seedDefaultAccounts() {
         type: account.type as AccountType,
         balanceType: account.balanceType as BalanceType,
         isAnalytical: account.isAnalytical,
-        parentCode: null, // 🔥 Contas raiz não têm pai
-        balance: 0, // 🔥 Garantindo saldo inicial zero
+        parentCode: null,
+        balance: 0,
       },
     });
   }
 
-  // Criando as contas FILHAS (garantindo que a conta pai já foi criada antes)
   for (const account of defaultAccounts.filter((a) => a.parentCode)) {
     const parentAccount = await db.chartOfAccounts.findUnique({
       where: { code: account.parentCode },
@@ -983,6 +974,67 @@ async function seedDefaultAccounts() {
   }
 
   console.log("✅ Plano de contas inicial criado com sucesso.");
+
+  console.log("🟢 Iniciando seed do Caixa...");
+
+  const parentAccount = await db.chartOfAccounts.findUnique({
+    where: { code: "1.1.1" },
+  });
+
+  if (!parentAccount) {
+    console.warn(
+      "Conta contábil 'Caixa e Equivalente de Caixa' não encontrada. Seed cancelado.",
+    );
+    return;
+  }
+
+  let cashAccount = await db.chartOfAccounts.findUnique({
+    where: { code: "1.1.1.1" },
+  });
+
+  if (!cashAccount) {
+    const accountCode = `${parentAccount.code}.${(await db.chartOfAccounts.count({ where: { parentCode: parentAccount.code } })) + 1}`;
+
+    cashAccount = await db.chartOfAccounts.create({
+      data: {
+        name: "Caixa",
+        code: accountCode,
+        type: "ASSET",
+        balanceType: "DEBIT",
+        isAnalytical: true,
+        parentCode: parentAccount.code,
+        balance: 0,
+      },
+    });
+
+    console.log("✅ Conta contábil 'Caixa' criada com sucesso.");
+  }
+
+  const existingCash = await db.bank.findUnique({
+    where: { name: "Caixa" },
+  });
+
+  if (!existingCash) {
+    await db.bank.create({
+      data: {
+        name: "Caixa",
+        accountCode: cashAccount.code,
+        initialBalance: 0,
+        initialBalanceDate: new Date(),
+        isActive: true,
+        formsOfReceiving: {
+          create: [{ method: "CASH" }],
+        },
+        formsOfPayment: {
+          create: [{ method: "CASH" }],
+        },
+      },
+    });
+
+    console.log("✅ Caixa criado com sucesso.");
+  } else {
+    console.log("❌ Caixa Físico já existe, nenhum seed necessário.");
+  }
 }
 
 seedDefaultAccounts()
