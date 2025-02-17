@@ -178,7 +178,7 @@ const ChartOfAccountsTable = () => {
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <Table>
+      <Table className="text-xs md:text-sm ">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
