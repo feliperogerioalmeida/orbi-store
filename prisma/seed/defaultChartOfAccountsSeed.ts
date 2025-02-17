@@ -997,7 +997,7 @@ async function seedDefaultAccounts() {
 
     cashAccount = await db.chartOfAccounts.create({
       data: {
-        name: "Caixa",
+        name: "CAIXA",
         code: accountCode,
         type: "ASSET",
         balanceType: "DEBIT",
