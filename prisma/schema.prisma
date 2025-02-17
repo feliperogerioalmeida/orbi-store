@@ -272,10 +272,8 @@ model Bank {
   initialBalance     Decimal
   initialBalanceDate DateTime
   isActive           Boolean         @default(true)
-
   formsOfReceiving ReceivingMethod[]
   formsOfPayment   PaymentMethod[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
