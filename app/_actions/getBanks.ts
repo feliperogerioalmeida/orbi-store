@@ -8,6 +8,11 @@ export async function getBanks() {
     include: {
       formsOfReceiving: true,
       formsOfPayment: true,
+      account: {
+        include: {
+          movements: true,
+        },
+      },
     },
   });
 
@@ -32,5 +37,6 @@ export async function getBanks() {
           >
         )[method].isActive,
     ),
+    hasMovements: bank.account.movements.length > 0,
   }));
 }

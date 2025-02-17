@@ -6,6 +6,7 @@ import {
   TabsTrigger,
 } from "@/app/_components/ui/tabs";
 import ChartOfAccountsTable from "./_components/chartOfAccountsTable";
+import BankTable from "./_components/bankTable";
 
 const ParametrizationPage = async () => {
   return (
@@ -38,6 +39,9 @@ const ParametrizationPage = async () => {
           </TabsList>
           <TabsContent value="chartOfAccounts">
             <ChartOfAccountsTable />
+          </TabsContent>
+          <TabsContent value="banks">
+            <BankTable />
           </TabsContent>
         </Tabs>
       </div>
