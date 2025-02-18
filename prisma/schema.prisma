@@ -285,7 +285,7 @@ model ReceivingMethod {
   method            PaymentType
   receiveTimeInDays Int           @default(0)
   taxRate           Decimal       @default(0)
-  typeOfRate        RateType?
+  typeOfRate        RateType? @default(CASH)
   installments      Installment[]
 }
 
@@ -295,7 +295,7 @@ model PaymentMethod {
   bank       Bank        @relation(fields: [bankId], references: [id], onDelete: Cascade)
   method     PaymentType
   taxRate    Decimal     @default(0)
-  typeOfRate RateType?
+  typeOfRate RateType?  @default(CASH)
 }
 
 model Installment {
