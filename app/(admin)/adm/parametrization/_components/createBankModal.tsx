@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
 } from "@/app/_components/ui/dialog";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
@@ -27,14 +26,47 @@ import {
 } from "@/app/_components/ui/select";
 
 import { Label } from "@/app/_components/ui/label";
-import { Plus } from "lucide-react";
+
 import { createBank } from "@/app/_actions/createBank";
 import { PaymentType, RateType } from "@prisma/client";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const paymentMethods = ["PIX", "Débito", "Crédito", "Boleto"];
 
-const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
-  const [open, setOpen] = useState(false);
+interface CreateBankModalProps {
+  open: boolean;
+  mode: "view" | "edit" | "create";
+  bankData?: {
+    name: string;
+    initialBalance: string;
+    initialBalanceDate: string;
+    isActive: boolean;
+    formsOfPayment: Record<string, { taxRate: string; type: string }>;
+    formsOfReceiving: Record<
+      string,
+      {
+        taxRate: string;
+        type: string;
+        receiveTime?: string;
+        installments?: string[];
+      }
+    >;
+  };
+  onBankCreated: () => void;
+  onClose: () => void;
+}
+
+const CreateBankModal = ({
+  open,
+  mode,
+  bankData,
+  onBankCreated,
+  onClose,
+}: CreateBankModalProps) => {
+  const isViewMode = mode === "view";
+  const isEditMode = mode === "edit";
+
   const [tab, setTab] = useState("payments");
   const [paymentMethodsState, setPaymentMethodsState] = useState<
     Record<
@@ -66,6 +98,77 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
     Date | undefined
   >(undefined);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (!open) return;
+
+    if (mode === "create") {
+      setBankName("");
+      setInitialBalance("");
+      setInitialBalanceDate(undefined);
+      setStatus("");
+      setPaymentMethodsState({});
+      setReceivableMethodsState({});
+    } else if (bankData) {
+      setBankName(bankData.name || "");
+      setInitialBalance(
+        bankData.initialBalance ? bankData.initialBalance.toString() : "0.00",
+      );
+
+      setInitialBalanceDate(
+        bankData.initialBalanceDate
+          ? new Date(bankData.initialBalanceDate)
+          : undefined,
+      );
+
+      setStatus(bankData.isActive ? "active" : "inactive");
+
+      const formattedReceivables: Record<
+        string,
+        { taxRate: string; type: string; receiveTime?: string }
+      > = {};
+      const formattedPayments: Record<
+        string,
+        { taxRate: string; type: string }
+      > = {};
+
+      Object.entries(bankData.formsOfPayment).forEach(([method, values]) => {
+        formattedPayments[method.toUpperCase()] = {
+          taxRate: values.taxRate || "0.00",
+          type: values.type || "",
+        };
+      });
+      Object.entries(bankData.formsOfReceiving).forEach(([method, values]) => {
+        formattedReceivables[method.toUpperCase()] = {
+          taxRate: values.taxRate || "0.00",
+          type: values.type || "",
+          receiveTime: values.receiveTime || "0",
+        };
+      });
+
+      setPaymentMethodsState(formattedPayments);
+      setReceivableMethodsState(formattedReceivables);
+    }
+  }, [open, mode, bankData]);
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    if (!open) {
+      onClose();
+    }
+
+    if (mode !== "edit" && mode !== "view") {
+      setBankName("");
+      setInitialBalance("");
+      setInitialBalanceDate(undefined);
+      setStatus("");
+      setPaymentMethodsState({});
+      setReceivableMethodsState({});
+    }
+  }, [open, mode, onClose]);
 
   const toggleMethod = (method: string, type: "payments" | "receivables") => {
     if (type === "payments") {
@@ -188,7 +291,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
 
         if (result.success) {
           console.log("✅ Banco criado com sucesso!");
-          setOpen(false);
+
           onBankCreated();
         } else {
           console.error("❌ Erro ao criar banco:", result.error);
@@ -199,13 +302,17 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
     });
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="hidden md:flex">Criar Banco</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-[80%] rounded-md md:w-full">
         <DialogHeader>
-          <DialogTitle>Informações do Banco</DialogTitle>
+          <DialogTitle>
+            {" "}
+            {isViewMode
+              ? "Visualizar Banco"
+              : isEditMode
+                ? "Editar Banco"
+                : "Criar Banco"}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-4 text-xs md:text-sm">
@@ -214,6 +321,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
               placeholder="Nome do Banco*"
               className="text-xs md:text-sm"
               value={bankName}
+              disabled={isViewMode}
               onChange={(e) => setBankName(e.target.value)}
             />
             <Input
@@ -221,6 +329,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
               className="text-xs md:text-sm"
               type="number"
               value={initialBalance}
+              disabled={isViewMode}
               onChange={(e) => setInitialBalance(e.target.value)}
             />
           </div>
@@ -230,9 +339,11 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
               type="date"
               placeholder="Data do Saldo Inicial*"
               className="text-xs md:text-sm"
+              disabled={isViewMode}
               value={
-                initialBalanceDate
-                  ? initialBalanceDate.toISOString().split("T")[0]
+                initialBalanceDate instanceof Date &&
+                !isNaN(initialBalanceDate.getTime())
+                  ? format(initialBalanceDate, "yyyy-MM-dd", { locale: ptBR })
                   : ""
               }
               onChange={(e) =>
@@ -241,7 +352,11 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
                 )
               }
             />
-            <Select onValueChange={(value) => setStatus(value)}>
+            <Select
+              value={status}
+              onValueChange={(value) => setStatus(value)}
+              disabled={isViewMode}
+            >
               <SelectTrigger>
                 <SelectValue
                   placeholder="Status"
@@ -277,10 +392,11 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
                       <div className="flex items-center space-x-2 w-full">
                         <Checkbox
                           id={method}
-                          checked={!!state[method]}
+                          checked={!!paymentMethodsState[method.toUpperCase()]}
+                          disabled={isViewMode}
                           onCheckedChange={() =>
                             toggleMethod(
-                              method,
+                              method.toUpperCase(),
                               type as "payments" | "receivables",
                             )
                           }
@@ -295,6 +411,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
                               placeholder="Taxa"
                               className="text-xs md:text-sm"
                               type="number"
+                              disabled={isViewMode}
                               value={state[method]?.taxRate || ""}
                               onChange={(e) =>
                                 handleChange(
@@ -307,6 +424,7 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
                             />
                             <Select
                               value={state[method]?.type || ""}
+                              disabled={isViewMode}
                               onValueChange={(value) =>
                                 handleChange(
                                   type as "payments" | "receivables",
@@ -401,24 +519,17 @@ const CreateBankModal = ({ onBankCreated }: { onBankCreated: () => void }) => {
           </Tabs>
         </div>
 
-        <DialogFooter className="flex mt-4 gap-2 w-full">
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancelar
-          </Button>
-          <Button onClick={handleSubmit} disabled={isPending}>
-            {isPending ? "Salvando..." : "Salvar"}
-          </Button>
-        </DialogFooter>
+        {!isViewMode && (
+          <DialogFooter className="flex mt-4 gap-2 w-full">
+            <Button variant="outline" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSubmit} disabled={isPending}>
+              {isPending ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
-
-      <DialogTrigger asChild>
-        <Button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-8 right-8 md:hidden rounded-full p-3 shadow-lg"
-        >
-          <Plus size={20} />
-        </Button>
-      </DialogTrigger>
     </Dialog>
   );
 };
