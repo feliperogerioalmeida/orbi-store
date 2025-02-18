@@ -265,27 +265,28 @@ enum AccountType {
 }
 
 model Bank {
-  id                 String          @id @default(uuid())
-  name               String          @unique
-  accountCode        String          @unique
-  account            ChartOfAccounts @relation(fields: [accountCode], references: [code])
+  id                 String            @id @default(uuid())
+  name               String            @unique
+  accountCode        String            @unique
+  account            ChartOfAccounts   @relation(fields: [accountCode], references: [code])
   initialBalance     Decimal
   initialBalanceDate DateTime
-  isActive           Boolean         @default(true)
-  formsOfReceiving ReceivingMethod[]
-  formsOfPayment   PaymentMethod[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive           Boolean           @default(true)
+  formsOfReceiving   ReceivingMethod[]
+  formsOfPayment     PaymentMethod[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
 }
 
 model ReceivingMethod {
-  id                String      @id @default(uuid())
+  id                String        @id @default(uuid())
   bankId            String
-  bank              Bank        @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  bank              Bank          @relation(fields: [bankId], references: [id], onDelete: Cascade)
   method            PaymentType
-  receiveTimeInDays Int         @default(0)
-  taxRate           Decimal     @default(0)
+  receiveTimeInDays Int           @default(0)
+  taxRate           Decimal       @default(0)
   typeOfRate        RateType?
+  installments      Installment[]
 }
 
 model PaymentMethod {
@@ -295,6 +296,15 @@ model PaymentMethod {
   method     PaymentType
   taxRate    Decimal     @default(0)
   typeOfRate RateType?
+}
+
+model Installment {
+  id                String          @id @default(uuid())
+  receivingMethodId String
+  receivingMethod   ReceivingMethod @relation(fields: [receivingMethodId], references: [id], onDelete: Cascade)
+  installmentNumber Int
+  taxRate           Decimal
+  typeOfRate        RateType        @default(PERCENTAGE)
 }
 
 enum PaymentType {
