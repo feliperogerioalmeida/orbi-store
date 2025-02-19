@@ -14,7 +14,11 @@ export async function getBanks() {
   const banks = await db.bank.findMany({
     orderBy: { name: "asc" },
     include: {
-      formsOfReceiving: true,
+      formsOfReceiving: {
+        include: {
+          installments: true,
+        },
+      },
       formsOfPayment: true,
       account: {
         include: {

@@ -31,6 +31,7 @@ import { createBank } from "@/app/_actions/createBank";
 import { PaymentType, RateType } from "@prisma/client";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { ScrollArea } from "@/app/_components/ui/scroll-area";
 
 const paymentMethods = ["PIX", "Débito", "Crédito", "Boleto"];
 
@@ -123,31 +124,52 @@ const CreateBankModal = ({
 
       setStatus(bankData.isActive ? "active" : "inactive");
 
+      // 📌 Correção para Recebimentos (formsOfReceiving)
       const formattedReceivables: Record<
         string,
-        { taxRate: string; type: string; receiveTime?: string }
+        {
+          taxRate: string;
+          type: string;
+          receiveTime?: string;
+          installments?: string[];
+        }
       > = {};
+
+      Object.entries(bankData.formsOfReceiving).forEach(([method, values]) => {
+        const upperMethod = method.toUpperCase(); // Garante consistência com as chaves
+
+        formattedReceivables[upperMethod] = {
+          taxRate: values.taxRate || "0.00",
+          type: values.type || "",
+          receiveTime: values.receiveTime ? values.receiveTime.toString() : "0",
+          installments:
+            upperMethod === "CREDIT_CARD" && values.installments
+              ? values.installments.map((inst) => inst.toString()) // Transformamos os valores para string
+              : [],
+        };
+      });
+
+      // 📌 Correção para Pagamentos (formsOfPayment)
       const formattedPayments: Record<
         string,
         { taxRate: string; type: string }
       > = {};
 
       Object.entries(bankData.formsOfPayment).forEach(([method, values]) => {
-        formattedPayments[method.toUpperCase()] = {
+        const upperMethod = method.toUpperCase();
+
+        formattedPayments[upperMethod] = {
           taxRate: values.taxRate || "0.00",
           type: values.type || "",
-        };
-      });
-      Object.entries(bankData.formsOfReceiving).forEach(([method, values]) => {
-        formattedReceivables[method.toUpperCase()] = {
-          taxRate: values.taxRate || "0.00",
-          type: values.type || "",
-          receiveTime: values.receiveTime || "0",
         };
       });
 
       setPaymentMethodsState(formattedPayments);
       setReceivableMethodsState(formattedReceivables);
+
+      console.log("🔍 Dados do banco carregados:", bankData);
+      console.log("🔍 Recebimentos formatados:", formattedReceivables);
+      console.log("🔍 Pagamentos formatados:", formattedPayments);
     }
   }, [open, mode, bankData]);
 
@@ -187,12 +209,7 @@ const CreateBankModal = ({
         if (prev[method]) {
           delete newState[method];
         } else {
-          newState[method] = {
-            taxRate: "",
-            type: "",
-            receiveTime: "",
-            installments: [],
-          };
+          newState[method] = { taxRate: "", type: "", receiveTime: "" };
         }
         return newState;
       });
@@ -207,43 +224,52 @@ const CreateBankModal = ({
     let formattedValue = value;
 
     if (field === "type") {
-      formattedValue = value === "Porcentagem" ? "PERCENTAGE" : "CASH";
+      formattedValue =
+        value.toUpperCase() === "PERCENTAGE" || value === "Porcentagem"
+          ? "PERCENTAGE"
+          : "CASH";
     }
+
+    const upperMethod = method.toUpperCase();
 
     if (type === "payments") {
       setPaymentMethodsState((prev) => ({
         ...prev,
-        [method]: prev[method]
-          ? { ...prev[method], [field]: formattedValue }
+        [upperMethod]: prev[upperMethod]
+          ? { ...prev[upperMethod], [field]: formattedValue }
           : { taxRate: "", type: formattedValue },
       }));
     } else {
       setReceivableMethodsState((prev) => ({
         ...prev,
-        [method]: prev[method]
-          ? { ...prev[method], [field]: formattedValue }
-          : { taxRate: "", type: formattedValue },
+        [upperMethod]: prev[upperMethod]
+          ? { ...prev[upperMethod], [field]: formattedValue }
+          : { taxRate: "", type: formattedValue, receiveTime: "" },
       }));
     }
   };
 
   const handleInstallmentChange = (index: number, value: string) => {
     setReceivableMethodsState((prev) => {
-      const updatedInstallments = [...(prev["Crédito"]?.installments || [])];
+      const updatedInstallments = [
+        ...(prev["CREDIT_CARD"]?.installments || []),
+      ];
       updatedInstallments[index] = value;
 
       return {
         ...prev,
-        ["Crédito"]: { ...prev["Crédito"], installments: updatedInstallments },
+        CREDIT_CARD: {
+          ...prev["CREDIT_CARD"],
+          installments: updatedInstallments,
+        },
       };
     });
   };
-
   const paymentMethodMapping: Record<string, PaymentType> = {
     PIX: "PIX",
-    Crédito: "CREDIT_CARD",
-    Débito: "DEBIT_CARD",
-    Boleto: "BILL",
+    CRÉDITO: "CREDIT_CARD",
+    DÉBITO: "DEBIT_CARD",
+    BOLETO: "BILL",
   };
   const handleSubmit = async () => {
     startTransition(async () => {
@@ -257,41 +283,73 @@ const CreateBankModal = ({
           console.error("❌ Preencha todos os campos obrigatórios.");
           return;
         }
+
         const formattedInitialBalance = Number(initialBalance).toFixed(2);
+
+        const consolidatedCreditCard = {
+          ...receivableMethodsState["CRÉDITO"],
+          installments:
+            receivableMethodsState["CREDIT_CARD"]?.installments || [],
+        };
+
+        const formsOfReceiving = Object.entries(receivableMethodsState)
+          .map(([method, values]) => {
+            const formattedMethod: PaymentType =
+              method.toUpperCase() === "CRÉDITO"
+                ? "CREDIT_CARD"
+                : (paymentMethodMapping[method] as PaymentType);
+
+            const receivingMethod: {
+              method: PaymentType;
+              receiveTimeInDays: number;
+              taxRate: number;
+              typeOfRate: RateType | null | undefined;
+              installments?: { installmentNumber: number; taxRate: number }[];
+            } = {
+              method: formattedMethod,
+              receiveTimeInDays: Number(values?.receiveTime || 0),
+              taxRate: values?.taxRate ? Number(values.taxRate) : 0,
+              typeOfRate: values?.type ? (values.type as RateType) : undefined,
+            };
+
+            if (
+              formattedMethod === "CREDIT_CARD" &&
+              consolidatedCreditCard.installments?.length
+            ) {
+              receivingMethod.installments = consolidatedCreditCard.installments
+                .map((taxRate, index) => ({
+                  installmentNumber: index + 1,
+                  taxRate: Number(taxRate) || 0,
+                }))
+                .filter((installment) => installment.taxRate > 0);
+            }
+
+            return receivingMethod;
+          })
+          .filter((method) => method.method);
+
+        const formsOfPayment = Object.entries(paymentMethodsState).length
+          ? Object.entries(paymentMethodsState).map(([method, values]) => ({
+              method: paymentMethodMapping[method] ?? method,
+              taxRate: values?.taxRate ? Number(values.taxRate) : 0,
+              typeOfRate: values?.type ? (values.type as RateType) : undefined,
+            }))
+          : [];
 
         const payload = {
           name: bankName,
           initialBalance: parseFloat(formattedInitialBalance),
           initialBalanceDate: new Date(initialBalanceDate),
           isActive: status === "active",
-          formsOfReceiving: Object.entries(receivableMethodsState).length
-            ? Object.entries(receivableMethodsState).map(
-                ([method, values]) => ({
-                  method: paymentMethodMapping[method] || "PIX",
-                  receiveTimeInDays: Number(values?.receiveTime || 0),
-                  taxRate: values?.taxRate ? Number(values.taxRate) : 0,
-                  typeOfRate: values?.type
-                    ? (values.type as RateType)
-                    : undefined,
-                }),
-              )
-            : [],
-          formsOfPayment: Object.entries(paymentMethodsState).length
-            ? Object.entries(paymentMethodsState).map(([method, values]) => ({
-                method: paymentMethodMapping[method] || "PIX",
-                taxRate: values?.taxRate ? Number(values.taxRate) : 0,
-                typeOfRate: values?.type
-                  ? (values.type as RateType)
-                  : undefined,
-              }))
-            : [],
+          formsOfReceiving,
+          formsOfPayment,
         };
 
         const result = await createBank(payload);
 
         if (result.success) {
           console.log("✅ Banco criado com sucesso!");
-
+          onClose();
           onBankCreated();
         } else {
           console.error("❌ Erro ao criar banco:", result.error);
@@ -303,7 +361,7 @@ const CreateBankModal = ({
   };
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[80%] rounded-md md:w-full">
+      <DialogContent className="w-[80%] h-[80vh] flex flex-col overflow-hidden rounded-md md:w-full">
         <DialogHeader>
           <DialogTitle>
             {" "}
@@ -371,160 +429,211 @@ const CreateBankModal = ({
           </div>
 
           <Tabs value={tab} onValueChange={setTab} className="w-full">
-            <TabsList className="grid grid-cols-2 w-full">
-              <TabsTrigger value="payments">Pagamentos</TabsTrigger>
-              <TabsTrigger value="receivables">Recebimentos</TabsTrigger>
+            <TabsList className="flex justify-between w-full">
+              <TabsTrigger value="payments" className="w-full">
+                Pagamentos
+              </TabsTrigger>
+              <TabsTrigger value="receivables" className="w-full">
+                Recebimentos
+              </TabsTrigger>
             </TabsList>
 
             {["payments", "receivables"].map((type) => (
               <TabsContent
                 key={type}
                 value={type}
-                className="flex flex-col gap-2 w-full"
+                className="flex gap-2 w-full overflow-y-auto flex-grow p-2 items-start "
               >
-                {paymentMethods.map((method) => {
-                  const isPayment = type === "payments";
-                  const state = isPayment
-                    ? paymentMethodsState
-                    : receivableMethodsState;
-                  return (
-                    <div key={method} className="flex flex-col gap-2 w-full">
-                      <div className="flex items-center space-x-2 w-full">
-                        <Checkbox
-                          id={method}
-                          checked={!!paymentMethodsState[method.toUpperCase()]}
-                          disabled={isViewMode}
-                          onCheckedChange={() =>
-                            toggleMethod(
-                              method.toUpperCase(),
-                              type as "payments" | "receivables",
-                            )
-                          }
-                        />
-                        <Label htmlFor={method}>{method}</Label>
-                      </div>
+                <ScrollArea className="h-[450px] w-full flex gap-2 px-2">
+                  {paymentMethods.map((method) => {
+                    const isPayment = type === "payments";
 
-                      {state[method] && (
-                        <div className="flex flex-col gap-2 w-full">
-                          <div className="flex flex-row w-full gap-2">
-                            <Input
-                              placeholder="Taxa"
-                              className="text-xs md:text-sm"
-                              type="number"
-                              disabled={isViewMode}
-                              value={state[method]?.taxRate || ""}
-                              onChange={(e) =>
-                                handleChange(
-                                  type as "payments" | "receivables",
-                                  method,
-                                  "taxRate",
-                                  e.target.value,
-                                )
-                              }
-                            />
-                            <Select
-                              value={state[method]?.type || ""}
-                              disabled={isViewMode}
-                              onValueChange={(value) =>
-                                handleChange(
-                                  type as "payments" | "receivables",
-                                  method,
-                                  "type",
-                                  value,
-                                )
-                              }
-                            >
-                              <SelectTrigger className="text-xs md:text-sm">
-                                <SelectValue
-                                  placeholder="Tipo de Taxa"
-                                  className="text-xs md:text-sm"
-                                />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="PERCENTAGE">
-                                  Porcentagem
-                                </SelectItem>
-                                <SelectItem value="CASH">Valor Fixo</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
+                    return (
+                      <div
+                        key={method}
+                        className="flex flex-col gap-2 w-full pt-1"
+                      >
+                        <div className="flex items-center w-full gap-2">
+                          <Checkbox
+                            id={method}
+                            checked={
+                              !!(isPayment
+                                ? paymentMethodsState[method.toUpperCase()]
+                                : receivableMethodsState[method.toUpperCase()])
+                            }
+                            disabled={isViewMode}
+                            onCheckedChange={() =>
+                              toggleMethod(
+                                method.toUpperCase(),
+                                type as "payments" | "receivables",
+                              )
+                            }
+                          />
+                          <Label htmlFor={method}>{method}</Label>
+                        </div>
 
-                          <div className="flex flex-row w-full gap-2">
-                            {!isPayment && method !== "PIX" && (
+                        {(isPayment
+                          ? paymentMethodsState[method.toUpperCase()]
+                          : receivableMethodsState[method.toUpperCase()]) && (
+                          <div className="flex flex-col gap-2 w-full">
+                            <div className="flex flex-row w-full gap-2">
                               <Input
-                                placeholder="Tempo de Recebimento (dias)"
+                                placeholder="Taxa"
+                                disabled={isViewMode}
                                 className="text-xs md:text-sm"
                                 type="number"
-                                value={state[method]?.receiveTime || ""}
+                                value={
+                                  (isPayment
+                                    ? paymentMethodsState[method.toUpperCase()]
+                                        ?.taxRate
+                                    : receivableMethodsState[
+                                        method.toUpperCase()
+                                      ]?.taxRate) || ""
+                                }
                                 onChange={(e) =>
                                   handleChange(
                                     type as "payments" | "receivables",
                                     method,
-                                    "receiveTime",
+                                    "taxRate",
                                     e.target.value,
                                   )
                                 }
                               />
-                            )}
-
-                            {method === "Crédito" && !isPayment && (
-                              <Input
-                                type="number"
-                                min={1}
-                                max={18}
-                                value={installments || ""}
-                                onChange={(e) =>
-                                  setInstallments(Number(e.target.value))
+                              <Select
+                                value={
+                                  type === "payments"
+                                    ? paymentMethodsState[method.toUpperCase()]
+                                        ?.type || ""
+                                    : receivableMethodsState[
+                                        method.toUpperCase()
+                                      ]?.type || ""
                                 }
-                                placeholder="Número de Parcelas"
-                                className="text-xs md:text-sm"
-                              />
-                            )}
-                          </div>
+                                disabled={isViewMode}
+                                onValueChange={(value) =>
+                                  handleChange(
+                                    type as "payments" | "receivables",
+                                    method.toUpperCase(),
+                                    "type",
+                                    value,
+                                  )
+                                }
+                              >
+                                <SelectTrigger className="text-xs md:text-sm">
+                                  <SelectValue
+                                    placeholder="Tipo de Taxa"
+                                    className="text-xs md:text-sm"
+                                  />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="PERCENTAGE">
+                                    Porcentagem
+                                  </SelectItem>
+                                  <SelectItem value="CASH">
+                                    Valor Fixo
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
 
-                          {method === "Crédito" &&
-                            !isPayment &&
-                            installments && (
-                              <div className="grid grid-cols-2 gap-2 w-full">
-                                {[...Array(installments)].map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className="flex items-center space-x-2 border p-2 rounded-md w-full"
-                                  >
-                                    <span className="w-8 text-center font-medium">
-                                      {i + 1}
-                                    </span>
-                                    <Input
-                                      placeholder="Taxa"
-                                      className="text-xs md:text-sm w-full"
-                                      type="number"
-                                      onChange={(e) =>
-                                        handleInstallmentChange(
-                                          i,
-                                          e.target.value,
-                                        )
-                                      }
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                            <div className="flex flex-row w-full gap-2">
+                              {!isPayment && method !== "PIX" && (
+                                <Input
+                                  placeholder="Tempo de Recebimento (dias)"
+                                  className="text-xs md:text-sm"
+                                  type="number"
+                                  disabled={isViewMode}
+                                  value={
+                                    receivableMethodsState[method.toUpperCase()]
+                                      ?.receiveTime || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleChange(
+                                      type as "payments" | "receivables",
+                                      method,
+                                      "receiveTime",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                              )}
+
+                              {method === "Crédito" && !isPayment && (
+                                <Input
+                                  type="number"
+                                  min={1}
+                                  max={18}
+                                  value={installments || ""}
+                                  onChange={(e) => {
+                                    const newInstallments = Number(
+                                      e.target.value,
+                                    );
+
+                                    setInstallments(newInstallments);
+
+                                    setReceivableMethodsState((prev) => ({
+                                      ...prev,
+                                      ["CREDIT_CARD"]: {
+                                        ...prev["CREDIT_CARD"],
+                                        installments: new Array(
+                                          newInstallments,
+                                        ).fill(""),
+                                      },
+                                    }));
+                                  }}
+                                  placeholder="Número de Parcelas"
+                                  className="text-xs md:text-sm"
+                                />
+                              )}
+                            </div>
+
+                            {method === "Crédito" &&
+                              !isPayment &&
+                              installments && (
+                                <div className="grid grid-cols-2 gap-2 w-full mb-2">
+                                  {[...Array(installments)].map((_, i) => (
+                                    <div
+                                      key={i}
+                                      className="flex items-center space-x-2 border p-2 rounded-md w-full"
+                                    >
+                                      <span className="w-8 text-center font-medium">
+                                        {i + 1}
+                                      </span>
+                                      <Input
+                                        placeholder="Taxa"
+                                        className="text-xs md:text-sm w-full"
+                                        type="number"
+                                        onChange={(e) =>
+                                          handleInstallmentChange(
+                                            i,
+                                            e.target.value,
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </ScrollArea>
               </TabsContent>
             ))}
           </Tabs>
         </div>
 
         {!isViewMode && (
-          <DialogFooter className="flex mt-4 gap-2 w-full">
-            <Button variant="outline" onClick={handleClose}>
+          <DialogFooter className="absolute bottom-4 flex justify-center items-center w-full mt-4 gap-2  right-0 px-2">
+            <Button variant="outline" onClick={handleClose} className="w-full">
               Cancelar
             </Button>
-            <Button onClick={handleSubmit} disabled={isPending}>
+            <Button
+              onClick={handleSubmit}
+              disabled={isPending}
+              className="w-full"
+            >
               {isPending ? "Salvando..." : "Salvar"}
             </Button>
           </DialogFooter>

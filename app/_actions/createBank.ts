@@ -14,6 +14,7 @@ interface BankInput {
     receiveTimeInDays: number;
     taxRate: number;
     typeOfRate: RateType | null | undefined;
+    installments?: { installmentNumber: number; taxRate: number }[];
   }[];
   formsOfPayment: {
     method: PaymentType;
@@ -33,6 +34,7 @@ export async function createBank(data: BankInput) {
       formsOfPayment,
     } = data;
 
+    console.log("data:", data);
     const upperCaseName = name.toUpperCase();
 
     const parentAccount = await db.chartOfAccounts.findUnique({
@@ -78,11 +80,21 @@ export async function createBank(data: BankInput) {
               receiveTimeInDays: number;
               taxRate: number;
               typeOfRate: RateType | null | undefined;
+              installments?: { installmentNumber: number; taxRate: number }[];
             }) => ({
               method: method.method,
               receiveTimeInDays: method.receiveTimeInDays,
               taxRate: method.taxRate,
               typeOfRate: method.typeOfRate,
+              installments:
+                method.method === "CREDIT_CARD" && method.installments
+                  ? {
+                      create: method.installments.map((installment) => ({
+                        installmentNumber: installment.installmentNumber,
+                        taxRate: installment.taxRate,
+                      })),
+                    }
+                  : undefined,
             }),
           ),
         },
