@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import {
   ColumnDef,
@@ -24,7 +23,7 @@ import {
   MoreHorizontal,
   Plus,
 } from "lucide-react";
-import { getBanks } from "@/app/_actions/getBanks";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,32 +31,60 @@ import {
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
 import Link from "next/link";
-import CreateBankModal from "./createBankModal";
 
-interface Bank {
-  id: string;
-  name: string;
-  initialBalance: string;
-  initialBalanceDate: string;
-  isActive: boolean;
-  formsOfReceiving: { method: string }[];
-  formsOfPayment: { method: string }[];
-  hasMovements?: boolean;
+import { useToast } from "@/app/_hooks/use-toast";
+import BankSheet from "./bankSheet";
+import {
+  Account,
+  Bank,
+  Installment,
+  Movement,
+  PaymentMethod,
+  ReceivingMethod,
+} from "@prisma/client";
+
+interface ExtendedFormsOfReceiving extends ReceivingMethod {
+  receiveTime: string;
+  type: string;
+  installments?: Installment[];
 }
 
-const formatMethods = (methods: { method: string }[]) => {
-  return methods.length ? methods.map((m) => m.method).join(" | ") : "-";
-};
+interface ExtendedAccount extends Account {
+  movements: Movement[];
+}
+export interface ExtendedBank extends Bank {
+  formsOfReceiving: ExtendedFormsOfReceiving[];
+  formsOfPayment: PaymentMethod[];
+  account: ExtendedAccount;
+}
 
 const BankTable = () => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<Bank[]>([]);
-  const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
+  const [data, setData] = useState<ExtendedBank[]>([]);
+  const [selectedBank, setSelectedBank] = useState<ExtendedBank | null>(null);
   const [modalMode, setModalMode] = useState<"create" | "edit" | "view">(
     "create",
   );
 
-  const openModal = (bank: Bank | null, mode: "create" | "edit" | "view") => {
+  const { toast } = useToast();
+  const paymentMethodMap: Record<string, string> = {
+    PIX: "Pix",
+    BILL: "Boleto",
+    CREDIT_CARD: "Cartão de Crédito",
+    DEBIT_CARD: "Cartão de Débito",
+    CASH: "Dinheiro",
+  };
+
+  const formatMethods = (methods: { method: string }[]) => {
+    return methods.length
+      ? methods.map((m) => paymentMethodMap[m.method]).join(" | ")
+      : "-";
+  };
+
+  const openModal = (
+    bank: ExtendedBank | null,
+    mode: "create" | "edit" | "view",
+  ) => {
     setSelectedBank(bank);
     setModalMode(mode);
     setOpen(true);
@@ -68,37 +95,12 @@ const BankTable = () => {
     setOpen(false);
   };
 
-  const mapBankToBankData = (bank: Bank | null) => {
-    if (!bank) return undefined;
-
-    return {
-      id: bank.id,
-      name: bank.name,
-      initialBalance: bank.initialBalance,
-      initialBalanceDate: bank.initialBalanceDate,
-      isActive: bank.isActive,
-      formsOfPayment:
-        bank.formsOfPayment.reduce(
-          (acc, method) => {
-            acc[method.method] = { taxRate: "0", type: "" };
-            return acc;
-          },
-          {} as Record<string, { taxRate: string; type: string }>,
-        ) || {},
-      formsOfReceiving:
-        bank.formsOfReceiving.reduce(
-          (acc, method) => {
-            acc[method.method] = { taxRate: "0", type: "" };
-            return acc;
-          },
-          {} as Record<string, { taxRate: string; type: string }>,
-        ) || {},
-    };
-  };
-
   const fetchData = async () => {
-    const result = (await getBanks()) as Bank[];
-    setData(result);
+    const res = await fetch("/api/banks/getBanks");
+    const json = await res.json();
+    const data = json.banks;
+
+    setData(data);
   };
 
   useEffect(() => {
@@ -106,10 +108,25 @@ const BankTable = () => {
   }, []);
 
   const formatBankName = (name: string) => {
-    return name.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase()); // 🔥 Capitaliza a primeira letra de cada palavra
+    return name.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
-  const columns: ColumnDef<Bank>[] = [
+  const handleDeleteClick = (id: string) => {
+    if (confirm("Tem certeza que deseja excluir este banco?")) {
+      fetch(`/api/banks/deleteBank/${id}`, {
+        method: "DELETE",
+      }).then(() => {
+        toast({
+          title: "Sucesso!",
+          description: "Banco excluido com sucesso.",
+          variant: "default",
+        });
+        fetchData();
+      });
+    }
+  };
+
+  const columns: ColumnDef<ExtendedBank>[] = [
     {
       accessorKey: "name",
       header: "Nome do Banco",
@@ -154,12 +171,16 @@ const BankTable = () => {
                   Ver Movimentações
                 </Link>
               </DropdownMenuItem>
-              {!row.original.hasMovements && (
-                <DropdownMenuItem className="text-red-500 hover:bg-red-100">
-                  <Trash size={16} className="mr-2" />
-                  Excluir
-                </DropdownMenuItem>
-              )}
+              {row.original.account.movements.length == 0 &&
+                row.original.name.toUpperCase() != "CAIXA" && (
+                  <DropdownMenuItem
+                    className="text-red-500 hover:bg-red-100"
+                    onClick={() => handleDeleteClick(row.original.id)}
+                  >
+                    <Trash size={16} className="mr-2" />
+                    Excluir
+                  </DropdownMenuItem>
+                )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -185,10 +206,10 @@ const BankTable = () => {
           Criar Banco
         </Button>
 
-        <CreateBankModal
+        <BankSheet
           open={open}
           mode={modalMode}
-          bankData={mapBankToBankData(selectedBank)}
+          bankData={selectedBank || undefined}
           onBankCreated={fetchData}
           onClose={handleCloseModal}
         />
