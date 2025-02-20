@@ -269,7 +269,7 @@ model Bank {
   name               String            @unique
   accountCode        String            @unique
   account            ChartOfAccounts   @relation(fields: [accountCode], references: [code])
-  initialBalance     Decimal
+  initialBalance     Float
   initialBalanceDate DateTime
   isActive           Boolean           @default(true)
   formsOfReceiving   ReceivingMethod[]
@@ -284,7 +284,7 @@ model ReceivingMethod {
   bank              Bank          @relation(fields: [bankId], references: [id], onDelete: Cascade)
   method            PaymentType
   receiveTimeInDays Int           @default(0)
-  taxRate           Decimal       @default(0)
+  taxRate           Float       @default(0)
   typeOfRate        RateType? @default(CASH)
   installments      Installment[]
 }
@@ -294,7 +294,7 @@ model PaymentMethod {
   bankId     String
   bank       Bank        @relation(fields: [bankId], references: [id], onDelete: Cascade)
   method     PaymentType
-  taxRate    Decimal     @default(0)
+  taxRate    Float     @default(0)
   typeOfRate RateType?  @default(CASH)
 }
 
@@ -303,7 +303,7 @@ model Installment {
   receivingMethodId String
   receivingMethod   ReceivingMethod @relation(fields: [receivingMethodId], references: [id], onDelete: Cascade)
   installmentNumber Int
-  taxRate           Decimal
+  taxRate           Float
   typeOfRate        RateType        @default(PERCENTAGE)
 }
 
