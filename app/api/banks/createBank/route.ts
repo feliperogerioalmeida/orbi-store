@@ -51,11 +51,19 @@ export async function POST(req: NextRequest) {
       throw new Error("Conta contábil pai não encontrada.");
     }
 
-    const accountCode = `${parentAccount.code}.${
-      (await db.chartOfAccounts.count({
-        where: { parentCode: parentAccount.code },
-      })) + 1
-    }`;
+    const latestAccount = await db.chartOfAccounts.findFirst({
+      where: { parentCode: parentAccount.code },
+      orderBy: { code: "desc" },
+    });
+
+    let newCodeNumber = 1;
+
+    if (latestAccount) {
+      const lastCode = latestAccount.code.split(".").pop();
+      newCodeNumber = parseInt(lastCode!, 10) + 1;
+    }
+
+    const accountCode = `${parentAccount.code}.${newCodeNumber}`;
 
     console.log("🔹 Criando conta contábil...");
     const account = await db.chartOfAccounts.create({
