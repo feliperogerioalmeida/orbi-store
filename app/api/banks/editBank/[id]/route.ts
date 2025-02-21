@@ -1,12 +1,11 @@
 import { db } from "@/app/_lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function PUT(req: NextRequest) {
   try {
-    const { id } = await params;
+    const { pathname } = new URL(req.url);
+    const id = pathname.split("/").pop();
+
     const data = await req.json();
     console.log("data:", data);
     if (!id) {

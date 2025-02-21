@@ -1,12 +1,12 @@
 import { db } from "@/app/_lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { id } = await params;
+    const { pathname } = new URL(req.url);
+    const id = pathname.split("/").pop();
+
+    console.log(id);
 
     if (!id) {
       return {
