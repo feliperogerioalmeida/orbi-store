@@ -9,10 +9,10 @@ export async function PUT(req: NextRequest) {
     const data = await req.json();
     console.log("data:", data);
     if (!id) {
-      return {
+      return NextResponse.json({
         status: 400,
         error: "ID não informado",
-      };
+      });
     }
 
     if (data.name) {

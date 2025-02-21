@@ -9,10 +9,10 @@ export async function DELETE(req: NextRequest) {
     console.log(id);
 
     if (!id) {
-      return {
+      return NextResponse.json({
         status: 400,
         error: "ID não informado",
-      };
+      });
     }
 
     const bank = await db.bank.findUnique({
@@ -27,17 +27,17 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!bank) {
-      return {
+      return NextResponse.json({
         status: 404,
         error: "Banco não encontrado",
-      };
+      });
     }
 
     if (bank.account.movements.length > 0) {
-      return {
+      return NextResponse.json({
         status: 400,
         error: "Não é possível excluir um banco com movimentações",
-      };
+      });
     }
 
     await db.bank.delete({ where: { id } });
