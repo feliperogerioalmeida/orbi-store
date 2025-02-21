@@ -70,7 +70,7 @@ export default async function AdminLayout({
       >
         <AuthProvider>
           <UserProvider>
-            <SidebarProvider defaultOpen={false}>
+            <SidebarProvider defaultOpen={true}>
               <AdmSidebar />
               <SidebarInset>
                 <div className="flex min-h-screen w-full flex-col">

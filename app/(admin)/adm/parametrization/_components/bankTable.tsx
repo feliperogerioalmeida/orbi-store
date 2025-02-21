@@ -196,24 +196,6 @@ const BankTable = () => {
 
   return (
     <div className="relative mt-4">
-      <div className="mb-4 flex justify-end">
-        <Button
-          className="hidden md:flex "
-          onClick={() => {
-            openModal(null, "create");
-          }}
-        >
-          Criar Banco
-        </Button>
-
-        <BankSheet
-          open={open}
-          mode={modalMode}
-          bankData={selectedBank || undefined}
-          onBankCreated={fetchData}
-          onClose={handleCloseModal}
-        />
-      </div>
       <div className="border rounded-lg overflow-hidden pl-2">
         <Table className="w-full">
           <TableHeader>
@@ -254,9 +236,29 @@ const BankTable = () => {
           </TableBody>
         </Table>
       </div>
+      <div className="mb-4 flex justify-start mt-4">
+        <Button
+          variant={"black"}
+          className="hidden md:flex "
+          onClick={() => {
+            openModal(null, "create");
+          }}
+        >
+          Criar Banco
+        </Button>
+
+        <BankSheet
+          open={open}
+          mode={modalMode}
+          bankData={selectedBank || undefined}
+          onBankCreated={fetchData}
+          onClose={handleCloseModal}
+        />
+      </div>
       <Button
+        variant={"black"}
         onClick={() => openModal(null, "create")}
-        className="fixed bottom-8 right-8 md:hidden rounded-full p-3 shadow-lg"
+        className="fixed bottom-8 right-8 md:hidden rounded-full p-3 shadow-lg size-[48px]"
       >
         <Plus size={20} />
       </Button>
