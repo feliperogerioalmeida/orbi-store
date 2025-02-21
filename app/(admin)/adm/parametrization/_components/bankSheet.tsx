@@ -157,13 +157,19 @@ const BankSheet = ({
             ]),
           ),
         );
-
-        setInstallments(
-          receivableMethodsState["CREDIT_CARD"]?.installments?.length,
-        );
       }
     }
   }, [bankData, open, mode]);
+
+  useEffect(() => {
+    if (receivableMethodsState["CREDIT_CARD"]?.installments) {
+      setInstallments(
+        receivableMethodsState["CREDIT_CARD"].installments.length,
+      );
+    } else {
+      setInstallments(0);
+    }
+  }, [receivableMethodsState]);
 
   useEffect(() => {
     setIsOpen(open);
