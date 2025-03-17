@@ -70,14 +70,14 @@ export default async function AdminLayout({
         <meta property="og:url" content="https://www.orbistore.com.br/" />
         <meta property="og:site_name" content="Orbi Store" />
         <meta property="og:title" content="Orbi Store" />
-
+        <meta property="fb:app_id" content="951395522636668" />
         <meta
           property="og:description"
           content="Os melhores iPhones e acessórios premium com atendimento de qualidade!"
         />
         <meta
           property="og:image"
-          content="https://orbi-store.vercel.app/icon-512x512.png"
+          content="https://orbistore.com.br/icon-512x512.png"
         />
       </head>
       <body
