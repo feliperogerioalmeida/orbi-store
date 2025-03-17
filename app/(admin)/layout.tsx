@@ -64,6 +64,24 @@ export default async function AdminLayout({
         <link rel="apple" href="/icon-512x512.png" />
 
         <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.orbistore.com.br/" />
+        <meta property="og:site_name" content="Orbi Store" />
+        <meta property="og:title" content="Orbi Store" />
+        <meta
+          property="fb:app_id"
+          content="951395522636668|BsZONvWQXUR0i6UQNh_auO6BMWY"
+        />
+        <meta
+          property="og:description"
+          content="Os melhores iPhones e acessórios premium com atendimento de qualidade!"
+        />
+        <meta
+          property="og:image"
+          content="https://orbi-store.vercel.app/icon-512x512.png"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
